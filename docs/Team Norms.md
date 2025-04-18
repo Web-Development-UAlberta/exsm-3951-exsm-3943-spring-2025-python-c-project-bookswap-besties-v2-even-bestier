@@ -127,6 +127,8 @@ By participating in this Capstone project, each team member agrees to:
 
 ## Signed
  - Justin Bertok
+ - Diana Cuccarolo
+ 
 
  -Nancy RAndall
  

@@ -1,31 +1,31 @@
 # Software Design Document: Book Exchange System
 
-## Introduction
-### Purpose
+## 1. Introduction
+### 1.1 Purpose
 This document describes the architecture and detailed design for the Task Management System (TMS), a web-based application for team collaboration and task tracking.
-### Scope
+### 1.2 Scope
 TMS will allow users to create projects, assign tasks, track progress, and generate reports on team productivity.
-### Definitions
+### 1.3 Definitions
 - TMS: Task Management System
 - User: Any person with authorized access to the system
 - Task: A unit of work to be completed
 - Project: A collection of related tasks
 
-## System Architecture
-### High-Level Architecture
+## 2. System Architecture
+### 2.1 High-Level Architecture
 TMS follows a three-tier architecture:
 - Presentation Layer (Frontend)
 - Application Layer (Backend)
 - Data Layer (Database)
-### Technology Stack
+### 2.2 Technology Stack
 - Frontend: React.js, Redux, Material UI
 - Backend: Node.js, Express.js
 - Database: MongoDB
 - Authentication: JWT (JSON Web Tokens)
 - Deployment: Docker, AWS
 
-## Detailed Design
-### Database Schema
+## 3. Detailed Design
+### 3.1 Database Schema
 Users Collection
 ```json
 JSON
@@ -71,7 +71,7 @@ JSON
   "updatedAt": Date
 }
 ```
-### API Endpoints
+### 3.2 API Endpoints
 #### Authentication
 - POST /api/auth/register - Register a new user
 - POST /api/auth/login - User login
@@ -94,15 +94,15 @@ JSON
 - PUT /api/tasks/:id - Update task
 - DELETE /api/tasks/:id - Delete task
 
-## User Interface Design
-### Wireframes
+## 4. User Interface Design
+### 4.1 Wireframes
 #### Key screens include:
 - Dashboard
 - Project List/Detail View
 - Task List/Detail View
 - User Profile
 - Admin Panel
-#### Navigation Structure
+### 4.2 Navigation Structure
 ```
 Home
 ├── Dashboard
@@ -119,31 +119,32 @@ Home
     ├── Notifications
     └── Team Management (Admin only)
 ```
-## Security Considerations
-### Authentication and Authorization
+## 5. Security Considerations
+### 5.1 Authentication and Authorization
 - JWT-based authentication with refresh tokens
 - Role-based access control (RBAC)
 - Password hashing using bcrypt
-### Data Protection
+### 5.2 Data Protection
 - HTTPS for all communications
 - Input validation and sanitization
 - Protection against common vulnerabilities (XSS, CSRF, SQL Injection)
-## Testing Strategy
-### Unit Testing
+## 6. Testing Strategy
+### 6.1 Unit Testing
 - Jest and React Testing Library for frontend components and utility functions.
-### Integration Testing
+### 6.2 Integration Testing
 - API endpoint testing using Supertest.
-### End-to-End Testing
+### 6.3 End-to-End Testing
 - Cypress for simulating user interactions.
 
-## Deployment Plan
-### Development Environment
+## 7. Deployment Plan
+### 7.1 Development Environment
 - Docker containers for local development.
-### Staging Environment
+### 7.2 Staging Environment
 - AWS ECS with CI/CD pipeline via GitHub Actions.
-### Production Environment
+### 7.3 Production Environment
 - AWS ECS with auto-scaling and load balancing.
-## Timeline and Milestones
+
+## 8. Timeline and Milestones
 | Phase | Description                      | Duration | Target Completion |
 |-------|----------------------------------|----------|-------------------|
 | 1     | Initial Setup and Authentication | 2 weeks  | May 1, 2025       |
@@ -152,7 +153,7 @@ Home
 | 4     | Testing and Bug Fixes            | 3 weeks  | July 28, 2025     |
 | 5     | Deployment and Launch            | 2 weeks  | August 15, 2025   |
 
-## Appendix
-### References
+## 9. Appendix
+### 9.1 References
 - [Django Documentation](https://docs.djangoproject.com/en/5.2/)
 

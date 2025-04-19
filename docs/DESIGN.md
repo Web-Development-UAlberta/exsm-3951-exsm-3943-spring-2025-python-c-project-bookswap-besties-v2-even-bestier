@@ -26,8 +26,8 @@ TMS follows a three-tier architecture:
 
 ## Detailed Design
 ### Database Schema
-```json
 Users Collection
+```json
 JSON
 {
   "_id": ObjectId,
@@ -38,8 +38,9 @@ JSON
   "createdAt": Date,
   "updatedAt": Date
 }
-
+```
 Projects Collection
+```json
 JSON
 {
   "_id": ObjectId,
@@ -53,7 +54,9 @@ JSON
   "createdAt": Date,
   "updatedAt": Date
 }
+```
 Tasks Collection
+```json
 JSON
 {
   "_id": ObjectId,

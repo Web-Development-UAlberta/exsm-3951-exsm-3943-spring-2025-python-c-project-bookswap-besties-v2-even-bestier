@@ -145,13 +145,14 @@ Home
 - AWS ECS with auto-scaling and load balancing.
 
 ## 8. Timeline and Milestones
-| Phase | Description                      | Duration | Target Completion |
-|-------|----------------------------------|----------|-------------------|
-| 1     | Initial Setup and Authentication | 2 weeks  | May 1, 2025       |
-| 2     | Core Features Development        | 6 weeks  | June 15, 2025     |
-| 3     | UI Refinement                    | 3 weeks  | July 7, 2025      |
-| 4     | Testing and Bug Fixes            | 3 weeks  | July 28, 2025     |
-| 5     | Deployment and Launch            | 2 weeks  | August 15, 2025   |
+| Phase | Description                                      | Duration | Target Completion |
+|-------|--------------------------------------------------|----------|-------------------|
+| 1     | Initial Setup & Project Planning                 | 1 week   | April 21, 2025    |
+| 2     | Design Finalization & Early Planning             | 6 weeks  | April 23, 2025    |
+| 3     | Finalize Planning Docs & Begin Implementation    | 3 weeks  | April 30, 2025    |
+| 4     | Build Core Application Logic                     | 3 weeks  | May 7, 2025       |
+| 5     | Finalize Application Logic & Prepare for Release | 2 weeks  | May 14, 2025      |
+| 6     | Final Presentation & Project Completion          | 2 weeks  | May 21, 2025      |
 
 ## 9. Appendix
 ### 9.1 References

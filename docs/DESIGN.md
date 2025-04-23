@@ -186,7 +186,56 @@ Logout
 - Protection against common vulnerabilities (XSS, CSRF, SQL Injection)
 
 ## 6. Testing Strategy
-- 
+
+**1. Major Issues**
+- Load main views (Home, Browse, Library, Profile)
+- Test login/logout
+- Add a book
+- Open swap flow
+
+ ~15 min per development session
+
+**2. Core User Flows**
+- Register -> Add Book -> Mark Available
+- Search -> Filter -> View Book -> Request Swap
+- Receive -> Accept/Decline Offer
+- Wishlist -> Trigger Alert
+- View user profile -> See reviews
+
+2 hours
+
+**3. Component Spot Checks**
+- Form validation
+- Button states (enabled/disabled/loading)
+- Notifications (trigger + clear)
+- Mobile responsiveness
+
+1 hour
+
+**4. Edge Cases**
+- Submit empty/invalid forms
+- Use long strings or broken inputs
+- Access features while logged out
+- Duplicate listings
+- Invalid URLs
+
+1 hour
+
+**5. Final Polish**
+- Fix typos
+- Confirm 404/fallback pages
+- Responsive layout checks
+- User-friendly alerts
+
+1 hour
+
+**(Optional) Automated Tests**
+- Login flow
+- Search + filter
+- Swap request lifecycle
+
+2–3 hours (optional)
+
 
 ## 7. Deployment Plan
 ### 7.1 Development Environment

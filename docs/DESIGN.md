@@ -239,11 +239,15 @@ Logout
 
 ## 7. Deployment Plan
 ### 7.1 Development Environment
-- Django for local development.
+- Local development using Django.
+- Version control and branching via Git + GitHub.
 ### 7.2 Staging Environment
-- Local Host with CI/CD pipeline via GitHub Actions.
+- Localhost or test server.
+- CI/CD pipeline configured with GitHub Actions.
+- Automated testing and linting before merges.
 ### 7.3 Production Environment
-- AWS ECS with auto-scaling and load balancing. (Live deployment TBD)
+- Target: AWS ECS with auto-scaling and load balancing.
+- Live deployment status: **TBD**.
 
 ## 8. Timeline and Milestones
 | Phase | Description                                      | Duration | Target Completion |

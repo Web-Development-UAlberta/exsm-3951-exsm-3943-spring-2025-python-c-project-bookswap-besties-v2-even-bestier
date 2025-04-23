@@ -177,11 +177,10 @@ Logout
 
 ## 5. Security Considerations
 ### 5.1 Authentication and Authorization
-- JWT-based authentication with refresh tokens
 - Role-based access control (RBAC)
 - Password hashing using bcrypt
 ### 5.2 Data Protection
-- HTTPS for all communications
+- HTTPS for all communications ( Production version )
 - Input validation and sanitization
 - Protection against common vulnerabilities (XSS, CSRF, SQL Injection)
 

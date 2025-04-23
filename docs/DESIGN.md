@@ -117,13 +117,13 @@ JSON
 
 ### 4.2 Navigation Structure
 
-Home
+#### Home:
 - Login / Register
 - Featured Books (For Sale / Swap)
 - Quick Search
 - How It Works
 
-Browse Books
+#### Browse Books:
 - Search: title, author, genre, ISBN
 - Filters:
   - Condition
@@ -136,7 +136,7 @@ Browse Books
   - Price
   - Condition
 
-My Library & Matches & Wishlist
+#### My Library & Matches & Wishlist:
 
 - Add Book to Library
 - Your Books
@@ -147,14 +147,14 @@ My Library & Matches & Wishlist
 - Wishlist
   - Wishlist Alerts
 
-Messages & Notifications
+#### Messages & Notifications:
 
 - Incoming Swap Offers
 - Counter-Offers
 - Wishlist Notifications
 - Shipping Updates
 
-Profile & Shipping Center
+#### Profile & Shipping Center:
 
 - Edit Account
 - Addresses & Payment Info
@@ -163,13 +163,13 @@ Profile & Shipping Center
 - Generate Shipping Label (Mocked)
 - Shipping Cost Estimator (Mocked)
 
-Help Center
+#### Help Center:
 
 - Blog / Guides
 - FAQ
 - Contact Support
 
-Logout
+#### Logout:
 
 - Profile Dropdown or Mobile Menu
 

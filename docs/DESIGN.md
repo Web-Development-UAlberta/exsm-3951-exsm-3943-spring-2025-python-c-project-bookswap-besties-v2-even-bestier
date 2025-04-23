@@ -28,11 +28,11 @@ TMS follows a three-tier architecture:
 - Application Layer (Backend)
 - Data Layer (Database)
 ### 2.2 Technology Stack
-- Frontend: React.js, Redux, Material UI
-- Backend: Node.js, Express.js
-- Database: MongoDB
-- Authentication: JWT (JSON Web Tokens)
-- Deployment: Docker, AWS
+- Frontend: Django
+- Backend: Django
+- Database: Django
+- Authentication: Django
+- Deployment: Django
 
 ## 3. Detailed Design
 ### 3.1 Database Schema
@@ -139,26 +139,21 @@ Home
 - Input validation and sanitization
 - Protection against common vulnerabilities (XSS, CSRF, SQL Injection)
 ## 6. Testing Strategy
-### 6.1 Unit Testing
-- Jest and React Testing Library for frontend components and utility functions.
-### 6.2 Integration Testing
-- API endpoint testing using Supertest.
-### 6.3 End-to-End Testing
-- Cypress for simulating user interactions.
+- 
 
 ## 7. Deployment Plan
 ### 7.1 Development Environment
-- Docker containers for local development.
+- Django for local development.
 ### 7.2 Staging Environment
-- AWS ECS with CI/CD pipeline via GitHub Actions.
+- Local Host with CI/CD pipeline via GitHub Actions.
 ### 7.3 Production Environment
-- AWS ECS with auto-scaling and load balancing.
+- AWS ECS with auto-scaling and load balancing. (Live deployment TBD)
 
 ## 8. Timeline and Milestones
 | Phase | Description                                      | Duration | Target Completion |
 |-------|--------------------------------------------------|----------|-------------------|
 | 1     | Initial Setup & Project Planning                 | 1 week   | April 21, 2025    |
-| 2     | Design Finalization & Early Planning             | 6 weeks  | April 23, 2025    |
+| 2     | Design Finalization & Early Planning             | 2 weeks  | April 23, 2025    |
 | 3     | Finalize Planning Docs & Begin Implementation    | 3 weeks  | April 30, 2025    |
 | 4     | Build Core Application Logic                     | 3 weeks  | May 7, 2025       |
 | 5     | Finalize Application Logic & Prepare for Release | 2 weeks  | May 14, 2025      |

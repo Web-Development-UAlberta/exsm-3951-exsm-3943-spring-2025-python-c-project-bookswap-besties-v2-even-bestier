@@ -107,28 +107,74 @@ JSON
 ## 4. User Interface Design
 ### 4.1 Wireframes
 #### Key screens include:
-- Dashboard
-- Project List/Detail View
-- Task List/Detail View
-- User Profile
-- Admin Panel
+
+- Login/Home
+- Browse Books
+- My Library, Wishlist, Matches
+- Messages and Notifications
+- Profile and Shipping Center
+- Help and FAQ's
+
 ### 4.2 Navigation Structure
-```
+
 Home
-├── Dashboard
-├── Projects
-│   ├── Project List
-│   └── Project Details
-├── Tasks
-│   ├── My Tasks
-│   ├── Team Tasks
-│   └── Task Details
-├── Reports
-└── Settings
-    ├── Profile
-    ├── Notifications
-    └── Team Management (Admin only)
-```
+│
+├── Login / Register
+├── Featured Books (For Sale / Swap)
+├── Quick Search
+└── How It Works
+
+Browse Books
+│
+├── Search: title, author, genre, ISBN
+├── Filters:
+│   ├── Condition
+│   ├── Transaction Type
+│   ├── Price Range
+│   ├── User Rating
+│   └── Location
+└── Sort Options
+    ├── Newest
+    ├── Price
+    └── Condition
+
+My Library & Matches & Wishlist
+│
+├── Add Book to Library
+├── Your Books
+│   └── Toggle Available / Unavailable
+├── Manage Listings
+├── Suggested Matches
+├── Pending Reviews (linked to your books)
+└── Wishlist
+    └── Wishlist Alerts
+
+Messages & Notifications
+│
+├── Incoming Swap Offers
+├── Counter-Offers
+├── Wishlist Notifications
+└── Shipping Updates
+
+Profile & Shipping Center
+│
+├── Edit Account
+├── Addresses & Payment Info
+├── View Personal Reviews
+├── Shipment Tracking (Mocked)
+├── Generate Shipping Label (Mocked)
+└── Shipping Cost Estimator (Mocked)
+
+Help Center
+│
+├── Blog / Guides
+├── FAQ
+└── Contact Support
+
+Logout
+│
+└── Profile Dropdown or Mobile Menu
+
 ## 5. Security Considerations
 ### 5.1 Authentication and Authorization
 - JWT-based authentication with refresh tokens
@@ -138,6 +184,7 @@ Home
 - HTTPS for all communications
 - Input validation and sanitization
 - Protection against common vulnerabilities (XSS, CSRF, SQL Injection)
+
 ## 6. Testing Strategy
 - 
 

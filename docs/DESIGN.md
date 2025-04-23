@@ -35,74 +35,81 @@ TMS follows a three-tier architecture:
 - Deployment: Django
 
 ## 3. Detailed Design
-### 3.1 Database Schema
-Users Collection
-```json
-JSON
-{
-  "_id": ObjectId,
-  "username": String,
-  "email": String,
-  "password": String (hashed),
-  "role": String (admin, manager, or member),
-  "createdAt": Date,
-  "updatedAt": Date
+### 3.1 ERD 
+![Test Image 1](images/Book Swap ERD.jpg)
+
+
+### 3.2 Database Schema
+
+**Members** {
+  "_id": ObjectId,\
+  "member_name": String,\
+  "email": String,\
+  "password": String (hashed),\
+  "address": String\
 }
-```
-Projects Collection
-```json
-JSON
-{
-  "_id": ObjectId,
-  "name": String,
-  "description": String,
-  "owner": ObjectId (ref: Users),
-  "members": [ObjectId] (ref: Users),
-  "status": String (active, completed, archived),
-  "startDate": Date,
-  "endDate": Date,
-  "createdAt": Date,
-  "updatedAt": Date
+
+**Books** {
+  "_id": ObjectId,\
+  "member": ObjectId (ref: Members),\
+  "title": String,\
+  "author": String,\
+  "genre": ObjectId (ref: Genres),\
+  "description": String,\
+  "pub_date": DATE,\
+  "condition": String,\
+  "language": String,\
+  "price": DECIMAL,\
+  "weight": DECIMAL,\
 }
-```
-Tasks Collection
-```json
-JSON
-{
-  "_id": ObjectId,
-  "title": String,
-  "description": String,
-  "project": ObjectId (ref: Projects),
-  "assignedTo": ObjectId (ref: Users),
-  "priority": String (low, medium, high),
-  "status": String (todo, in-progress, review, done),
-  "dueDate": Date,
-  "createdAt": Date,
-  "updatedAt": Date
+
+**Wish_Lists** {
+  "_id": ObjectId,\
+  "member": ObjectId (ref: Members),\
+  "book": ObjectId (ref: Books),\
 }
-```
-### 3.2 API Endpoints
-#### Authentication
-- POST /api/auth/register - Register a new user
-- POST /api/auth/login - User login
-- POST /api/auth/logout - User logout
-#### Users
-- GET /api/users - Get all users
-- GET /api/users/:id - Get user by ID
-- PUT /api/users/:id - Update user
-- DELETE /api/users/:id - Delete user
-#### Projects
-- GET /api/projects - Get all projects
-- POST /api/projects - Create a new project
-- GET /api/projects/:id - Get project by ID
-- PUT /api/projects/:id - Update project
-- DELETE /api/projects/:id - Delete project
-#### Tasks
-- GET /api/tasks - Get all tasks
-- POST /api/tasks - Create a new task
-- GET /api/tasks/:id - Get task by ID
-- PUT /api/tasks/:id - Update task
-- DELETE /api/tasks/:id - Delete task
+
+**Genres** {
+   "_id": ObjectId,\
+   "genre": String,\
+}
+
+**Sales** {
+  "_id": ObjectId,\
+  "seller": ObjectId (ref: Members),\
+  "buyer": ObjectId (ref: Members),\
+  "book": ObjectId (ref: Books),\
+  "shipment": ObjectId (ref: Users),\
+}
+
+**Shipments** {
+  "_id": ObjectId,\
+  "shipment_date": Date,\
+  "address": ObjectId (ref: Members),\
+  "cost": Decimal,
+}
+
+**Swaps** {
+  "_id": ObjectId,\
+  "shipment": ObjectId (ref: Members),\
+}
+
+**Swap_Details** {
+  "_id": ObjectId,\
+  "book": ObjectId (ref: Books),\
+  "original_owner": ObjectId (ref: Members),\
+  "new_owner": ObjectId (ref: Members),\
+  "swap": ObjectId (ref: Swaps),\
+}
+
+**Reviews** {
+  "_id": ObjectId,\
+  "member": ObjectId (ref: Members),\
+  "book": ObjectId (ref: Books),\
+  "rating": Integer,\
+  "comment": String,\
+}
+
 
 ## 4. User Interface Design
 ### 4.1 Wireframes
@@ -113,7 +120,7 @@ JSON
 - User Profile
 - Admin Panel
 ### 4.2 Navigation Structure
-```
+
 Home
 ├── Dashboard
 ├── Projects
@@ -128,16 +135,19 @@ Home
     ├── Profile
     ├── Notifications
     └── Team Management (Admin only)
-```
+
 ## 5. Security Considerations
 ### 5.1 Authentication and Authorization
-- JWT-based authentication with refresh tokens
-- Role-based access control (RBAC)
-- Password hashing using bcrypt
+
++	User authentication using Sessions Management (Django authentication)
++	Password hashing (Django automatically hashes passwords)
+
 ### 5.2 Data Protection
-- HTTPS for all communications
-- Input validation and sanitization
-- Protection against common vulnerabilities (XSS, CSRF, SQL Injection)
+
++ HTTPS for all communications
++	Input validation and sanitization.
++	Protection against common vulnerabilities (XSS, CSRF, SQL Injection)
+
 ## 6. Testing Strategy
 - 
 

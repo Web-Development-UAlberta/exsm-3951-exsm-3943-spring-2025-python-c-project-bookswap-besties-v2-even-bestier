@@ -36,12 +36,12 @@ TMS follows a three-tier architecture:
 
 ## 3. Detailed Design
 ### 3.1 ERD 
-![Test Image 1](images/Book Swap ERD.jpg)
 
+<img src="../images/Book Swap ERD.jpg" width="1000" height="648">
 
 ### 3.2 Database Schema
 
-**Members** {
+**Members** {\
   "_id": ObjectId,\
   "member_name": String,\
   "email": String,\
@@ -49,7 +49,7 @@ TMS follows a three-tier architecture:
   "address": String\
 }
 
-**Books** {
+**Books** {\
   "_id": ObjectId,\
   "member": ObjectId (ref: Members),\
   "title": String,\
@@ -63,18 +63,18 @@ TMS follows a three-tier architecture:
   "weight": DECIMAL,\
 }
 
-**Wish_Lists** {
+**Wish_Lists** {\
   "_id": ObjectId,\
   "member": ObjectId (ref: Members),\
   "book": ObjectId (ref: Books),\
 }
 
-**Genres** {
+**Genres** {\
    "_id": ObjectId,\
    "genre": String,\
 }
 
-**Sales** {
+**Sales** {\
   "_id": ObjectId,\
   "seller": ObjectId (ref: Members),\
   "buyer": ObjectId (ref: Members),\
@@ -82,19 +82,19 @@ TMS follows a three-tier architecture:
   "shipment": ObjectId (ref: Users),\
 }
 
-**Shipments** {
+**Shipments** {\
   "_id": ObjectId,\
   "shipment_date": Date,\
   "address": ObjectId (ref: Members),\
   "cost": Decimal,
 }
 
-**Swaps** {
+**Swaps** {\
   "_id": ObjectId,\
   "shipment": ObjectId (ref: Members),\
 }
 
-**Swap_Details** {
+**Swap_Details** {\
   "_id": ObjectId,\
   "book": ObjectId (ref: Books),\
   "original_owner": ObjectId (ref: Members),\
@@ -102,7 +102,7 @@ TMS follows a three-tier architecture:
   "swap": ObjectId (ref: Swaps),\
 }
 
-**Reviews** {
+**Reviews** {\
   "_id": ObjectId,\
   "member": ObjectId (ref: Members),\
   "book": ObjectId (ref: Books),\
@@ -149,7 +149,7 @@ Home
 +	Protection against common vulnerabilities (XSS, CSRF, SQL Injection)
 
 ## 6. Testing Strategy
-- 
+- "[To be filled in later]"
 
 ## 7. Deployment Plan
 ### 7.1 Development Environment

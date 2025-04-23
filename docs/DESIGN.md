@@ -114,50 +114,144 @@ TMS follows a three-tier architecture:
 ## 4. User Interface Design
 ### 4.1 Wireframes
 #### Key screens include:
-- Dashboard
-- Project List/Detail View
-- Task List/Detail View
-- User Profile
-- Admin Panel
+
+- Login/Home
+- Browse Books
+- My Library, Wishlist, Matches
+- Messages and Notifications
+- Profile and Shipping Center
+- Help and FAQ's
+
 ### 4.2 Navigation Structure
 
-Home
-├── Dashboard
-├── Projects
-│   ├── Project List
-│   └── Project Details
-├── Tasks
-│   ├── My Tasks
-│   ├── Team Tasks
-│   └── Task Details
-├── Reports
-└── Settings
-    ├── Profile
-    ├── Notifications
-    └── Team Management (Admin only)
+#### Home:
+- Login / Register
+- Featured Books (For Sale / Swap)
+- Quick Search
+- How It Works
+
+#### Browse Books:
+- Search: title, author, genre, ISBN
+- Filters:
+  - Condition
+  - Transaction Type
+  - Price Range
+  - User Rating
+  - Location
+- Sort Options
+  - Newest
+  - Price
+  - Condition
+
+#### My Library & Matches & Wishlist:
+
+- Add Book to Library
+- Your Books
+  - Toggle Available / Unavailable
+- Manage Listings
+- Suggested Matches
+- Pending Reviews (linked to your books)
+- Wishlist
+  - Wishlist Alerts
+
+#### Messages & Notifications:
+
+- Incoming Swap Offers
+- Counter-Offers
+- Wishlist Notifications
+- Shipping Updates
+
+#### Profile & Shipping Center:
+
+- Edit Account
+- Addresses & Payment Info
+- View Personal Reviews
+- Shipment Tracking (Mocked)
+- Generate Shipping Label (Mocked)
+- Shipping Cost Estimator (Mocked)
+
+#### Help Center:
+
+- Blog / Guides
+- FAQ
+- Contact Support
+
+#### Logout:
+
+- Profile Dropdown or Mobile Menu
 
 ## 5. Security Considerations
 ### 5.1 Authentication and Authorization
-
-+	User authentication using Sessions Management (Django authentication)
-+	Password hashing (Django automatically hashes passwords)
-
+- Role-based access control (RBAC)
+- Password hashing using bcrypt
 ### 5.2 Data Protection
-
-+ HTTPS for all communications
-+	Input validation and sanitization.
-+	Protection against common vulnerabilities (XSS, CSRF, SQL Injection)
+- HTTPS for all communications ( Production version )
+- Input validation and sanitization
+- Protection against common vulnerabilities (XSS, CSRF, SQL Injection)
 
 ## 6. Testing Strategy
-- "[To be filled in later]"
+
+**1. Major Issues**
+- Load main views (Home, Browse, Library, Profile)
+- Test login/logout
+- Add a book
+- Open swap flow
+
+ ~15 min per development session
+
+**2. Core User Flows**
+- Register -> Add Book -> Mark Available
+- Search -> Filter -> View Book -> Request Swap
+- Receive -> Accept/Decline Offer
+- Wishlist -> Trigger Alert
+- View user profile -> See reviews
+
+2 hours
+
+**3. Component Spot Checks**
+- Form validation
+- Button states (enabled/disabled/loading)
+- Notifications (trigger + clear)
+- Mobile responsiveness
+
+1 hour
+
+**4. Edge Cases**
+- Submit empty/invalid forms
+- Use long strings or broken inputs
+- Access features while logged out
+- Duplicate listings
+- Invalid URLs
+
+1 hour
+
+**5. Final Polish**
+- Fix typos
+- Confirm 404/fallback pages
+- Responsive layout checks
+- User-friendly alerts
+
+1 hour
+
+**(Optional) Automated Tests**
+- Login flow
+- Search + filter
+- Swap request lifecycle
+
+2–3 hours (optional)
+
 
 ## 7. Deployment Plan
 ### 7.1 Development Environment
-- Django for local development.
+- Local development using Django.
+- Version control and branching via Git + GitHub.
 ### 7.2 Staging Environment
-- Local Host with CI/CD pipeline via GitHub Actions.
+- Localhost or test server.
+- CI/CD pipeline configured with GitHub Actions.
+- Automated testing and linting before merges.
 ### 7.3 Production Environment
-- AWS ECS with auto-scaling and load balancing. (Live deployment TBD)
+- Target: AWS ECS with auto-scaling and load balancing.
+- Live deployment status: **TBD**.
 
 ## 8. Timeline and Milestones
 | Phase | Description                                      | Duration | Target Completion |

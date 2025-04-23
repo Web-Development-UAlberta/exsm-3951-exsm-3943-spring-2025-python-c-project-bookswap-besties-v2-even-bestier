@@ -120,17 +120,6 @@ This app is designed for book lovers who want to exchange, sell, or buy books th
 
 ---
 
-## Technologies & Tools
-
-- **Frontend**: React, HTML/CSS, Vite or Create React App
-- **Backend**: Node.js, Express, PostgreSQL
-- **Testing**: Jest, React Testing Library
-- **CI/CD**: GitHub Actions
-- **Design & Planning**: Draw.io, Figma, Markdown Docs
-- **Version Control**: Git, GitHub (Protected Branches)
-
----
-
 ## Business Rules
 
 - Users must be able to list books and specify transaction type.
@@ -162,5 +151,3 @@ This app is designed for book lovers who want to exchange, sell, or buy books th
 - System is demo-ready and stable by final presentation.
 
 ---
-
-#### Structure and content created with the assistance of AI - Nancy

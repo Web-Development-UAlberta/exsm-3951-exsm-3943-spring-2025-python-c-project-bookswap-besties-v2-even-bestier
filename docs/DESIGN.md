@@ -167,6 +167,3 @@ Home
 ## 9. Appendix
 ### 9.1 References
 - [Django Documentation](https://docs.djangoproject.com/en/5.2/)
-
----
-##### Structure and content created with the assistance of AI

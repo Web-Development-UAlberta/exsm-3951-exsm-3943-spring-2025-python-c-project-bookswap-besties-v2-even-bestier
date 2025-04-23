@@ -118,62 +118,60 @@ JSON
 ### 4.2 Navigation Structure
 
 Home
-│
-├── Login / Register
-├── Featured Books (For Sale / Swap)
-├── Quick Search
-└── How It Works
+- Login / Register
+- Featured Books (For Sale / Swap)
+- Quick Search
+- How It Works
 
 Browse Books
-│
-├── Search: title, author, genre, ISBN
-├── Filters:
-│   ├── Condition
-│   ├── Transaction Type
-│   ├── Price Range
-│   ├── User Rating
-│   └── Location
-└── Sort Options
-    ├── Newest
-    ├── Price
-    └── Condition
+- Search: title, author, genre, ISBN
+- Filters:
+  - Condition
+  - Transaction Type
+  - Price Range
+  - User Rating
+  - Location
+- Sort Options
+  - Newest
+  - Price
+  - Condition
 
 My Library & Matches & Wishlist
-│
-├── Add Book to Library
-├── Your Books
-│   └── Toggle Available / Unavailable
-├── Manage Listings
-├── Suggested Matches
-├── Pending Reviews (linked to your books)
-└── Wishlist
-    └── Wishlist Alerts
+
+- Add Book to Library
+- Your Books
+  - Toggle Available / Unavailable
+- Manage Listings
+- Suggested Matches
+- Pending Reviews (linked to your books)
+- Wishlist
+  - Wishlist Alerts
 
 Messages & Notifications
-│
-├── Incoming Swap Offers
-├── Counter-Offers
-├── Wishlist Notifications
-└── Shipping Updates
+
+- Incoming Swap Offers
+- Counter-Offers
+- Wishlist Notifications
+- Shipping Updates
 
 Profile & Shipping Center
-│
-├── Edit Account
-├── Addresses & Payment Info
-├── View Personal Reviews
-├── Shipment Tracking (Mocked)
-├── Generate Shipping Label (Mocked)
-└── Shipping Cost Estimator (Mocked)
+
+- Edit Account
+- Addresses & Payment Info
+- View Personal Reviews
+- Shipment Tracking (Mocked)
+- Generate Shipping Label (Mocked)
+- Shipping Cost Estimator (Mocked)
 
 Help Center
-│
-├── Blog / Guides
-├── FAQ
-└── Contact Support
+
+- Blog / Guides
+- FAQ
+- Contact Support
 
 Logout
-│
-└── Profile Dropdown or Mobile Menu
+
+- Profile Dropdown or Mobile Menu
 
 ## 5. Security Considerations
 ### 5.1 Authentication and Authorization

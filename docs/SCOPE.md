@@ -63,7 +63,7 @@ This app is designed for book lovers who want to exchange, sell, or buy books th
 
 ---
 
-## Deliverables & Timeline - Phase 1
+## Detailed Deliverables & Timeline - Phase 1
 
 ### 📅 Week 01
 - [ ] Team Norms Document: `./docs/TEAM-NORMS.md`

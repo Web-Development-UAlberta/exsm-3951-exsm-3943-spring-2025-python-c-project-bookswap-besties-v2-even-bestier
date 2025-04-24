@@ -182,10 +182,10 @@ TMS follows a three-tier architecture:
 
 ## 5. Security Considerations
 ### 5.1 Authentication and Authorization
-- Role-based access control (RBAC)
-- Password hashing using bcrypt
+-	User authentication using Sessions Management (Django authentication)
+-	Password hashing (Django automatically hashes passwords)
 ### 5.2 Data Protection
-- HTTPS for all communications ( Production version )
+- HTTPS for all communications
 - Input validation and sanitization
 - Protection against common vulnerabilities (XSS, CSRF, SQL Injection)
 
@@ -253,7 +253,8 @@ TMS follows a three-tier architecture:
 - Target: AWS ECS with auto-scaling and load balancing.
 - Live deployment status: **TBD**.
 
-## 8. Timeline and Milestones
+## 8. High Level Timeline and Milestones
+**Please see SCOPE.md for further details.**
 | Phase | Description                                      | Duration | Target Completion |
 |-------|--------------------------------------------------|----------|-------------------|
 | 1     | Initial Setup & Project Planning                 | 1 week   | April 21, 2025    |

@@ -54,22 +54,32 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 
 | **Test Case** | **Description** | **Expected Result** | **Error Conditions** |
 |---------------|-----------------|---------------------|----------------------|
-| **Test: Add Book to Database** | Test the addition of a new book to the database | Book is added with correct details | Missing details, duplicate ISBN |
-| **Test: Register New User** | Test user registration process | User is created with hashed password | Duplicate email, weak password |
+| **Test: Add Book to Database** | Test the addition of a new book to the database | Book is added with valid member and genre reference | Missing details, duplicate ISBN, genre/member not found, duplicate listing |
+| **Test: Register New User** | Test user registration process | User is created with hashed password and unique email | Duplicate email, weak password, invalid email format |
+| **Test: Wishlist Entry** | Test the creation of a wishlist entry into the database | Wishlist entry created linking book to user | Book or member does not exist, book already in wishlist |
+| **Test: Sales** | Test the sales record | Sales record created linking buyer, seller and book | Book or user does not exist, book already sold |
+| **Test: Reviews** | Test creation of a review | Review saved with rating and comment for a book | Book or user not found, rating out of range (>5 or <1)
 
 ### 5.2 Back End - Functions
 
 | **Test Case** | **Description** | **Expected Result** | **Error Conditions** |
 |---------------|-----------------|---------------------|----------------------|
-| **Test: Register User** | Register a new user | User is successfully registered | Invalid email format, password too short |
+| **Test: Register User** | Register a new user | User is successfully registered with hashed password | Missing or invalid email, password too short/weak, email already exists |
+| **Test: Login User** | User Login | Returns session on success | Email not found, incorrect password |
+| **Test: Add Book** | Add a book | Book saved with correct references | Missing fields, member doesn't exist |
+| **Test: Wishlist Entry** | Add a book onto wishlist | Book added to user's wishlist | Book already in wishlist, invalid IDs |
 | **Test: Search Books** | Search for books by title | Returns list of books matching the query | No books found for query |
+| **Test: Submit Review** | Save a review on a book | Review saved | Rating invalid, book not found |
 
 ### 5.3 Front End
 
 | **Test Case** | **Description** | **Expected Result** | **Error Conditions** |
 |---------------|-----------------|---------------------|----------------------|
 | **Test: Login Page** | User submits login form | Redirects to homepage or shows error message | Incorrect credentials |
+| **Test: Registration Page** | User registers on platform | Displays form, shows success or redirects | Shows errors from 400, 5XX is generic "Try again later." |
 | **Test: Book Listing Form** | User adds a book to their library | Book appears in library view | Missing fields, incorrect book data |
+| **Test: Wishlist** | View user's wishlist | Shows books from user's wishlist, links to matches | No wishlist with no message for user |
+| **Test: Search Books** | Search for books | Filters/search update query | No matches with no message for user |
 
 ---
 

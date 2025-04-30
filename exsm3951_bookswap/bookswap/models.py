@@ -50,6 +50,12 @@ class Swap_Detail(models.Model):
    new_owner_id = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
    swap_id = models.ForeignKey(Swap, on_delete=models.CASCADE, null=False)
 
+class Shipment(models.Model):
+   id = models.AutoField(primary_key=True)
+   shipment_date = models.DateField(null=False)
+   address = models.CharField(max_length=255)
+   shipment_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
+
 class Sale(models.Model):
    id = models.AutoField(primary_key=True)
    seller_id = models.ForeignKey('Seller_Id',
@@ -68,9 +74,3 @@ class Swap(models.Model):
    id = models.AutoField(primary_key=True)
    swap_date = models.DateField(null=False)
 
-class Shipment(models.Model):
-   id = models.AutoField(primary_key=True)
-   shipment_date = models.DateField(null=False)
-   address = models.CharField(max_length=255)
-   shipment_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
-   

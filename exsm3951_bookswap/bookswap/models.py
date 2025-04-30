@@ -74,10 +74,3 @@ class Shipment(models.Model):
    address = models.CharField(max_length=255)
    shipment_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
    
-
-
-   
-
-
-    
-

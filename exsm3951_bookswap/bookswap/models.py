@@ -1,6 +1,7 @@
 from django.db import models
 from enum import Enum
 from django.db import models
+from authentication.models import Member
 
 class ConditionType(Enum):
     new = "New"
@@ -29,7 +30,7 @@ class Book(models.Model):
     
 class Review(models.Model):
     id = models.AutoField(primary_key=True)
-    book = models.ForeignKey(Member, to_field='member_id', on_delete=models.CASCADE, null=False)
+    book = models.ForeignKey(Book, to_field='member_id', on_delete=models.CASCADE, null=False)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
     rating = models.IntegerField(default=0)
     review = models.TextField()

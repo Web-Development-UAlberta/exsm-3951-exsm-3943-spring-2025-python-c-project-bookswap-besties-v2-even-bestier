@@ -58,7 +58,7 @@ TMS follows a three-tier architecture:
   "genre": ObjectId (ref: Genre),\
   "description": String,\
   "pub_date": DATE,\
-  "condition": String,\
+  "condition": ENUM(NEW, GOOD, FAIR, POOR)\
   "language": String,\
   "price": DECIMAL,\
   "weight": DECIMAL,\
@@ -68,28 +68,29 @@ TMS follows a three-tier architecture:
   "_id": ObjectId,\
   "member": ObjectId (ref: Member),\
   "book": ObjectId (ref: Book),\
+
 }
 
 **Transaction** {\
-  "_id": ObjectId,\
+  "_id": ObjectId",\
   "transaction_type": ENUM(Sale, Swap),\
   "transaction_date": DATE,\
   "shipment": ObjectId (ref: User),\
-  "book": ObjectId (ref: Books),\
+  "book": ObjectId (ref: Book),\
   "seller": ObjectId (ref: Member),\
   "buyer": ObjectId (ref: Member),\
   "sale_cost": DECIMAL,\
   "original_owner": ObjectId (ref: Member),\
   "new_owner": ObjectId (ref: Member),\
-  
 }
 
-**Shipments** {\
+**Shipment** {\
   "_id": ObjectId,\
   "shipper": ObjectId (ref: Member),\
+  "recipient": ObjectId (ref: Member),\
   "address": ObjectId (ref: Member),\
-  "shipment_date": DATE,\
-  "shipment_cost": Decimal,
+  "shipment_date": Date,\
+  "shipement_cost": DECIMAL,\
 }
 
 **Reviews** {\

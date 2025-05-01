@@ -23,18 +23,23 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 - **Reviews**:
   - Add, edit, and delete reviews for books.
 
+- **Swaps**
+  - Create and record swap transactions
+  - Link books, original and new owners
+  - Associate shipments and costs
+
 ### 2.2 Features Not to be Tested
-- **Swap Logic**: This will be tested in Phase 2.
-- **Shipping/Payment Integration**: These are mocked in Phase 1.
+- **Real Payment Processing**: Mocked in Phase 1
+- **Shipping Label Integration**: Phase 2
 
 ---
 
 ## 3. Test Strategy
 
 ### 3.1 Test Types
-- **Manual Tests**: For UI and UX verification.
-- **Unit Tests**: For backend validation and core functionality.
-- **Front-End Tests**: To ensure correct behavior of the front end.
+- **Manual Tests**: For UI/UX verification
+- **Unit Tests**: For backend logic and models
+- **Front-End Tests**: For client-side behaviors and validations
 
 ---
 
@@ -59,6 +64,9 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Wishlist Entry | Create wishlist entry | Wishlist record created | Book already in wishlist, book or member missing |
 | Reviews | Add review to book | Review saved with valid rating | Rating <1 or >5, empty review, book/member not found |
 | Sales Record | Link buyer, seller, and book | Sale saved | Book already sold, invalid user references |
+| Swap Record | Create swap transaction | Swap record saved with date | Missing swap date |
+| Swap Detail | Add book and members to swap | Entry saved | Book or member not found |
+| Shipment Record | Link shipment to swap | Shipment saved with cost/date | Negative shipment cost, invalid date |
 
 
 ### 5.2 Back End – Functions & Validations
@@ -74,6 +82,10 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Wishlist Entry | Add new wishlist item | Entry created | Book already in wishlist |
 | Search Books | Query title, author | Matched books shown | No results found |
 | Search (Edge) | Special chars, case-insensitive | Handled gracefully | No results or XSS prevented |
+| Initiate Swap | Create swap with valid date | Swap initiated | Missing swap date |
+| Add Swap Detail | Link books and members to swap | Entry created | Member/book not found |
+| Swap Edge | Book used in multiple swaps | Prevent duplicate use | Rejected if book already swapped |
+| Validate Shipment | Create shipment | Shipment saved | Invalid cost/date/empty address |
 
 
 ### 5.3 Front End – Forms & UI Validation
@@ -88,6 +100,10 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Wishlist | Add unique book | Added to wishlist | Already exists, show error |
 | Wishlist | Remove book | Wishlist updated | Gracefully handle invalid ID |
 | Search | Case-insensitive / partial query | Results returned | No matches handled without error |
+| Swap Form | Select books and users | Swap created | Missing participants, duplicate book |
+| Swap Review Page | View swaps linked to user | Show swap history | If no swap, show message |
+| Shipment Entry Form | Input cost and date | Shipment created | Negative cost, missing address |
+| Edge: Swap Attempt by Unauthorized User | Try swap while logged out | Redirect/login required | Unauthorized action blocked |
 
 
 ### 5.4 Edge Case & Boundary Matrix
@@ -105,6 +121,11 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Wishlist | Add duplicate book | Show "Already in wishlist" |
 | Search | Special characters | Does not crash, returns 0 or escape output |
 | Search | Case-insensitive input | Should match title/author |
+| Swap | Same book in two swaps | Prevented |
+| Swap | Missing book or member | Validation error |
+| Shipment | Negative cost or empty address | Rejected |
+| Swap History | No previous swaps | Show empty state message |
+| Unauthorized Access | Try swap/edit while logged out | Blocked or redirected |
 
 ---
 

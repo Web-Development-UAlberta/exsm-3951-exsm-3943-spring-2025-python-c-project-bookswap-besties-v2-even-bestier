@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Book, Review, WishList, Swap, Shipment, SwapDetail
+from .models import Book, Review, WishList, Swap, Shipment, Transaction
 
 
 class BookAdmin(admin.ModelAdmin):
-    list_display = ['id', 'isbn', 'title', 'author', 'member']
+    list_display = ['id', 'member','isbn', 'title', 'author', 'genre', 'description', 'pub_date', 'condition', 'language', 'price', 'weight']
     
     
 class ReviewAdmin(admin.ModelAdmin):
@@ -19,17 +19,18 @@ class SwapAdmin(admin.ModelAdmin):
     
        
 class ShipmentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'address', 'shipment_cost'] 
+    list_display = ['id', 'shipper', 'recipient', 'shipment_cost'] 
     
-       
-class SwapDetailAdmin(admin.ModelAdmin):
-    list_display = ['id', 'swap' ,'book', 'original_owner', 'new_owner', 'shipment'] 
     
-       
+class TransactionAdmin(admin.ModelAdmin):
+    swap = models.ForeignKey(Swap, on_delete=models.CASCADE, null=True)  # null when transaction_type is Sale
+    list_display = ['transaction_type', 'transaction_date', 'shipment', 'book', 'from_member', 'to_member', 'cost', 'swap']
+    
+         
 admin.site.register(Book, BookAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(WishList, WishListAdmin)
 admin.site.register(Swap, SwapAdmin)
 admin.site.register(Shipment, ShipmentAdmin)
-admin.site.register(SwapDetail, SwapDetailAdmin)
+admin.site.register(Transaction, TransactionAdmin)
     

@@ -6,9 +6,10 @@ from .models import Member
 class MemberAdmin(UserAdmin):
     model = Member
 
-    list_display = ('id', 'email', 'first_name', 'last_name', 'address', 'is_superuser')
+    list_display = ('id', 'email', 'first_name', 'last_name', 'address', 'genre_preference', 'wishlist_books','is_superuser')
 
     # fields = ['address']
 
 
 admin.site.register(Member, MemberAdmin)
+

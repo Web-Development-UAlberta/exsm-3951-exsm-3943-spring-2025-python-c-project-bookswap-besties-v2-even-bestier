@@ -37,24 +37,25 @@ TMS follows a three-tier architecture:
 ## 3. Detailed Design
 ### 3.1 ERD 
 
-<img src="../images/Book Swap ERD - revision.jpg" width="1000" height="648">
+<img src="../images/ERD Diagram - Book Swap-revision.jpg" width="1000" height="648">
 
 ### 3.2 Database Schema
 
-**Members** {\
+**Member** {\
   "_id": ObjectId,\
-  "member_name": String,\
+  "first_name": String,\
+  "last_name": String,\
   "email": String,\
   "password": String (hashed),\
   "address": String\
 }
 
-**Books** {\
+**Book** {\
   "_id": ObjectId,\
-  "member": ObjectId (ref: Members),\
+  "member": ObjectId (ref: Member),\
   "title": String,\
   "author": String,\
-  "genre": ObjectId (ref: Genres),\
+  "genre": ObjectId (ref: Genre),\
   "description": String,\
   "pub_date": DATE,\
   "condition": String,\
@@ -63,49 +64,38 @@ TMS follows a three-tier architecture:
   "weight": DECIMAL,\
 }
 
-**Wish_Lists** {\
+**WishList** {\
   "_id": ObjectId,\
-  "member": ObjectId (ref: Members),\
-  "book": ObjectId (ref: Books),\
+  "member": ObjectId (ref: Member),\
+  "book": ObjectId (ref: Book),\
 }
 
-**Genres** {\
-   "_id": ObjectId,\
-   "genre": String,\
-}
-
-**Sales** {\
+**Transaction** {\
   "_id": ObjectId,\
-  "seller": ObjectId (ref: Members),\
-  "buyer": ObjectId (ref: Members),\
+  "transaction_type": ENUM(Sale, Swap),\
+  "transaction_date": DATE,\
+  "shipment": ObjectId (ref: User),\
   "book": ObjectId (ref: Books),\
-  "shipment": ObjectId (ref: Users),\
+  "seller": ObjectId (ref: Member),\
+  "buyer": ObjectId (ref: Member),\
+  "sale_cost": DECIMAL,\
+  "original_owner": ObjectId (ref: Member),\
+  "new_owner": ObjectId (ref: Member),\
+  
 }
 
 **Shipments** {\
   "_id": ObjectId,\
-  "shipment_date": Date,\
-  "address": ObjectId (ref: Members),\
-  "cost": Decimal,
-}
-
-**Swaps** {\
-  "_id": ObjectId,\
-  "shipment": ObjectId (ref: Members),\
-}
-
-**Swap_Details** {\
-  "_id": ObjectId,\
-  "book": ObjectId (ref: Books),\
-  "original_owner": ObjectId (ref: Members),\
-  "new_owner": ObjectId (ref: Members),\
-  "swap": ObjectId (ref: Swaps),\
+  "shipper": ObjectId (ref: Member),\
+  "address": ObjectId (ref: Member),\
+  "shipment_date": DATE,\
+  "shipment_cost": Decimal,
 }
 
 **Reviews** {\
   "_id": ObjectId,\
-  "member": ObjectId (ref: Members),\
-  "book": ObjectId (ref: Books),\
+  "member": ObjectId (ref: Member),\
+  "book": ObjectId (ref: Book),\
   "rating": Integer,\
   "comment": String,\
 }

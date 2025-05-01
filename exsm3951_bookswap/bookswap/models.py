@@ -1,5 +1,4 @@
 from django.db import models
-from enum import Enum
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from authentication.models import Member
@@ -52,28 +51,39 @@ class WishList(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
 
 
-class Swap(models.Model):
-    swap_date = models.DateField(null=False)
-
-
 class Shipment(models.Model):
+    shipper = models.ForeignKey(Member, related_name="shipper_shipment", on_delete=models.CASCADE, null=False)
+    recipient = models.ForeignKey(Member, related_name="recipient_shipment", on_delete=models.CASCADE, null=False)
     shipment_date = models.DateField(null=False)
-    address = models.CharField(max_length=255)
     shipment_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
-
-
-class SwapDetail(models.Model):
-    swap = models.ForeignKey(Swap, on_delete=models.CASCADE, null=False)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
-    original_owner = models.ForeignKey(Member, related_name="original_owner_swap_details", on_delete=models.CASCADE, null=False)
-    new_owner = models.ForeignKey(Member, related_name="new_owner_swap_details", on_delete=models.CASCADE, null=False)
-    # many swap details can belong to a single shipment
+    
+    # derived properties
+    @property
+    def shipper_address(self):
+        return self.shipper.address
+    
+    @property
+    def recipient_address(self):
+        return self.recipient.address
+    
+    
+       
+class Swap(models.Model):
+    pass  # will still get the id field from django
+    
+    
+class Transaction(models.Model):
+    
+    class TransactionType(models.TextChoices):
+        sale = "Sale"
+        swap = "Swap"
+        
+        
+    transaction_type = models.CharField(max_length=4, choices=TransactionType.choices, null=False)
+    transaction_date = models.DateField(null=False)
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, null=False)
-   
-
-class Sale(models.Model):
-    seller = models.ForeignKey(Member, related_name="seller_sales", on_delete=models.CASCADE, null=False)
-    buyer = models.ForeignKey(Member, related_name="buys_sales", on_delete=models.CASCADE, null=False)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
-    shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, null=False)
-    sale_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
+    from_member = models.ForeignKey(Member, related_name="from_member", on_delete=models.CASCADE, null=False)
+    to_member = models.ForeignKey(Member, related_name="to_member", on_delete=models.CASCADE, null=False)
+    cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
+    swap = models.ForeignKey(Swap, on_delete=models.CASCADE, null=True)  # null when transaction_type is Sale

@@ -912,9 +912,5 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,visualstudio,visualstudiocode,react,reactnative,csharp,dotnetcore,web
 
-<<<<<<< HEAD
 **/db.sqlite3
-=======
-db.sqlite3
->>>>>>> 1fe5ac60df2bf174b5a3c454a7e8a06f9c2ac5af
 

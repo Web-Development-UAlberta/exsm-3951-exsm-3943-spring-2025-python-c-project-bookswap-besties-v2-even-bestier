@@ -47,14 +47,16 @@ TMS follows a three-tier architecture:
   "email": String,\
   "password": String (hashed),\
   "address": String\
+  "genre_preference": String,\
 }
 
 **Book** {\
   "_id": ObjectId,\
   "member": ObjectId (ref: Member),\
   "title": String,\
+  "isbn": String,\
   "author": String,\
-  "genre": ObjectId (ref: Genre),\
+  "genre": String,\
   "description": String,\
   "pub_date": DATE,\
   "condition": ENUM(NEW, GOOD, FAIR, POOR)\
@@ -69,9 +71,8 @@ TMS follows a three-tier architecture:
   "book": ObjectId (ref: Book),\
 }
 
-**Genre** {\
+**Swap** {\
    "_id": ObjectId,\
-   "genre": String,\
 }
 
 **Transaction** {\
@@ -80,19 +81,16 @@ TMS follows a three-tier architecture:
   "transaction_date": DATE,\
   "shipment": ObjectId (ref: User),\
   "book": ObjectId (ref: Book),\
-  "seller": ObjectId (ref: Member),\
-  "buyer": ObjectId (ref: Member),\
-  "sale_cost": DECIMAL,\
-  "original_owner": ObjectId (ref: Member),\
-  "new_owner": ObjectId (ref: Member),\ 
+  "from": ObjectId (ref: Member),\
+  "to": ObjectId (ref: Member),\
+  "cost": DECIMAL,\
+  "swap": ObjectId (ref: Member),\
 }
 
 **Shipment** {\
   "_id": ObjectId,\
-  "book": ObjectId (ref: Book),
   "shipper": ObjectId (ref: Member),\
   "recipient": ObjectId (ref: Member),\
-  "address": ObjectId (ref: Member),\
   "shipment_date": Date,\
   "shipement_cost": DECIMAL,\
 }

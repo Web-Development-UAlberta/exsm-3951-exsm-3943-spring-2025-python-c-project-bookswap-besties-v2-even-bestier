@@ -75,7 +75,7 @@ TMS follows a three-tier architecture:
   "_id": ObjectId,\
   "member": ObjectId (ref: Member),\
   "book": ObjectId (ref: Book),\
-
+}
 
 **Swap** {\
    "_id": ObjectId,\

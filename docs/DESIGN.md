@@ -37,7 +37,7 @@ TMS follows a three-tier architecture:
 ## 3. Detailed Design
 ### 3.1 ERD 
 
-<img src="../images/ERD Diagram - Book Swap-revision.1.jpg" width="1000" height="648">
+<img src="../images/ERD Diagram - Book Swap-revision.2.jpg" width="1000" height="648">
 
 ### 3.2 Database Schema
 

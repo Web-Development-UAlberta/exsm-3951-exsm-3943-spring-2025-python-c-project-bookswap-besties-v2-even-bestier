@@ -37,13 +37,15 @@ TMS follows a three-tier architecture:
 ## 3. Detailed Design
 ### 3.1 ERD 
 
+
 ![ERD diagram revision 3](../images/ERD%20-%20Book%20Swap-revision.3.drawio.svg)
 
 ### 3.2 Database Schema
 
 **Member** {\
   "_id": ObjectId,\
-  "member_name": String,\
+  "first_name": String,\
+  "last_name": String,\
   "email": String,\
   "password_hashed": String (hashed),\
   "address": String\
@@ -73,7 +75,7 @@ TMS follows a three-tier architecture:
   "_id": ObjectId,\
   "member": ObjectId (ref: Member),\
   "book": ObjectId (ref: Book),\
-}
+
 
 **Swap** {\
    "_id": ObjectId,\
@@ -100,8 +102,8 @@ TMS follows a three-tier architecture:
 
 **Reviews** {\
   "_id": ObjectId,\
-  "member": ObjectId (ref: Members),\
-  "book": ObjectId (ref: Books),\
+  "member": ObjectId (ref: Member),\
+  "book": ObjectId (ref: Book),\
   "rating": Integer,\
   "comment": String,\
 }

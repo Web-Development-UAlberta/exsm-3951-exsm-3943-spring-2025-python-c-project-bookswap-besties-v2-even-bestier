@@ -5,31 +5,35 @@ from authentication.models import Member
 
 
 class Book(models.Model):
-    
-    class BookCondition(models.TextChoices):
-        new = "New"
-        good = "Good"
-        fair = "Fair"
-        poor = "Poor"
-
-
-    member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
     isbn = models.CharField(max_length=100, null=False)
     title = models.CharField(max_length=100, null=False)
     author = models.CharField(max_length=100, null=False)
     genre = models.CharField(max_length=100, null=False)
     description = models.TextField()
     pub_date = models.DateField(null=False)
-    condition = models.CharField(
-    max_length=4,
-    choices=BookCondition.choices, default=BookCondition.new, null=False
-    )
     language = models.CharField(max_length=100)  
-    price =  models.DecimalField(max_digits=6, decimal_places=2, null=False)
-    weight = models.DecimalField(max_digits=7, decimal_places=3, null=False)
+    weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.0, null=False)
 
     def __str__(self):
         return self.title
+    
+
+class BookListing(models.Model):
+    
+    class BookCondition(models.TextChoices):
+        new = "New"
+        good = "Good"
+        fair = "Fair"
+        poor = "Poor"
+        
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
+    member_owner = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
+    condition = models.CharField(
+        max_length=4,
+        choices=BookCondition.choices, default=BookCondition.new, null=False
+    )
+    price =  models.DecimalField(max_digits=6, decimal_places=2, null=False)
+    
 
 
 class Review(models.Model):
@@ -52,20 +56,9 @@ class WishList(models.Model):
 
 
 class Shipment(models.Model):
-    shipper = models.ForeignKey(Member, related_name="shipper_shipment", on_delete=models.CASCADE, null=False)
-    recipient = models.ForeignKey(Member, related_name="recipient_shipment", on_delete=models.CASCADE, null=False)
     shipment_date = models.DateField(null=False)
     shipment_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
-    
-    # derived properties
-    @property
-    def shipper_address(self):
-        return self.shipper.address
-    
-    @property
-    def recipient_address(self):
-        return self.recipient.address
-    
+    weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.0, null=False)
     
        
 class Swap(models.Model):
@@ -82,7 +75,7 @@ class Transaction(models.Model):
     transaction_type = models.CharField(max_length=4, choices=TransactionType.choices, null=False)
     transaction_date = models.DateField(null=False)
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, null=False)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
+    book_listing = models.ForeignKey(BookListing, on_delete=models.CASCADE, null=False)
     from_member = models.ForeignKey(Member, related_name="from_member", on_delete=models.CASCADE, null=False)
     to_member = models.ForeignKey(Member, related_name="to_member", on_delete=models.CASCADE, null=False)
     cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)

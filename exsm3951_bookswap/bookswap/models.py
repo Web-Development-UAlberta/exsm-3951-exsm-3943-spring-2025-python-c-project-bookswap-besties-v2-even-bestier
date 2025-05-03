@@ -1,36 +1,39 @@
 from django.db import models
-from enum import Enum
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from authentication.models import Member
 
 
 class Book(models.Model):
-    
-    class BookCondition(models.TextChoices):
-        new = "New"
-        good = "Good"
-        fair = "Fair"
-        poor = "Poor"
-
-
-    member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
     isbn = models.CharField(max_length=100, null=False)
     title = models.CharField(max_length=100, null=False)
     author = models.CharField(max_length=100, null=False)
     genre = models.CharField(max_length=100, null=False)
     description = models.TextField()
     pub_date = models.DateField(null=False)
-    condition = models.CharField(
-    max_length=4,
-    choices=BookCondition.choices, default=BookCondition.new, null=False
-    )
     language = models.CharField(max_length=100)  
-    price =  models.DecimalField(max_digits=6, decimal_places=2, null=False)
-    weight = models.DecimalField(max_digits=7, decimal_places=3, null=False)
+    weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.0, null=False)
 
     def __str__(self):
         return self.title
+    
+
+class BookListing(models.Model):
+    
+    class BookCondition(models.TextChoices):
+        new = "New"
+        good = "Good"
+        fair = "Fair"
+        poor = "Poor"
+        
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
+    member_owner = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
+    condition = models.CharField(
+        max_length=4,
+        choices=BookCondition.choices, default=BookCondition.new, null=False
+    )
+    price =  models.DecimalField(max_digits=6, decimal_places=2, null=False)
+    
 
 
 class Review(models.Model):
@@ -52,28 +55,28 @@ class WishList(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
 
 
-class Swap(models.Model):
-    swap_date = models.DateField(null=False)
-
-
 class Shipment(models.Model):
     shipment_date = models.DateField(null=False)
-    address = models.CharField(max_length=255)
     shipment_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
-
-
-class SwapDetail(models.Model):
-    swap = models.ForeignKey(Swap, on_delete=models.CASCADE, null=False)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
-    original_owner = models.ForeignKey(Member, related_name="original_owner_swap_details", on_delete=models.CASCADE, null=False)
-    new_owner = models.ForeignKey(Member, related_name="new_owner_swap_details", on_delete=models.CASCADE, null=False)
-    # many swap details can belong to a single shipment
+    weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.0, null=False)
+    
+       
+class Swap(models.Model):
+    pass  # will still get the id field from django
+    
+    
+class Transaction(models.Model):
+    
+    class TransactionType(models.TextChoices):
+        sale = "Sale"
+        swap = "Swap"
+        
+        
+    transaction_type = models.CharField(max_length=4, choices=TransactionType.choices, null=False)
+    transaction_date = models.DateField(null=False)
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, null=False)
-   
-
-class Sale(models.Model):
-    seller = models.ForeignKey(Member, related_name="seller_sales", on_delete=models.CASCADE, null=False)
-    buyer = models.ForeignKey(Member, related_name="buys_sales", on_delete=models.CASCADE, null=False)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
-    shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, null=False)
-    sale_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
+    book_listing = models.ForeignKey(BookListing, on_delete=models.CASCADE, null=False)
+    from_member = models.ForeignKey(Member, related_name="from_member", on_delete=models.CASCADE, null=False)
+    to_member = models.ForeignKey(Member, related_name="to_member", on_delete=models.CASCADE, null=False)
+    cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
+    swap = models.ForeignKey(Swap, on_delete=models.CASCADE, null=True)  # null when transaction_type is Sale

@@ -1,0 +1,35 @@
+name: Django Tests
+
+
+# will run the workflow when main gets new commits
+# or when a PR to main receives new commits
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches:
+      - '**'  # Match Pull Requests targeting any branch
+
+
+# what will the workflow do?
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # checkout the code of the branch (either the PR branch or main)
+      - uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
+      - name: Install dependencies
+        run: |
+          pip install Django==5.2
+      - name: Run migrations
+        run: |
+          python src/exsm3951_bookswap/manage.py migrate
+      - name: Run tests
+        run: |
+          python src/exsm3951_bookswap/manage.py test bookswap

@@ -29,7 +29,7 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 - **Swaps**
   - Create swap transactions (single or multiple books)
   - Support swap negotiation (offer, counter-offer)
-  - Handle disputed swaps or cancellations
+  - Handle swaps cancellations
   - Record shipment details and handle damage claims
 
 - **Shipment**
@@ -79,7 +79,6 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Swap – Basic            | One-for-one swap                    | Swap saved                      | Missing refs or data                                |
 | Swap – Multi-Book       | Multiple-for-one swap               | All books linked correctly      | Book reused in other swap                           |
 | Swap – Negotiation      | Create and respond to offers        | Status updated                  | Invalid offer logic                                 |
-| Swap – Dispute          | Dispute after swap                  | Flag swap, log dispute          | No resolution handler                               |
 | Shipment                | Record shipment                     | Shipment saved                  | Negative cost, invalid date                         |
 | Damaged Book Claim      | Report damaged book                 | Damage record linked            | Missing description                                 |
 
@@ -96,7 +95,6 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Search Books            | Title, author, etc.          | Matches shown               | No results gracefully handled                    |
 | Swap Initiation         | Offer valid swap             | Swap saved                  | Missing book/member                              |
 | Swap Update             | Counter or cancel swap       | Status reflects change      | Invalid state transition                         |
-| Swap Dispute            | Initiate dispute             | Logged properly             | Already resolved                                 |
 | Damaged Shipment        | Report and attach book       | Status = damaged            | Missing damage info                              |
 | Shipment Entry          | Add shipment                 | Validated and saved         | Invalid cost/date                                |
 
@@ -135,7 +133,6 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Wishlist             | Add same book again                  | Show error                               |
 | Search               | Special chars                        | Escaped; no crash                        |
 | Swap                 | Same book in two swaps               | Block duplicate use                      |
-| Disputed Swap        | Swap flagged by user                 | Alert admin/moderator                    |
 | Shipment             | Cost = -1                            | Error message                            |
 | Swap History         | User has 0 swaps                     | Show “no history yet”                    |
 | Unauthorized Access  | Not logged in                        | Redirect to login                        |

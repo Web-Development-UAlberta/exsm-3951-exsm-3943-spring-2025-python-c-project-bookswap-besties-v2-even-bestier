@@ -1,6 +1,7 @@
 from django.test import TestCase
 from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transaction
 from authentication.models import Member
+from django.contrib.auth.tokens import default_token_generator
 
 #sources: https://docs.djangoproject.com/en/5.2/topics/testing/overview/
 
@@ -18,6 +19,34 @@ class MemberModelTests(TestCase):
         self.assertEqual(member.email, 'johndoe@example.com')
         self.assertEqual(member.first_name, 'John')
         self.assertEqual(member.last_name, 'Doe')
+
+    def test_update_member_profile(self):
+        #create member
+        member = Member.objects.create(
+            username='rsmith',
+            first_name='Robert',
+            last_name='Smith',
+            email='rsmith@example.com',
+            password='password123',
+            address='Old Address'
+        )
+        member.address = 'New Address'
+        member.save()
+        self.assertEqual(Member.objects.get(username='rsmith').address, 'New Address')
+        #member.objects.get with help from OpenAI ChatGPT 3.5, May 3/25
+
+    #reset password with help from OpenAI ChatGPT 3.5, May 3/25
+    def test_password_reset_token_generation(self):
+        member = Member.objects.create(
+            username='resetuser',
+            first_name='Robert',
+            last_name='Smith',
+            email='reset@example.com',
+            password='oldpass',
+            address='123 Main St'
+        )
+        token = default_token_generator.make_token(member)
+        self.assertTrue(default_token_generator.check_token(member, token))
 
 class BookModelTests(TestCase):
     def test_create_book(self):
@@ -225,6 +254,63 @@ class SwapModelTests(TestCase):
     def test_create_swap(self):
         swap = Swap.objects.create()
         self.assertIsNotNone(swap.id)
+
+    def test_member_with_no_swaps(self):
+        # Create a member
+        member = Member.objects.create(
+            username='noswapper',
+            first_name='No',
+            last_name='Swaps',
+            email='noswaps@example.com',
+            password='password123',
+            address='321 No St'
+        )
+
+        # Create a transaction of type Sale (not Swap)
+        book = Book.objects.create(
+            isbn='0000000000',
+            title='No Swap Book',
+            author='Author Zero',
+            genre='None',
+            description='This book was never swapped',
+            pub_date='2020-01-01',
+            language='English',
+            weight=1.0
+        )
+
+        listing = BookListing.objects.create(
+            book=book,
+            member_owner=member,
+            condition='Good',
+            price=10.00
+        )
+
+        shipment = Shipment.objects.create(
+            shipment_date='2025-05-03',
+            shipment_cost=5.00,
+            weight=1.0
+        )
+
+        # Create a sale transaction (not a swap)
+        Transaction.objects.create(
+            transaction_type='Sale',
+            transaction_date='2025-05-03',
+            shipment=shipment,
+            book_listing=listing,
+            from_member=member,
+            to_member=member,
+            cost=15.00,
+            swap=None
+        )
+
+        # Verify the member has no swap transactions
+        swap_transactions = Transaction.objects.filter(
+            swap__isnull=False,
+            from_member=member
+        )
+        self.assertEqual(swap_transactions.count(), 0)
+        #swap_transactions with help from OpenAI ChatGPT 3.5, May 3/25
+
 
 
 

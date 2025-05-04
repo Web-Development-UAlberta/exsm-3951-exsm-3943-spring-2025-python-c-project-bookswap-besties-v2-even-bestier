@@ -6,12 +6,14 @@ from authentication.models import Member
 
 class MemberModelTests(TestCase):
     def test_create_member(self):
+        #create member
         member = Member.objects.create(
             username='jdoe',
             first_name='John',
             last_name='Doe',
             email='johndoe@example.com',
-            password='password123'
+            password='password123',
+            address='123 Main St'
         )
         self.assertEqual(member.email, 'johndoe@example.com')
         self.assertEqual(member.first_name, 'John')
@@ -19,6 +21,7 @@ class MemberModelTests(TestCase):
 
 class BookModelTests(TestCase):
     def test_create_book(self):
+        #create book
         book = Book.objects.create(
             isbn='1234567890',
             title='The Great Gatsby',
@@ -36,14 +39,17 @@ class BookModelTests(TestCase):
 
 class BookListingModelTests(TestCase):
     def test_create_booklisting(self):
+        #create member
         member = Member.objects.create(
             username='asmith',
             first_name='Alice',
             last_name='Smith',
             email='alice@example.com',
-            password='password123'
+            password='password123',
+            address='123 Main St'
         )
 
+        #create book
         book = Book.objects.create(
             isbn='9876543210',
             title='1984',
@@ -55,6 +61,7 @@ class BookListingModelTests(TestCase):
             weight=4.0
         )
         
+        #create listing
         listing = BookListing.objects.create(
             book=book,
             member_owner=member,
@@ -68,14 +75,17 @@ class BookListingModelTests(TestCase):
 
 class ReviewModelTests(TestCase):
     def test_create_review(self):
+        #create member
         member = Member.objects.create(
             username='bmarley',
             first_name='Bob',
             last_name='Marley',
             email='bobm@example.com',
-            password='password123'
+            password='password123',
+            address='123 Main St'
         )
 
+        #create book
         book = Book.objects.create(
             isbn='1111111111',
             title='Brave New World',
@@ -87,6 +97,7 @@ class ReviewModelTests(TestCase):
             weight=3.0
         )
 
+        #create review
         review = Review.objects.create(
             book=book,
             member=member,
@@ -107,7 +118,8 @@ class TransactionModelTests(TestCase):
             first_name='Jane',
             last_name='Doe',
             email='jdoe@example.com',
-            password='password123'
+            password='password123',
+            address='123 Main St'
         )
 
         receiver = Member.objects.create(
@@ -163,7 +175,39 @@ class TransactionModelTests(TestCase):
         self.assertEqual(transaction.to_member.email, 'mtwain@example.com')
         self.assertEqual(transaction.shipment.shipment_cost, 25.00)
 
+class WishListModelTests(TestCase):
+    def test_create_wishlist(self):
+        #create members
+        member = Member.objects.create(
+            username='jjoplin',
+            first_name='Janice',
+            last_name='Joplin',
+            email='jjoplin@example.com',
+            password='password123',
+            address='123 Main St'
+        )
 
+        #create book
+        book = Book.objects.create(
+            isbn='3333333333',
+            title='Clean Sweep',
+            author='Ilona Andrews',
+            genre='Science Fiction',
+            description='Out of this world novel about an otherworldly inkeeper',
+            pub_date='2005-04-12',
+            language='English',
+            weight=3.5
+        )
+        
+        #create wishlist
+        wishlist = WishList.objects.create(
+            book=book,
+            member=member
+        )
+
+        self.assertEqual(wishlist.book.title, 'Clean Sweep')
+        self.assertEqual(wishlist.member.address, '123 Main St')
+        
 
 
 

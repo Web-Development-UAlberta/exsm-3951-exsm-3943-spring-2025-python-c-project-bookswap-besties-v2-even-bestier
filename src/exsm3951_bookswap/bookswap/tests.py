@@ -207,8 +207,19 @@ class WishListModelTests(TestCase):
 
         self.assertEqual(wishlist.book.title, 'Clean Sweep')
         self.assertEqual(wishlist.member.address, '123 Main St')
-        
 
+class ShipmentModelTests(TestCase):
+    def test_create_shipment(self):
+        #create shipment
+        shipment = Shipment.objects.create(
+            shipment_date='2025-05-02',
+            shipment_cost=7.99,
+            weight=6.0
+        )
+
+        self.assertEqual(str(shipment.shipment_date), '2025-05-02')
+        self.assertEqual(shipment.weight, 6.0)
+        self.assertEqual(shipment.shipment_cost, 7.99)
 
 
 

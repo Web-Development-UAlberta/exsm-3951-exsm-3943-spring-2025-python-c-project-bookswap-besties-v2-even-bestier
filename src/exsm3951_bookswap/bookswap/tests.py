@@ -64,6 +64,38 @@ class BookListingModelTests(TestCase):
         self.assertEqual(listing.book.title, '1984')
         self.assertEqual(listing.member_owner.email, 'alice@example.com')
 
+class ReviewModelTests(TestCase):
+    def test_create_review(self):
+        member = Member.objects.create(
+            first_name='Bob',
+            last_name='Marley',
+            email='bobm@example.com',
+            password='password123'
+        )
+
+        book = Book.objects.create(
+            isbn='1111111111',
+            title='Brave New World',
+            author='Aldous Huxley',
+            genre='Science Fiction',
+            description='A dystopian novel',
+            pub_date='1932-01-01',
+            language='English',
+            weight=3.0
+        )
+
+        review = Review.objects.create(
+            book=book,
+            member=member,
+            rating=5,
+            review='A fascinating and eerie read!'
+        )
+
+        self.assertEqual(review.rating, 5)
+        self.assertIn('fascinating', review.review)
+        self.assertEqual(review.book.title, 'Brave New World')
+        self.assertEqual(review.member.first_name, 'Bob')
+
 
 
 """ This won't run until we have views and templates

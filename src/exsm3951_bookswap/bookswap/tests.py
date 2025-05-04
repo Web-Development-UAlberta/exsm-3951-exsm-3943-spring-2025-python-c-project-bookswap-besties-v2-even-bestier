@@ -33,7 +33,36 @@ class BookModelTests(TestCase):
         self.assertEqual(book.author, 'F. Scott Fitzgerald')
         self.assertEqual(book.weight, 4.5)
 
+class BookListingModelTests(TestCase):
+    def test_create_booklisting(self):
+        member = Member.objects.create(
+            first_name='Alice',
+            last_name='Smith',
+            email='alice@example.com',
+            password='password123'
+        )
 
+        book = Book.objects.create(
+            isbn='9876543210',
+            title='1984',
+            author='George Orwell',
+            genre='Dystopian',
+            description='A novel about surveillance and control',
+            pub_date='1949-06-08',
+            language='English',
+            weight=4.0
+        )
+        
+        listing = BookListing.objects.create(
+            book=book,
+            member_owner=member,
+            condition='Good',
+            price=12.50
+        )
+        self.assertEqual(listing.condition, 'Good')
+        self.assertEqual(listing.price, 12.50)
+        self.assertEqual(listing.book.title, '1984')
+        self.assertEqual(listing.member_owner.email, 'alice@example.com')
 
 
 

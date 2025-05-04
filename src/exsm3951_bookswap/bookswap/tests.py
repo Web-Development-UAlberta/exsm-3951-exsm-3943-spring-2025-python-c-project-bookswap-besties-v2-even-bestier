@@ -221,7 +221,10 @@ class ShipmentModelTests(TestCase):
         self.assertEqual(shipment.weight, 6.0)
         self.assertEqual(shipment.shipment_cost, 7.99)
 
-
+class SwapModelTests(TestCase):
+    def test_create_swap(self):
+        swap = Swap.objects.create()
+        self.assertIsNotNone(swap.id)
 
 
 

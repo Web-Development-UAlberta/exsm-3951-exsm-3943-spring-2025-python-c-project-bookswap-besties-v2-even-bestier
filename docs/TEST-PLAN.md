@@ -9,6 +9,8 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 - **User Registration & Login**:
   - Register a new user.
   - Login with valid and invalid credentials.
+  - Password reset flow
+  - Update user profile (e.g., name, address, genre preference)
 
 - **Book Listing**:
   - Add a book to the library.
@@ -22,11 +24,16 @@ This test plan is designed to ensure that the core features of the **Book Exchan
   
 - **Reviews**:
   - Add, edit, and delete reviews for books.
+  - Rating validation
 
 - **Swaps**
-  - Create and record swap transactions
-  - Link books, original and new owners
-  - Associate shipments and costs
+  - Create swap transactions (single or multiple books)
+  - Support swap negotiation (offer, counter-offer)
+  - Handle disputed swaps or cancellations
+  - Record shipment details and handle damage claims
+
+- **Shipment**
+  - Record shipment info and validate cost, weight, and date
 
 ### 2.2 Features Not to be Tested
 - **Real Payment Processing**: Mocked in Phase 1
@@ -37,9 +44,11 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 ## 3. Test Strategy
 
 ### 3.1 Test Types
-- **Manual Tests**: For UI/UX verification
-- **Unit Tests**: For backend logic and models
-- **Front-End Tests**: For client-side behaviors and validations
+- **Manual Tests**: For UI/UX flows and messages
+- **Unit Tests**: For models, views, forms
+- **Front-End Tests**: Input validation and feedback
+- **Edge Case Tests**: Validate system resilience
+- **Integration Tests**: Complex workflows like swaps + shipment + transaction
 
 ---
 
@@ -57,95 +66,103 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 
 ### 5.1 Back End - Database
 
-| **Test Case** | **Description** | **Expected Result** | **Error Conditions** |
-|---------------|-----------------|---------------------|----------------------|
-| Add Book to Database | Add book with valid data | Book saved to DB | ISBN duplicate, missing data, invalid condition, negative price/weight |
-| Register New User | Register with valid inputs | User created with hashed password | Duplicate email, invalid email format, weak password |
-| Wishlist Entry | Create wishlist entry | Wishlist record created | Book already in wishlist, book or member missing |
-| Reviews | Add review to book | Review saved with valid rating | Rating <1 or >5, empty review, book/member not found |
-| Sales Record | Link buyer, seller, and book | Sale saved | Book already sold, invalid user references |
-| Swap Record | Create swap transaction | Swap record saved with date | Missing swap date |
-| Swap Detail | Add book and members to swap | Entry saved | Book or member not found |
-| Shipment Record | Link shipment to swap | Shipment saved with cost/date | Negative shipment cost, invalid date |
+| **Test Case**           | **Description**                     | **Expected Result**             | **Error Conditions**                                |
+|-------------------------|-------------------------------------|---------------------------------|-----------------------------------------------------|
+| Add Book                | Save valid book                     | Book saved to user's library    | Invalid/missing fields                              |
+| Add Book (Zero Price)   | Price = 0                           | Book accepted (e.g., donation)  | Negative price rejected                             |
+| Register User           | Save valid user                     | User created                    | Duplicate email/username                            |
+| Password Reset          | Trigger password reset              | Email sent                      | Invalid email shows error                           |
+| Update Profile          | Edit user details                   | Profile updated                 | Missing required fields                             |
+| Wishlist Entry          | Add book to wishlist                | Entry saved                     | Duplicate entry blocked                             |
+| Review                  | Add review with rating 1–5          | Review saved                    | Invalid rating                                      |
+| Sale Transaction        | Record buyer/seller/book            | Transaction saved               | Invalid refs or duplicate                           |
+| Swap – Basic            | One-for-one swap                    | Swap saved                      | Missing refs or data                                |
+| Swap – Multi-Book       | Multiple-for-one swap               | All books linked correctly      | Book reused in other swap                           |
+| Swap – Negotiation      | Create and respond to offers        | Status updated                  | Invalid offer logic                                 |
+| Swap – Dispute          | Dispute after swap                  | Flag swap, log dispute          | No resolution handler                               |
+| Shipment                | Record shipment                     | Shipment saved                  | Negative cost, invalid date                         |
+| Damaged Book Claim      | Report damaged book                 | Damage record linked            | Missing description                                 |
 
 
 ### 5.2 Back End – Functions & Validations
 
-| **Test Case** | **Description** | **Expected Result** | **Error Conditions** |
-|---------------|-----------------|---------------------|----------------------|
-| Register User | Valid registration data | Success | Email exists, weak password |
-| Login User | Valid login | Session created | Invalid credentials |
-| Add Book | Valid book info | Book saved | Missing fields, invalid condition, future pub_date |
-| Add Book (Edge) | Max-length title, zero price | Book accepted if valid | Title too long, price < 0 |
-| Submit Review | Valid rating and comment | Review saved | Rating out of bounds, missing fields |
-| Submit Review (Edge) | Empty review or long comment | Error shown or truncated | Validation error |
-| Wishlist Entry | Add new wishlist item | Entry created | Book already in wishlist |
-| Search Books | Query title, author | Matched books shown | No results found |
-| Search (Edge) | Special chars, case-insensitive | Handled gracefully | No results or XSS prevented |
-| Initiate Swap | Create swap with valid date | Swap initiated | Missing swap date |
-| Add Swap Detail | Link books and members to swap | Entry created | Member/book not found |
-| Swap Edge | Book used in multiple swaps | Prevent duplicate use | Rejected if book already swapped |
-| Validate Shipment | Create shipment | Shipment saved | Invalid cost/date/empty address |
+| **Test Case**           | **Description**              | **Expected Result**         | **Error Conditions**                            |
+|-------------------------|------------------------------|-----------------------------|--------------------------------------------------|
+| Register User           | Valid info                   | Success                     | Duplicate email                                  |
+| Login                   | Valid credentials            | Session starts              | Invalid creds show error                         |
+| Add Book                | Max-length title, 0 price    | Saved if valid              | Negative values rejected                         |
+| Submit Review           | Rating + text                | Review saved                | Rating outside 1–5                               |
+| Wishlist                | Add/remove                   | Entry created/removed       | Already exists                                   |
+| Search Books            | Title, author, etc.          | Matches shown               | No results gracefully handled                    |
+| Swap Initiation         | Offer valid swap             | Swap saved                  | Missing book/member                              |
+| Swap Update             | Counter or cancel swap       | Status reflects change      | Invalid state transition                         |
+| Swap Dispute            | Initiate dispute             | Logged properly             | Already resolved                                 |
+| Damaged Shipment        | Report and attach book       | Status = damaged            | Missing damage info                              |
+| Shipment Entry          | Add shipment                 | Validated and saved         | Invalid cost/date                                |
+
 
 
 ### 5.3 Front End – Forms & UI Validation
 
-| **Form** | **Test Case** | **Expected Result** | **Error Conditions** |
-|----------|---------------|---------------------|----------------------|
-| Registration | Valid email/password | User registered | Duplicate or invalid email, blank password |
-| Registration | Empty/invalid fields | Show field-level errors | All required fields marked |
-| Add Book | Submit full book info | Book appears in library | Negative price/weight, invalid date |
-| Add Book | Exceed max field lengths | Error or truncation | Title/author too long |
-| Review Form | Rating 1–5 with comment | Review posted | Rating out of bounds, empty text |
-| Wishlist | Add unique book | Added to wishlist | Already exists, show error |
-| Wishlist | Remove book | Wishlist updated | Gracefully handle invalid ID |
-| Search | Case-insensitive / partial query | Results returned | No matches handled without error |
-| Swap Form | Select books and users | Swap created | Missing participants, duplicate book |
-| Swap Review Page | View swaps linked to user | Show swap history | If no swap, show message |
-| Shipment Entry Form | Input cost and date | Shipment created | Negative cost, missing address |
-| Edge: Swap Attempt by Unauthorized User | Try swap while logged out | Redirect/login required | Unauthorized action blocked |
+| **Form**         | **Test Case**                     | **Expected Result**          | **Error Conditions**                            |
+|------------------|-----------------------------------|------------------------------|--------------------------------------------------|
+| Registration      | Valid input                      | Account created               | Invalid/duplicate email                          |
+| Password Reset    | Enter email                      | Email sent                    | No email: show message                           |
+| Profile Edit      | Update name/address              | Info updated                  | Blank required fields                            |
+| Add Book          | Fill all fields                  | Book appears in user library  | Validation on blanks/invalids                    |
+| Review            | Submit rating + comment          | Saved/reviewed                | Rating invalid                                   |
+| Wishlist          | Add/remove book                  | Updated live                  | Already in list                                  |
+| Search            | Case-insensitive queries         | Matched shown                 | Empty result = friendly message                  |
+| Swap Offer        | Choose book + user               | Offer created                 | Missing selection                                |
+| Swap History      | View completed swaps             | List shown or empty message   | No swaps = show empty state                      |
+| Shipment          | Add weight/cost/date             | Saved                         | Negative numbers = error                         |
+
 
 
 ### 5.4 Edge Case & Boundary Matrix
 
-| **Component** | **Edge Case** | **Expected Behavior** |
-|---------------|---------------|------------------------|
-| Registration | Duplicate or invalid email | "Email already in use" error |
-| Password | Too short or blank | Validation error |
-| Book Listing | Title = 100 chars | Saved successfully |
-| Book Listing | Price = 0 or negative | Rejected or flagged |
-| Book Listing | Future publication date | Rejected |
-| Book Listing | Invalid condition | Not allowed (use enum choices) |
-| Reviews | Rating = 0 or 6 | Validation error |
-| Reviews | Extremely long review | Truncated or limited |
-| Wishlist | Add duplicate book | Show "Already in wishlist" |
-| Search | Special characters | Does not crash, returns 0 or escape output |
-| Search | Case-insensitive input | Should match title/author |
-| Swap | Same book in two swaps | Prevented |
-| Swap | Missing book or member | Validation error |
-| Shipment | Negative cost or empty address | Rejected |
-| Swap History | No previous swaps | Show empty state message |
-| Unauthorized Access | Try swap/edit while logged out | Blocked or redirected |
+| **Component**        | **Edge Case**                        | **Expected Behavior**                   |
+|----------------------|--------------------------------------|------------------------------------------|
+| Registration         | Duplicate email                      | “Email in use” shown                     |
+| Password             | Too short                            | Error shown                              |
+| Book Title           | 100 characters                       | Saved                                    |
+| Price                | 0 (donation)                         | Allowed                                  |
+| Price                | Negative                             | Rejected                                 |
+| Pub Date             | Future date                          | Rejected unless marked “Pre-order”       |
+| Condition            | Invalid enum                         | Rejected                                 |
+| Review Rating        | 0 or 6                               | Validation error                         |
+| Long Review          | >10,000 chars                        | Truncate or block                        |
+| Wishlist             | Add same book again                  | Show error                               |
+| Search               | Special chars                        | Escaped; no crash                        |
+| Swap                 | Same book in two swaps               | Block duplicate use                      |
+| Disputed Swap        | Swap flagged by user                 | Alert admin/moderator                    |
+| Shipment             | Cost = -1                            | Error message                            |
+| Swap History         | User has 0 swaps                     | Show “no history yet”                    |
+| Unauthorized Access  | Not logged in                        | Redirect to login                        |
+
 
 ---
 
 ## 6. Test Execution
 
-- **Manual Testing**: UI flows and validation cases
-- **Unit Testing**: Automated tests on models and views
-- **Front-End Testing**: Form and input validation checks
-- **Edge Case Testing**: Verify uncommon and invalid user actions
+- **Manual Testing**: Run UI interactions across various devices and browsers.
+- **Automated Unit Tests**: Use Django TestCase for backend validations and model logic.
+- **Integration Tests**: Cover combined workflows such as "book listing → swap → shipment".
+- **Edge Case Testing**: Simulate unexpected user behavior, missing fields, invalid data.
+- **Continuous Testing**: Use GitHub Actions or other CI pipelines to run tests on push/merge.
 
 ---
 
 ## 7. Expected Outcomes
 
-- All functional tests pass with correct results
-- Forms enforce all constraints with useful feedback
-- Edge cases handled safely and gracefully
-- Clear user feedback on all invalid inputs
+- Functional workflows like registration, login, listing, and swaps work end-to-end.
+- Validation and error messaging are user-friendly and consistent.
+- Edge cases are handled gracefully (e.g., invalid inputs, duplicate entries).
+- Data consistency is preserved across books, swaps, and transactions.
+- Unauthorized access and invalid operations are blocked.
 
 ## 8. Test Reporting
 
 - **Pass**: Feature performs as expected
 - **Fail**: Unhandled error, broken logic, incorrect result
+- Use GitHub CI or a testing dashboard for automated logging and alerts.

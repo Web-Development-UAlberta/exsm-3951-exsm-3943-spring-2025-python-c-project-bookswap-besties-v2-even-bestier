@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Browse Books - BookSwap{% endblock %}
+{% block content %}
+<h2 class="text-xl font-bold mb-4">Browse Books</h2>
+
+{# Filters #} 
+<form method="get" class="mb-6 grid grid-cols-1 sm:grid-cols-4 gap-4">
+  <input type="text" name="title" placeholder="Search title..." class="border px-3 py-2 rounded">
+  <input type="text" name="author" placeholder="Author..." class="border px-3 py-2 rounded">
+  <select name="genre" class="border px-3 py-2 rounded">
+    <option value="">Genre</option>
+    <option value="fiction">Fiction</option>
+    <option value="nonfiction">Non-fiction</option>
+  </select>
+  <input type="number" name="max_price" placeholder="Max Price" class="border px-3 py-2 rounded">
+  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded sm:col-span-1">Filter</button>
+</form>
+
+{% endblock %}

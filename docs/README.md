@@ -1,4 +1,25 @@
-# University of Alberta Template Repository
-## Full Stack Web Application Development Program
+# University of Alberta - EXSM 3951 - Python Project 
+### Project Name: BookSwap Besties V2 Even Bestier
 
-Add your README content here.
+**Project Authors:** 
+ + Nancy Randell, 
+ + Justin Bertok, 
+ + Diana Cuccarolo
+<br>
+<br>
+# Django Setup/Startup
+
+1. Python `3.13` is the version used in this project
+2. Install project dependencies:
+    ```
+    pip install Django==5.2
+    ```
+3. For the first time, run all migrations
+    ```
+    python src/exsm3951_bookswap/manage.py migrate 
+    ```
+4. Now you are ready to run the server
+    ```
+    python src/exsm3951_bookswap/manage.py runserver 
+    ```
+5. Once the server is running you can visit the app at http://127.0.0.1:8000/

@@ -10,16 +10,32 @@
 # Django Setup/Startup
 
 1. Python `3.13` is the version used in this project
-2. Install project dependencies:
+2. Create a virtual environment for the python project
     ```
-    pip install Django==5.2
+    python -m venv venv
     ```
-3. For the first time, run all migrations
+3. Activate the virtual environment
+    
+    For mac/linux:
+    ```
+    source venv/bin/activate
+    ```
+    
+    For windows:
+    ```
+    venv/Scripts/activate
+    ```
+    After the venv is activated, you should see `(venv)` in the terminal prompt
+4. Install project dependencies:
+    ```
+    pip install -r requirements.txt
+    ```
+5. For the first time, run all migrations
     ```
     python src/exsm3951_bookswap/manage.py migrate 
     ```
-4. Now you are ready to run the server
+6. Now you are ready to run the server
     ```
     python src/exsm3951_bookswap/manage.py runserver 
     ```
-5. Once the server is running you can visit the app at http://127.0.0.1:8000/
+7. Once the server is running you can visit the app at http://127.0.0.1:8000/

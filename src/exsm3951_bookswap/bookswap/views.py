@@ -18,6 +18,6 @@ def browse_books_view(request):
    
     books = [] 
 
-    return render(request, "browse/browse_books.html", {
+    return render(request, "browse/browse.html", {
         "books": books
     })

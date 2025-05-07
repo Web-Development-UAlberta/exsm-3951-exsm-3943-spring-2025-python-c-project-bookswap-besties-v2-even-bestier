@@ -15,7 +15,7 @@ def signup(request):
             return redirect('/')  # redirect to login 
     else:
         form = UserCreationForm()
-    return render(request, 'authentication/signup.html', {'form': form})
+    return render(request, 'auth/signup.html', {'form': form})
 
 def user_login(request):
     if request.method == 'POST':
@@ -24,12 +24,12 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            return redirect('/recipes/')
+            return redirect('/library/')
         else: 
             messages.error(request, "username or password is not valid! Try again!")
             return redirect('/')
         
-    return render(request, 'authentication/login.html')
+    return render(request, 'auth/login.html')
 
 def user_logout(request):
 	logout(request)

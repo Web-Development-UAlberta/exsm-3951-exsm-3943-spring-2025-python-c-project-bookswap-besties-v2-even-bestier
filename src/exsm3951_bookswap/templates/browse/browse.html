@@ -16,4 +16,23 @@
   <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded sm:col-span-1">Filter</button>
 </form>
 
+{# Book Grid #}
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+  {% for book in books %}
+    <div class="bg-white shadow p-3 rounded flex flex-col justify-between">
+      <div>
+        <p class="font-bold">{{ book.title }}</p>
+        <p class="text-sm text-gray-600">{{ book.author }}</p>
+        <p class="text-xs text-gray-400 mb-2">Genre: {{ book.genre }} | ${{ book.price }}</p>
+      </div>
+      <form method="post" action="{% url 'add_to_wishlist' book.id %}">
+        {% csrf_token %}
+        <button class="mt-2 text-blue-600 hover:underline text-sm">Add to Wishlist</button>
+      </form>
+    </div>
+  {% empty %}
+    <p>No books found. Try adjusting your filters.</p>
+  {% endfor %}
+</div>
+
 {% endblock %}

@@ -5,13 +5,17 @@ from authentication.models import Member
 
 
 class Book(models.Model):
-    isbn = models.CharField(max_length=100, null=False)
+    class Language(models.TextChoices):
+        english = 'en', 'English'
+        french = 'fr', 'French'
+        
+    isbn = models.CharField(max_length=100, null=False, unique=True)
     title = models.CharField(max_length=100, null=False)
     author = models.CharField(max_length=100, null=False)
     genre = models.CharField(max_length=100, null=False)
     description = models.TextField()
     pub_date = models.DateField(null=False)
-    language = models.CharField(max_length=100)  
+    language = models.CharField(max_length=100, choices=Language.choices, default=Language.english, null=False)  
     weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.0, null=False)
 
     def __str__(self):
@@ -78,5 +82,5 @@ class Transaction(models.Model):
     book_listing = models.ForeignKey(BookListing, on_delete=models.CASCADE, null=False)
     from_member = models.ForeignKey(Member, related_name="from_member", on_delete=models.CASCADE, null=False)
     to_member = models.ForeignKey(Member, related_name="to_member", on_delete=models.CASCADE, null=False)
-    cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
+    cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=0)
     swap = models.ForeignKey(Swap, on_delete=models.CASCADE, null=True)  # null when transaction_type is Sale

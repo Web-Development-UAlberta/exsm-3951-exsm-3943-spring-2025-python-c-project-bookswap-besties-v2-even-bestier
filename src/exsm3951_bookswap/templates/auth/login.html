@@ -24,3 +24,18 @@
     <a href="{% url 'register' %}" class="text-blue-600 hover:underline">Register here</a>.
   </p>
 </div>
+
+<div class="mt-10">
+  <h3 class="text-lg font-semibold mb-2">Newest Books for Sale</h3>
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+    {% for book in newest_books %}
+      <div class="bg-white shadow rounded p-2 text-center">
+        <p class="font-medium">{{ book.title }}</p>
+        <p class="text-sm text-gray-600">{{ book.author }}</p>
+      </div>
+    {% empty %}
+      <p>No books available yet.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

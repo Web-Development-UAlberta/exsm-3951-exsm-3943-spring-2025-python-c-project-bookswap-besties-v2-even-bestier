@@ -2,13 +2,12 @@ from django.test import TestCase
 from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transaction
 from authentication.models import Member
 from django.contrib.auth.tokens import default_token_generator
+from django.db import IntegrityError
 
 #sources: https://docs.djangoproject.com/en/5.2/topics/testing/overview/
 
-class MemberModelTests(TestCase):
-    def test_create_member(self):
-        #create member
-        member = Member.objects.create(
+def CreateMember():
+    member = Member.objects.create(
             username='jdoe',
             first_name='John',
             last_name='Doe',
@@ -16,9 +15,37 @@ class MemberModelTests(TestCase):
             password='password123',
             address='123 Main St'
         )
+    return member
+
+
+class MemberModelTests(TestCase):
+    def test_create_member(self):
+        #create member
+        member = CreateMember()
         self.assertEqual(member.email, 'johndoe@example.com')
         self.assertEqual(member.first_name, 'John')
         self.assertEqual(member.last_name, 'Doe')
+
+    def test_create_member_with_duplicate_username(self):
+        Member.objects.create(
+            username='jdoe',
+            first_name='John',
+            last_name='Doe',
+            email='johndoe@example.com',
+            password='password123',
+            address='123 Main St'
+        )  
+        #username will trigger error
+        with self.assertRaises(IntegrityError):
+            Member.objects.create(
+                username='jdoe',
+                first_name='John',
+                last_name='Doe',
+                email='johndoe@example.com',
+                password='password123',
+                address='123 Main St'
+            )
+        #Integrity Error with help from OpenAI ChatGPT 3.5, May 7/25    
 
     def test_update_member_profile(self):
         #create member
@@ -48,6 +75,17 @@ class MemberModelTests(TestCase):
         token = default_token_generator.make_token(member)
         self.assertTrue(default_token_generator.check_token(member, token))
 
+    def test_create_member_no_first_name(self):
+        member = Member.objects.create(
+            username='rsmith',
+            first_name='Robert',
+            last_name='Smith',
+            email='rsmith@example.com',
+            password='password123',
+            address='Old Address'
+        )
+        self.assertRaises(IntegrityError)
+
 class BookModelTests(TestCase):
     def test_create_book(self):
         #create book
@@ -65,6 +103,59 @@ class BookModelTests(TestCase):
         self.assertEqual(book.isbn, '1234567890')
         self.assertEqual(book.author, 'F. Scott Fitzgerald')
         self.assertEqual(book.weight, 4.5)
+
+    def test_create_book_without_title(self):
+        #create book
+        book = Book.objects.create(
+            isbn='1234567890',
+            title='',
+            author='F. Scott Fitzgerald',
+            genre='Fiction',
+            description='A classic novel',
+            pub_date='1954-09-25',
+            language='English',
+            weight=4.5
+        )
+
+        self.assertRaises(IntegrityError)
+
+    def test_create_book_with_weight_length_too_long(self):
+        Book.objects.create(
+            isbn='1234567890',
+            title='',
+            author='F. Scott Fitzgerald',
+            genre='Fiction',
+            description='A classic novel',
+            pub_date='1954-09-25',
+            language='English',
+            weight=46541364.5
+        )  
+
+        self.assertRaises(IntegrityError)
+
+    def test_create_book_with_duplicate_isbn(self):
+        Book.objects.create(
+            isbn='1234567890',
+            title='',
+            author='F. Scott Fitzgerald',
+            genre='Fiction',
+            description='A classic novel',
+            pub_date='1954-09-25',
+            language='English',
+            weight=4.5
+        )  
+        #isbn will trigger error
+        with self.assertRaises(IntegrityError):
+            Book.objects.create(
+                isbn='1234567890',
+                title='',
+                author='F. Scott Fitzgerald',
+                genre='Fiction',
+                description='A classic novel',
+                pub_date='1954-09-25',
+                language='English',
+                weight=4.5
+            )
 
 class BookListingModelTests(TestCase):
     def test_create_booklisting(self):
@@ -102,6 +193,39 @@ class BookListingModelTests(TestCase):
         self.assertEqual(listing.book.title, '1984')
         self.assertEqual(listing.member_owner.email, 'alice@example.com')
 
+    def test_create_book_listing_condition_not_a_choice(self):
+        #create member
+        member = Member.objects.create(
+            username='asmith',
+            first_name='Alice',
+            last_name='Smith',
+            email='alice@example.com',
+            password='password123',
+            address='123 Main St'
+        )
+
+        #create book
+        book = Book.objects.create(
+            isbn='9876543210',
+            title='1984',
+            author='George Orwell',
+            genre='Dystopian',
+            description='A novel about surveillance and control',
+            pub_date='1949-06-08',
+            language='English',
+            weight=4.0
+        )
+        
+        #create listing
+        listing = BookListing.objects.create(
+            book=book,
+            member_owner=member,
+            condition='Extremely Perfect!',
+            price=12.50
+        )
+
+        self.assertRaises(IntegrityError)
+
 class ReviewModelTests(TestCase):
     def test_create_review(self):
         #create member
@@ -138,6 +262,39 @@ class ReviewModelTests(TestCase):
         self.assertIn('fascinating', review.review)
         self.assertEqual(review.book.title, 'Brave New World')
         self.assertEqual(review.member.first_name, 'Bob')
+
+    def test_review_rating_higher_than_5(self):
+        #create member
+        member = Member.objects.create(
+            username='bmarley',
+            first_name='Bob',
+            last_name='Marley',
+            email='bobm@example.com',
+            password='password123',
+            address='123 Main St'
+        )
+
+        #create book
+        book = Book.objects.create(
+            isbn='1111111111',
+            title='Brave New World',
+            author='Aldous Huxley',
+            genre='Science Fiction',
+            description='A dystopian novel',
+            pub_date='1932-01-01',
+            language='English',
+            weight=3.0
+        )
+
+        #create review
+        review = Review.objects.create(
+            book=book,
+            member=member,
+            rating=8,
+            review='A fascinating and eerie read!'
+        )
+
+        self.assertRaises(IntegrityError)
 
 class TransactionModelTests(TestCase):
     def test_create_transaction(self):
@@ -204,6 +361,66 @@ class TransactionModelTests(TestCase):
         self.assertEqual(transaction.to_member.email, 'mtwain@example.com')
         self.assertEqual(transaction.shipment.shipment_cost, 25.00)
 
+    def test_create_transaction_type_not_in_list(self):
+        #create members
+        sender = Member.objects.create(
+            username='jdoe',
+            first_name='Jane',
+            last_name='Doe',
+            email='jdoe@example.com',
+            password='password123',
+            address='123 Main St'
+        )
+
+        receiver = Member.objects.create(
+            username='mtwain',
+            first_name='Mark',
+            last_name='Twain',
+            email='mtwain@example.com',
+            password='password123'
+        )
+
+        #create book
+        book = Book.objects.create(
+            isbn='2222222222',
+            title='To Kill a Mockingbird',
+            author='Harper Lee',
+            genre='Fiction',
+            description='Classic novel on justice and race',
+            pub_date='1960-07-11',
+            language='English',
+            weight=5.0
+        )
+
+        #create listing
+        listing = BookListing.objects.create(
+            book=book,
+            member_owner=sender,
+            condition='Fair',
+            price=15.00
+        )
+
+        #create shipment
+        shipment = Shipment.objects.create(
+            shipment_date='2025-05-02',
+            shipment_cost=25.00,
+            weight=6.0
+        )
+
+        #create transaction
+        transaction = Transaction.objects.create(
+            transaction_type='Garage Sale',
+            transaction_date='2025-05-01',
+            shipment=shipment,
+            book_listing=listing,
+            from_member=sender,
+            to_member=receiver,
+            cost=38.00,
+            swap=None
+        )
+
+        self.assertRaises(IntegrityError)
+
 class WishListModelTests(TestCase):
     def test_create_wishlist(self):
         #create members
@@ -249,6 +466,16 @@ class ShipmentModelTests(TestCase):
         self.assertEqual(str(shipment.shipment_date), '2025-05-02')
         self.assertEqual(shipment.weight, 6.0)
         self.assertEqual(shipment.shipment_cost, 7.99)
+
+    def test_create_shipment_weight_too_long(self):
+        #create shipment
+        shipment = Shipment.objects.create(
+            shipment_date='2025-05-02',
+            shipment_cost=6.99,
+            weight=65633456.0
+        )
+
+        self.assertRaises(IntegrityError)
 
 class SwapModelTests(TestCase):
     def test_create_swap(self):

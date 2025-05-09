@@ -1,22 +1,38 @@
 from django.db import models
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from authentication.models import Member
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 
+
+def validate_not_future_date(value):
+    if value > timezone.now().date():
+        raise ValidationError("Publication Date cannot be in the future")
+
+def validate_shipment_date(value):
+    if value < timezone.now().date():
+        raise ValidationError("Shipment cannot be in the past")
+    
+    
+isbn_validator = RegexValidator(
+    regex=r'^(?:\d{9}[\dXx]|\d{13})$',
+    message="Enter a valid ISBN-10 or ISBN-13 number without dashes."
+)
 
 class Book(models.Model):
     class Language(models.TextChoices):
         english = 'en', 'English'
         french = 'fr', 'French'
         
-    isbn = models.CharField(max_length=100, null=False, unique=True)
-    title = models.CharField(max_length=100, null=False)
-    author = models.CharField(max_length=100, null=False)
+    isbn = models.CharField(max_length=100, null=False, unique=True, db_index=True, validators=[isbn_validator])
+    title = models.CharField(max_length=100, null=False, db_index=True)
+    author = models.CharField(max_length=100, null=False, db_index=True)
     genre = models.CharField(max_length=100, null=False)
     description = models.TextField()
-    pub_date = models.DateField(null=False)
+    pub_date = models.DateField(null=False, validators=[validate_not_future_date])
     language = models.CharField(max_length=100, choices=Language.choices, default=Language.english, null=False)  
-    weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.0, null=False)
+    weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.1, validators=[MinValueValidator(0.1)], null=False)
 
     def __str__(self):
         return self.title
@@ -36,7 +52,9 @@ class BookListing(models.Model):
         max_length=4,
         choices=BookCondition.choices, default=BookCondition.new, null=False
     )
-    price =  models.DecimalField(max_digits=6, decimal_places=2, null=False)
+    price =  models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0.01)], null=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
 
 
@@ -45,6 +63,8 @@ class Review(models.Model):
     member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
     rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=False)
     review = models.TextField()
+    
+    create_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.book.title}: {self.rating}"
@@ -60,13 +80,13 @@ class WishList(models.Model):
 
 
 class Shipment(models.Model):
-    shipment_date = models.DateField(null=False)
-    shipment_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False)
-    weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.0, null=False)
+    shipment_date = models.DateField(null=False, validators=[validate_shipment_date])
+    shipment_cost = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0.00)], null=False)
+    weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.01, validators=[MinValueValidator(0.01)], null=False)
     
        
 class Swap(models.Model):
-    pass  # will still get the id field from django
+    create_at = models.DateTimeField(auto_now_add=True)
     
     
 class Transaction(models.Model):
@@ -84,3 +104,13 @@ class Transaction(models.Model):
     to_member = models.ForeignKey(Member, related_name="to_member", on_delete=models.CASCADE, null=False)
     cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=0)
     swap = models.ForeignKey(Swap, on_delete=models.CASCADE, null=True)  # null when transaction_type is Sale
+
+
+    def clean(self):
+        super().clean()
+        if self.from_member == self.to_member:
+            raise ValidationError("A member cannot sell/swap with themselves")
+    
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)

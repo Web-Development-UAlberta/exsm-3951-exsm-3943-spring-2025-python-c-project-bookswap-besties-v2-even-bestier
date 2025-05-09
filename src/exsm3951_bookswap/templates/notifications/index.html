@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Notifications - BookSwap{% endblock %}
+{% block content %}
+<h2 class="text-xl font-bold mb-4">Notifications</h2>
+
+<ul class="space-y-4">
+  {% for note in notifications %}
+    <li class="bg-yellow-100 border-l-4 border-yellow-500 p-3 rounded">
+      <p>{{ note.message }}</p>
+      <p class="text-xs text-gray-500 mt-1">{{ note.timestamp }}</p>
+    </li>
+  {% empty %}
+    <li class="text-gray-600">No new notifications.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

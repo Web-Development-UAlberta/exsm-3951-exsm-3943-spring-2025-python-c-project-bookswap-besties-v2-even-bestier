@@ -78,6 +78,9 @@ class WishList(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
 
+    #make sure the combination of member and book is unique
+    class Meta:
+        unique_together = ('member', 'book')
 
 class Shipment(models.Model):
     shipment_date = models.DateField(null=False, validators=[validate_shipment_date])

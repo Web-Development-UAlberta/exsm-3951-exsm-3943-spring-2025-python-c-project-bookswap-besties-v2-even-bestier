@@ -288,6 +288,22 @@ class WishListModelTests(TestCase):
         self.assertEqual(wishlist.book.title, 'The Great Gatsby')
         self.assertEqual(wishlist.member.address, '123 Main St')
 
+    def test_add_duplicate_book_to_wishlist(self):
+        member=CreateMember()
+        book=CreateBook()
+
+        #create wishlist
+        WishList.objects.create(
+            book=book,
+            member=member
+        )
+
+        with self.assertRaises(IntegrityError):
+            WishList.objects.create(
+                book=book,
+                member=member
+            )
+
 class ShipmentModelTests(TestCase):
     def test_create_shipment(self):
         shipment = CreateShipment()
@@ -348,7 +364,7 @@ class SwapModelTests(TestCase):
 
 #FRONT END TESTS
 
-class BookViewTests(TestCase):
+class LibraryViewTests(TestCase):
     def test_book_listing_view(self):
         member=CreateMember()
         book=CreateBook()
@@ -370,3 +386,50 @@ class BookViewTests(TestCase):
         response = self.client.get('/library/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'The Great Gatsby')
+
+    def test_empty_state_library_view(self):
+        member=CreateMember()
+
+        self.client.force_login(member)
+
+        response=self.client.get('/library/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "You don't have any books yet.") 
+
+'''
+    def test_remove_book_from_wishlist(self):
+        member=CreateMember()
+        book = CreateBook()
+
+        #add book to wishlist
+        wishlist_item=WishList.objects.create(member=member, book=book)
+
+        #simulate removal from wishlist
+        self.client.force_login(member)
+        response=self.client.post(f'/library/remove_from_wishlist/{wishlist_item.id}/') #adjust this once page is made
+
+        self.assertEqual(response.status_code, 302)
+        self.assertNotContains(response, 'The Great Gatsby')
+
+class BrowseViewTests(TestCase):
+    def test_book_detail_page(self):
+        member=CreateMember()
+        book=CreateBook()
+        listing=CreateListing(book, member)
+
+        self.client.force_login(member)
+        response = self.client.get(f'/library/{listing.id}/') #adjust this when page is made
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'The Great Gatsby')
+
+'''
+
+class NavigationTests(TestCase):
+    def test_navigation_links(self):
+        member=CreateMember()
+        self.client.force_login(member)
+        response=self.client.get('/library/')
+
+        self.assertContains(response, 'My Library')
+        self.assertContains(response, 'Browse')        

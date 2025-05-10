@@ -103,7 +103,7 @@ class Transaction(models.Model):
     from_member = models.ForeignKey(Member, related_name="from_member", on_delete=models.CASCADE, null=False)
     to_member = models.ForeignKey(Member, related_name="to_member", on_delete=models.CASCADE, null=False)
     cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=0)
-    swap = models.ForeignKey(Swap, on_delete=models.CASCADE, null=True)  # null when transaction_type is Sale
+    swap = models.ForeignKey(Swap, on_delete=models.CASCADE, null=True, blank=True)  # null when transaction_type is Sale
 
 
     def clean(self):

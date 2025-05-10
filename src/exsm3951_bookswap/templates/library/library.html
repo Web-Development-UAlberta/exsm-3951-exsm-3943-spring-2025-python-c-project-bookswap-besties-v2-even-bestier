@@ -6,11 +6,11 @@
 <section class="mb-8">
   <h3 class="text-lg font-semibold mb-2">My Collection</h3>
   <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-    {% for book in my_books %}
+    {% for listing in my_books %}
       <div class="bg-white shadow p-3 rounded">
-        <p class="font-bold">{{ book.title }}</p>
-        <p class="text-sm text-gray-600">{{ book.author }}</p>
-        <p class="text-xs text-gray-400">Condition: {{ book.condition }}</p>
+        <p class="font-bold">{{ listing.book.title }}</p>
+        <p class="text-sm text-gray-600">{{ listing.book.author }}</p>
+        <p class="text-xs text-gray-400">Condition: {{ listing.condition }}</p>
       </div>
     {% empty %}
       <p>You don't have any books yet.</p>
@@ -21,11 +21,11 @@
 <section>
   <h3 class="text-lg font-semibold mb-2">My Wishlist</h3>
   <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-    {% for book in wishlist %}
+    {% for item in wishlist %}
       <div class="bg-blue-50 shadow p-3 rounded">
-        <p class="font-bold">{{ book.title }}</p>
-        <p class="text-sm text-gray-600">{{ book.author }}</p>
-        <p class="text-xs text-gray-400">Genre: {{ book.genre }}</p>
+        <p class="font-bold">{{ item.book.title }}</p>
+        <p class="text-sm text-gray-600">{{ item.book.author }}</p>
+        <p class="text-xs text-gray-400">Genre: {{ item.book.genre }}</p>
       </div>
     {% empty %}
       <p>Your wishlist is empty.</p>

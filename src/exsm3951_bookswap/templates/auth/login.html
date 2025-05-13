@@ -2,6 +2,19 @@
 {% block title %}Login - BookSwap{% endblock %}
 {% block content %}
 <div class="max-w-md mx-auto bg-white rounded-xl shadow-md p-6">
+  {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'success' %}
+            <div class="bg-green-200 text-green-800 p-4 rounded-lg mb-4 text-center">
+                {{ message }}
+            </div>
+        {% elif message.tags == 'error' %}
+            <div class="bg-red-200 text-red-800 p-4 rounded-lg mb-4 text-center">
+                {{ message }}
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% endif %}
   <h2 class="text-xl font-semibold mb-4">Login to BookSwap</h2>
 
   <form method="post">

@@ -14,10 +14,12 @@
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <a href="/" class="text-xl font-bold">BookSwap</a>
       <nav class="space-x-4 text-sm">
+        {% if user.is_authenticated %}
         <a href="{% url 'library' %}" class="hover:underline">My Library</a>
         <a href="{% url 'browse_books' %}" class="hover:underline">Browse</a>
         <a href="{% url 'notifications' %}" class="hover:underline">Notifications</a>
         <a href="{% url 'profile_settings' %}" class="hover:underline">Profile</a>
+        {% endif %}
         <a href="{% url 'help_faq' %}" class="hover:underline">Help</a>
       
         {% if user.is_authenticated %}

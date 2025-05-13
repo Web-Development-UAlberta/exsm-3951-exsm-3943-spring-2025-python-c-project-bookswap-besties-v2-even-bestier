@@ -2,6 +2,8 @@ from django.db import models
 from authentication.models import Member
  
 """
+Notification Creation triggers:
+
 Everytime a book is listed:
 1. Get all users who have the book in their wishlist
 2. Create a notification record for each user about that book listing

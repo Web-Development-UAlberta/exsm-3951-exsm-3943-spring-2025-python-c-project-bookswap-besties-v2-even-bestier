@@ -4,6 +4,7 @@ from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transac
 from .utils.google_books import get_cover_image, get_books_data
 from .forms import BookForm, CustomEditUserForm
 from authentication.models import Member
+from notifications.models import Notification
 from django.contrib import messages
 
 
@@ -35,8 +36,21 @@ def browse_books_view(request):
 def add_to_wishlist(request, book_id):
     book = get_object_or_404(Book, id=book_id)
 
-    # Replace with actual wishlist logic
-    print(f"Add {book.title} to wishlist for {request.user}")
+    # Add the book as a wishlist item for the user
+    wishlist_item = WishList(book=book, member=request.user)
+    wishlist_item.save()
+    
+    # Create notifications for all the listing(s) of the book
+    book_listings = BookListing.objects.filter(book=book)
+    for book_listing in book_listings:
+        notification = Notification(
+            title=f'{book_listing.member_owner.full_name} has a listing for the book "{book.title}"!',
+            message=f'Follow the link to the book listing <a style="color: blue;" href="/book-listings/{book_listing.id}">{book.title}</a>',
+            member=request.user,
+        )
+        notification.save()
+        
+
 
     # Redirect back to where they came from
     return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
@@ -81,3 +95,6 @@ def update_account(request, pk):
             'form': form,
         }
     return render(request, 'profile/settings.html', context)
+
+
+# TODO: Create Book listing view (which will trigger notifications creation)

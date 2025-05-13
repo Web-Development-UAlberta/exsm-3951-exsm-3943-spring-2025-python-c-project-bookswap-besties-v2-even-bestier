@@ -2,9 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transaction
 from .utils.google_books import get_cover_image, get_books_data
-from .forms import BookForm
+from .forms import BookForm, CustomEditUserForm
+from authentication.models import Member
+from django.contrib import messages
 
-# Placeholder code, feel free to replace all
+
 @login_required
 def library_view(request):
     my_books = BookListing.objects.filter(member_owner=request.user)
@@ -39,6 +41,7 @@ def add_to_wishlist(request, book_id):
     # Redirect back to where they came from
     return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
 
+
 def book_search_view(request):
     query = request.GET.get('q', '')
     results = get_books_data(query) if query else []
@@ -59,3 +62,22 @@ def book_create_from_search(request):
             return redirect('library')
 
     return render(request, 'partials/book_form.html', {'form': form})
+
+@login_required
+def update_account(request, pk):
+    user = get_object_or_404(Member, pk=pk)
+    if request.method == 'POST':
+        post_data = request.POST.copy()
+        form = CustomEditUserForm(post_data, isinstance=user)
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        #finish entering fields here
+
+        messages.success(request, "Profile updated successfully!")
+        return redirect('library') #where should we redirect to?
+    else:
+        form = CustomEditUserForm(isinstance=user)
+        context = {
+            'form': form,
+        }
+    return render(request, 'profile/settings.html', context)

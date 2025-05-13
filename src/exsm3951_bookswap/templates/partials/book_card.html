@@ -1,8 +1,15 @@
+{% load static %}
 <div class="bg-white rounded shadow p-4 flex flex-col hover:shadow-lg transition">
   <!-- Book Cover -->
-  <img src="{{ book.image_url|default:static('images/placeholder_cover.svg') }}" 
-       alt="{{ book.title }} cover"
-       class="mb-3 w-full h-40 object-cover rounded bg-gray-100">
+  {% if book.image_url %}
+    <img src="{{ book.image_url }}"
+         alt="{{ book.title }} cover"
+         class="mb-3 w-full h-40 object-cover rounded bg-gray-100">
+  {% else %}
+    <img src="{% static 'images/placeholder_cover.svg' %}"
+         alt="Placeholder cover"
+         class="mb-3 w-full h-40 object-cover rounded bg-gray-100">
+  {% endif %}
 
   <!-- Book Info -->
   <div class="flex-grow">

@@ -3,6 +3,14 @@
 {% block content %}
 <h2 class="text-xl font-bold mb-4">Browse Books</h2>
 
+<form method="get" action="{% url 'book_search' %}" class="mb-4 flex flex-col sm:flex-row gap-2">
+  <input type="text" name="q" placeholder="Search by title or ISBN..."
+         class="border rounded px-3 py-2 w-full sm:w-2/3" required>
+  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+    Search
+  </button>
+</form>
+
 {# Filters #} 
 <form method="get" class="mb-6 grid grid-cols-1 sm:grid-cols-4 gap-4">
   <input type="text" name="title" placeholder="Search title..." class="border px-3 py-2 rounded">

@@ -53,34 +53,43 @@
 
 ## Project Usage
 
+A walk through of the User Flow:
 
-Now that you have installed the software the next step is using it. Here are the next steps:
+### 1. Create an account / login
+- On the login page, click to register
+- Fill in your username and password
+- Then login into the app
 
-Once you have installed the project as per installation requirements you can start using the software by creating an admin username and password:
+### 2. Browse for books that I'm interested in
+- On the navbar, click on Browse
+- Then search for a book by their isbn / title / author / genre
+- A popup will display the result where you can click on edit/save to add the book to the library of the app (if it hasn't been added yet)
 
-### Access the Admin Panel
-- Visit: http://127.0.0.1:8000/admin/
-- Log in using your Django superuser credentials (create one if you haven’t):
-    ```
-    python src/exsm3951_bookswap/manage.py createsuperuser
-    ```
-- Once signed into the admin panel you can:
-   - Add/edit users
-   - Manage books, book library, sales and swap requests
-   - Review database entries and transactions
-- To create a new application to build upon and add new pages:
-   ```
-   python src/exsm3951_bookswap/manage.py startapp your_app_name
-   ```
-- Make migrations when models are created for your new app or if existing ones were changed:
-    ```
-    python src/exsm3951_bookswap/manage.py makemigrations
-    python src/exsm3951_bookswap/manage.py migrate
-    ```
-- Running Tests is an option and good to verify if there are any issues:
-    ```
-    python src/exsm3951_bookswap/manage.py test
-    ```
+### 3. Add a book to your wishlist
+- Any book present in the library can be added to your wishlist so that you could be notified when there are book listings of that book
+- Wishlisted books are listed on the home page under "My Wishlist"
+
+### 4. Make a listing for a book you own
+- Once a book is present in the library (after being added from a search on the browse page), you can create a book listing for a copy you own of that book
+- On the Books listings page, you can click to create a new book listing
+- When creating a book listing you can set the condition and price you want to sell the book for.
+
+### 5. Request book listing from seller to buy
+- On the Books Listings page,  you can search for a book to see if there is a listing(s)
+- If you find a listing you want to buy, you can click on the "Request Buy" button which will notify the seller to approve or reject the offer.
+- If approved, the seller will finalize the details of the sale transaction, and you will be notified that you bought the book with the shiping details
+- If the seller rejected, you will be notified of it
+
+### 6. Request book listing to swap
+- On the Books Listing page, you can search for a book to see if there is a listing(s)
+- If you find a listing you are interested in and you want to offer to swap your book listing(s) with theirs, then you can click the "Offer Swap" button
+- You will then be presented with a form to fill with the swap details (Which book listing you are offering)
+- Once you confirm your swap offer, the seller be notified of it
+- If approved, the seller will finalize the details of the swap transaction, and you will be notified that your swap has been accepted with the shiping details
+- If the seller rejected the swap, you will be notified of  it
+
+
+
 
 
  

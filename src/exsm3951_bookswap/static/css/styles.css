@@ -1,4 +1,16 @@
-body {
-  background-color: #f9f9f9;
-  font-family: system-ui, sans-serif;
+
+
+.notification-link {
+  position: relative;
+}
+
+.unread-notifications-badge {
+    position: absolute;
+    font-size: 10px;
+    top: -13px;
+    right: -7px;
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    padding: 1px 8px;
 }

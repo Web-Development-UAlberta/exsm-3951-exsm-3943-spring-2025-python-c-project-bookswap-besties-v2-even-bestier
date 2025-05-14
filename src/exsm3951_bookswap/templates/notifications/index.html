@@ -5,9 +5,20 @@
 
 <ul class="space-y-4">
   {% for note in notifications %}
-    <li class="bg-yellow-100 border-l-4 border-yellow-500 p-3 rounded">
-      <p>{{ note.message }}</p>
-      <p class="text-xs text-gray-500 mt-1">{{ note.timestamp }}</p>
+    <li class="{% if note.is_read %} bg-violet-100 border-violet-500 {% else %} bg-yellow-100 border-yellow-500 {% endif %} border-l-4 p-3 rounded flex justify-between">
+      <div>
+        <h3 class="font-bold">{{ note.title }}</h3>
+        <p>{{ note.message|safe }}</p>
+        <p class="text-xs text-gray-500 mt-1">{{ note.timestamp }}</p>
+      </div>
+      {% if not note.is_read %}
+      <form method="POST" action="{% url 'mark-notification-read' note.id %}">
+        {% csrf_token %}
+        <button type="submit" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+          Mark Read
+        </button>
+      </form>
+      {% endif %}
     </li>
   {% empty %}
     <li class="text-gray-600">No new notifications.</li>

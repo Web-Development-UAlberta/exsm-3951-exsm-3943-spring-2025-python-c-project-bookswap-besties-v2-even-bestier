@@ -10,3 +10,11 @@ class Member(AbstractUser):
     
     wishlist_books = models.ManyToManyField('bookswap.Book', through='bookswap.WishList', related_name='wishlist_books')
     
+    @property
+    def unread_notification_count(self):
+        from notifications.models import Notification
+        return Notification.objects.filter(member=self, is_read=False).count()
+    
+    @property 
+    def full_name(self):
+        return f"{self.first_name} {self.last_name}"

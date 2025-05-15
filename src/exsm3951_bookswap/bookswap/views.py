@@ -20,9 +20,6 @@ def library_view(request):
 @login_required
 def browse_books_view(request):
     books = Book.objects.all()
-    for book in books:
-        book.image_url = get_cover_image(book.title, book.author)
-
     # Optional inline search support
     query = request.GET.get('q')
     book_data = get_books_data(query) if query else None
@@ -42,10 +39,14 @@ def add_to_wishlist(request, book_id):
     
     # Create notifications for all the listing(s) of the book
     book_listings = BookListing.objects.filter(book=book)
+    my_book_listings = request.user.book_listings.all()
+
     for book_listing in book_listings:
+        if book_listing in my_book_listings:
+            continue
         notification = Notification(
             title=f'{book_listing.member_owner.full_name} has a listing for the book "{book.title}"!',
-            message=f'Follow the link to the book listing <a style="color: blue;" href="/book-listings/{book_listing.id}">{book.title}</a>',
+            message=f'Follow the link to the book listing <a style="color: blue;" href="/library/book-listings/{book_listing.id}">{book.title}</a>',
             member=request.user,
         )
         notification.save()
@@ -76,8 +77,3 @@ def book_create_from_search(request):
     initial_data = request.GET.dict()  # <- use prefilled query params
     form = BookForm(initial=initial_data)
     return render(request, 'partials/book_form.html', {'form': form})
-
-
-
-
-# TODO: Create Book listing view (which will trigger notifications creation)

@@ -13,4 +13,5 @@ class BookForm(forms.ModelForm):
             'pub_date',
             'language',
             'weight',
+            'image_url'
         ]

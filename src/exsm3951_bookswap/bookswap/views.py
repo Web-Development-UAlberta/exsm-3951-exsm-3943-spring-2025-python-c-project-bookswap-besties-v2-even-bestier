@@ -66,15 +66,15 @@ def book_search_view(request):
 
 @login_required
 def book_create_from_search(request):
-    initial_data = request.GET.dict()  # <- use prefilled query params
-    form = BookForm(initial=initial_data)
-
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('library')
 
+
+    initial_data = request.GET.dict()  # <- use prefilled query params
+    form = BookForm(initial=initial_data)
     return render(request, 'partials/book_form.html', {'form': form})
 
 

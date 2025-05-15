@@ -1,5 +1,6 @@
 import urllib.request
 import json
+import datetime
 from urllib.parse import quote_plus
 
 def get_cover_image(title, author=None):
@@ -28,13 +29,16 @@ def get_books_data(query, max_results=40):
             for item in data.get("items", []):
                 volume = item.get("volumeInfo", {})
 
+                pub_date = volume.get("publishedDate", "1900-01-01")
+                if len(pub_date) == 4:
+                    pub_date = datetime.date(int(pub_date), 1, 1)
                 books.append({
                     "isbn": extract_isbn(volume),
                     "title": volume.get("title", "Unknown Title"),
                     "author": ", ".join(volume.get("authors", ["Unknown Author"])),
                     "genre": volume.get("categories", ["General"])[0],
                     "description": volume.get("description", "No description available."),
-                    "pub_date": volume.get("publishedDate", "1900-01-01"),
+                    "pub_date": str(pub_date),
                     "language": volume.get("language", "en"),
                     "image_url": volume.get("imageLinks", {}).get("thumbnail"),
                 })

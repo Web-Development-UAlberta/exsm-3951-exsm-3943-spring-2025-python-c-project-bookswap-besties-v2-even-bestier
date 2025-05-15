@@ -25,11 +25,12 @@ def browse_books_view(request):
 
     # Optional inline search support
     query = request.GET.get('q')
-    book_data = get_books_data(query) if query else None
+    book_data = get_books_data(query) if query else None  
 
     return render(request, "browse/browse.html", {
         "books": books,
-        "book_data": book_data
+        "book_data": book_data,
+        "my_wishlisted_books": request.user.wishlist_books.all() 
     })
 
 @login_required
@@ -49,12 +50,18 @@ def add_to_wishlist(request, book_id):
             member=request.user,
         )
         notification.save()
-        
-
 
     # Redirect back to where they came from
     return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
 
+
+@login_required
+def remove_from_wishlist(request, wishlist_id):
+    wishlist_item = get_object_or_404(WishList, id=wishlist_id)
+    wishlist_item.delete()
+    
+    return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
+    
 
 def book_search_view(request):
     query = request.GET.get('q', '')

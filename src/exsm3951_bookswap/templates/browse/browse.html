@@ -34,10 +34,14 @@
         <p class="text-sm text-gray-600">{{ book.author }}</p>
         <p class="text-xs text-gray-400 mb-2">Genre: {{ book.genre }} | ${{ book.price }}</p>
       </div>
+      {% if book in my_wishlisted_books %}
+        In your wishlist
+      {% else %}
       <form method="post" action="{% url 'add_to_wishlist' book.id %}">
         {% csrf_token %}
         <button class="mt-2 text-blue-600 hover:underline text-sm">Add to Wishlist</button>
       </form>
+      {% endif %}
     </div>
   {% empty %}
     <p>No books found. Try adjusting your filters.</p>

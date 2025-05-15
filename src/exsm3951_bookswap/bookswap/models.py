@@ -33,6 +33,7 @@ class Book(models.Model):
     pub_date = models.DateField(null=False, validators=[validate_not_future_date])
     language = models.CharField(max_length=100, choices=Language.choices, default=Language.english, null=False)  
     weight = models.DecimalField(max_digits=7, decimal_places=2, default=0.1, null=False)
+    image_url = models.TextField(default="No image", null=False)
 
     def __str__(self):
         return self.title
@@ -47,7 +48,7 @@ class BookListing(models.Model):
         poor = "Poor"
         
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
-    member_owner = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
+    member_owner = models.ForeignKey(Member, on_delete=models.CASCADE, null=False, related_name='book_listings')
     condition = models.CharField(
         max_length=4,
         choices=BookCondition.choices, default=BookCondition.new, null=False

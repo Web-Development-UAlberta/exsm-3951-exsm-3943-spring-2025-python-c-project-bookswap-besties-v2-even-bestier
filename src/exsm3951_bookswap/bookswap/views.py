@@ -20,9 +20,6 @@ def library_view(request):
 @login_required
 def browse_books_view(request):
     books = Book.objects.all()
-    for book in books:
-        book.image_url = get_cover_image(book.title, book.author)
-
     # Optional inline search support
     query = request.GET.get('q')
     book_data = get_books_data(query) if query else None
@@ -42,10 +39,14 @@ def add_to_wishlist(request, book_id):
     
     # Create notifications for all the listing(s) of the book
     book_listings = BookListing.objects.filter(book=book)
+    my_book_listings = request.user.book_listings.all()
+
     for book_listing in book_listings:
+        if book_listing in my_book_listings:
+            continue
         notification = Notification(
             title=f'{book_listing.member_owner.full_name} has a listing for the book "{book.title}"!',
-            message=f'Follow the link to the book listing <a style="color: blue;" href="/book-listings/{book_listing.id}">{book.title}</a>',
+            message=f'Follow the link to the book listing <a style="color: blue;" href="/library/book-listings/{book_listing.id}">{book.title}</a>',
             member=request.user,
         )
         notification.save()
@@ -78,6 +79,22 @@ def book_create_from_search(request):
     return render(request, 'partials/book_form.html', {'form': form})
 
 
-
+@login_required
+def view_book_listing(request, book_listing_id):
+    book_listing = get_object_or_404(BookListing, pk=book_listing_id)
+    return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
 
 # TODO: Create Book listing view (which will trigger notifications creation)
+# Create
+
+# Update
+@login_required
+def edit_book_listing(request, book_listing_id):
+    book_listing = get_object_or_404(BookListing, pk=book_listing_id)
+    return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
+
+# Delete
+@login_required
+def delete_book_listing(request, book_listing_id):
+    book_listing = get_object_or_404(BookListing, pk=book_listing_id)
+    return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})

@@ -32,7 +32,8 @@
       <div>
         <p class="font-bold">{{ book.title }}</p>
         <p class="text-sm text-gray-600">{{ book.author }}</p>
-        <p class="text-xs text-gray-400 mb-2">Genre: {{ book.genre }} | ${{ book.price }}</p>
+        <p class="text-xs text-gray-400 mb-2">Genre: {{ book.genre }}</p>
+        <img src="{{ book.image_url }}" alt="No image" />
       </div>
       <form method="post" action="{% url 'add_to_wishlist' book.id %}">
         {% csrf_token %}

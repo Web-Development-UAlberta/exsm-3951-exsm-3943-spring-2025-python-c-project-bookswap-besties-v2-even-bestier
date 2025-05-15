@@ -394,7 +394,7 @@ class LibraryViewTests(TestCase):
 
         response=self.client.get('/library/')
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "You don't have any books yet.") 
+        self.assertContains(response, "You don't have any book listings yet.") 
 
 '''
     def test_remove_book_from_wishlist(self):

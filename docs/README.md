@@ -55,29 +55,35 @@
 
 A walk through of the User Flow:
 
-### 1. Create an account / login
+### 1. Register a new account
 - On the login page, click to register
-- Fill in your username and password
-- Then login into the app
+- Then fill in the information requireed to register a new account (username, passowrd, etc...)
 
-### 2. Browse for books that I'm interested in
+### 2. Login
+- Once you have signed up, on the login page enter your credentials (username, password) to log in
+
+### 3. Profile Page
+- To update your profile info, navigate to the Profile Page
+- There you need to update the full name, email, shipping address, and book genre preference
+
+### 4. Browse for books that I'm interested in
 - On the navbar, click on Browse
 - Then search for a book by their isbn / title / author / genre
 - A popup will display the result where you can click on edit/save to add the book to the library of the app (if it hasn't been added yet)
 
-### 3. Add a book to your wishlist
+### 5. Add a book to your wishlist
 - Any book present in the library can be added to your wishlist so that you could be notified when there are book listings of that book
 - Wishlisted books are listed on the home page under "My Wishlist"
 
-### 4. Make a listing for a book you own
+### 6. Make a listing for a book you own
 - Once a book is present in the library (after being added from a search on the browse page), you can create a book listing for a copy you own of that book
 - On the Books listings page, you can click to create a new book listing
 - When creating a book listing you can set the condition and price you want to sell the book for.
 
-### 5. Request book listing from seller to buy
+### 7. Request book listing from seller to buy
 - On the Books Listings page,  you can search for a book to see if there is a listing(s)
 - If you find a listing you want to buy, you can click on the "Request Buy" button which will notify the seller to approve or reject the offer.
-- If approved, the seller will finalize the details of the sale transaction, and you will be notified that you bought the book with the shiping details
+- If approved, the seller will finalize the details of the sale transaction, and you will be notified that you bought the book with the shipping details
 - If the seller rejected, you will be notified of it
 
 ### 6. Request book listing to swap
@@ -85,7 +91,7 @@ A walk through of the User Flow:
 - If you find a listing you are interested in and you want to offer to swap your book listing(s) with theirs, then you can click the "Offer Swap" button
 - You will then be presented with a form to fill with the swap details (Which book listing you are offering)
 - Once you confirm your swap offer, the seller be notified of it
-- If approved, the seller will finalize the details of the swap transaction, and you will be notified that your swap has been accepted with the shiping details
+- If approved, the seller will finalize the details of the swap transaction, and you will be notified that your swap has been accepted with the shipping details
 - If the seller rejected the swap, you will be notified of  it
 
 

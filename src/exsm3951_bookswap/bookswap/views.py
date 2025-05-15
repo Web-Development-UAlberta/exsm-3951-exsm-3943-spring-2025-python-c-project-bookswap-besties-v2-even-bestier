@@ -68,7 +68,6 @@ def book_search_view(request):
 def book_create_from_search(request):
     if request.method == 'POST':
         form = BookForm(request.POST)
-        import pdb; pdb.set_trace()
         if form.is_valid():
             form.save()
             return redirect('library')

@@ -19,6 +19,7 @@
         <p class="font-bold">{{ listing.book.title }}</p>
         <p class="text-sm text-gray-600">{{ listing.book.author }}</p>
         <p class="text-xs text-gray-400">Condition: {{ listing.condition }}</p>
+        <img src="{{ listing.book.image_url }}" alt="No image" />
       </div>
     {% empty %}
       <p>You don't have any book listings yet.</p>
@@ -35,6 +36,7 @@
           <p class="font-bold">{{ item.book.title }}</p>
           <p class="text-sm text-gray-600">{{ item.book.author }}</p>
           <p class="text-xs text-gray-400">Genre: {{ item.book.genre }}</p>
+          <img src="{{ item.book.image_url }}" alt="No image" />
         </div>
         <form method="POST" action="{% url 'remove_from_wishlist' item.id %}">
           {% csrf_token %}

@@ -77,3 +77,24 @@ def book_create_from_search(request):
     initial_data = request.GET.dict()  # <- use prefilled query params
     form = BookForm(initial=initial_data)
     return render(request, 'partials/book_form.html', {'form': form})
+
+
+@login_required
+def view_book_listing(request, book_listing_id):
+    book_listing = get_object_or_404(BookListing, pk=book_listing_id)
+    return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
+
+# TODO: Create Book listing view (which will trigger notifications creation)
+# Create
+
+# Update
+@login_required
+def edit_book_listing(request, book_listing_id):
+    book_listing = get_object_or_404(BookListing, pk=book_listing_id)
+    return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
+
+# Delete
+@login_required
+def delete_book_listing(request, book_listing_id):
+    book_listing = get_object_or_404(BookListing, pk=book_listing_id)
+    return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})

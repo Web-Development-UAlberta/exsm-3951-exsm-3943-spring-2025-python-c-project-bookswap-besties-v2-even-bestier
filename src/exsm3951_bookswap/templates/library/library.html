@@ -2,18 +2,17 @@
 {% load bookswap_tags %}
 {% block title %}My Library - BookSwap{% endblock %}
 {% block content %}
-<h2 class="text-xl font-bold mb-4">My Library</h2>
-
+<h2 class="text-xl font-bold mb-4">Listings</h2>
 <form method="get" action="{% url 'book_search' %}" class="mb-4 flex flex-col sm:flex-row gap-2">
   <input type="text" name="q" placeholder="Search by title or ISBN..."
          class="border rounded px-3 py-2 w-full sm:w-2/3" required>
   <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-    Search
+    Search For Listings
   </button>
 </form>
 
 <section class="mb-8">
-  <h3 class="text-lg font-semibold mb-2">My Collection</h3>
+  <h3 class="text-lg font-semibold mb-2">My Book Listings</h3>
   <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
     {% for listing in my_books %}
       <div class="bg-white shadow p-3 rounded">
@@ -22,7 +21,7 @@
         <p class="text-xs text-gray-400">Condition: {{ listing.condition }}</p>
       </div>
     {% empty %}
-      <p>You don't have any books yet.</p>
+      <p>You don't have any book listings yet.</p>
     {% endfor %}
   </div>
 </section>

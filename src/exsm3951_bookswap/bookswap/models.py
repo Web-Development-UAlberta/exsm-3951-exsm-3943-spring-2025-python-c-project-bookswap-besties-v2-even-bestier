@@ -32,7 +32,7 @@ class Book(models.Model):
     description = models.TextField()
     pub_date = models.DateField(null=False, validators=[validate_not_future_date])
     language = models.CharField(max_length=100, choices=Language.choices, default=Language.english, null=False)  
-    weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.1, validators=[MinValueValidator(0.1)], null=False)
+    weight = models.DecimalField(max_digits=7, decimal_places=2, default=0.1, null=False)
 
     def __str__(self):
         return self.title

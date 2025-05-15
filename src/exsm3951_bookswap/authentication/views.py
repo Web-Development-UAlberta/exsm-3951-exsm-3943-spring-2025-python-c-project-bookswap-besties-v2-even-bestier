@@ -18,6 +18,8 @@ def signup(request):
     return render(request, 'auth/signup.html', {'form': form})
 
 def user_login(request):
+    if request.user.is_authenticated:
+        return redirect('library')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']

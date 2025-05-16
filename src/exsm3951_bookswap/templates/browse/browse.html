@@ -2,27 +2,32 @@
 {% load bookswap_tags %}
 {% block title %}Browse Books - BookSwap{% endblock %}
 {% block content %}
-<h2 class="text-xl font-bold mb-4">Browse Books</h2>
+<div class="text-center">
+  <h2 class="text-6xl font-semibold inline-block mb-6 px-6 py-2 rounded-xl backdrop-blur-lg"
+      style="color: #825d3f; background-color: rgba(255, 255, 255, 0.4); text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+    Browse Books
+  </h2>
+</div>
 
 <form method="get" action="{% url 'book_search' %}" class="mb-4 flex flex-col sm:flex-row gap-2">
   <input type="text" name="q" placeholder="Search by title or ISBN..."
-         class="border rounded px-3 py-2 w-full sm:w-2/3" required>
-  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+         class="border rounded-xl px-2 py-1 w-full sm:w-2/3" required>
+  <button type="submit" class="bg-green-600 text-white px-4 py-1 rounded-xl hover:bg-green-700">
     Search
   </button>
 </form>
 
 {# Filters #} 
 <form method="get" class="mb-6 grid grid-cols-1 sm:grid-cols-4 gap-4">
-  <input type="text" name="title" placeholder="Search title..." class="border px-3 py-2 rounded">
-  <input type="text" name="author" placeholder="Author..." class="border px-3 py-2 rounded">
-  <select name="genre" class="border px-3 py-2 rounded">
+  <input type="text" name="title" placeholder="Search title..." class="border px-2 py-1 rounded-xl">
+  <input type="text" name="author" placeholder="Author..." class="border px-2 py-1 rounded-xl">
+  <select name="genre" class="border px-2 py-1 rounded-xl">
     <option value="">Genre</option>
     <option value="fiction">Fiction</option>
     <option value="nonfiction">Non-fiction</option>
   </select>
-  <input type="number" name="max_price" placeholder="Max Price" class="border px-3 py-2 rounded">
-  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded sm:col-span-1">Filter</button>
+  <input type="number" name="max_price" placeholder="Max Price" class="border px-2 py-1 rounded-xl">
+  <button type="submit" class="bg-green-600 text-white px-2 py-1 rounded-xl sm:col-span-1">Filter</button>
 </form>
 
 {# Book Grid #}
@@ -40,7 +45,7 @@
       {% else %}
       <form method="post" action="{% url 'add_to_wishlist' book.id %}">
         {% csrf_token %}
-        <button class="mt-2 text-blue-600 hover:underline text-sm">Add to Wishlist</button>
+        <button class="mt-2 text-blue-600 hover:underline text-md">Add to Wishlist</button>
       </form>
       {% endif %}
     </div>
@@ -70,7 +75,7 @@
         <div class="bg-gray-50 p-4 rounded shadow">
           {% include "partials/book_card.html" with book=book show_wishlist_button=False %}
           <a href="{% url 'book_create_from_search' %}?{{ book|as_querystring:'only=isbn,title,author,genre,description,pub_date,language,image_url' }}"
-            class="mt-2 block text-center bg-blue-600 text-white py-1 rounded hover:bg-blue-700">
+            class="mt-2 block text-center bg-green-600 text-white py-1 rounded hover:bg-blue-700">
             Review / Edit & Save
           </a>
         </div>

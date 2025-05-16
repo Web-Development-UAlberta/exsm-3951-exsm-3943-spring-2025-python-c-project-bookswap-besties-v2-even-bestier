@@ -11,4 +11,4 @@
 - Wednesday April 30 4:00pm - I dunno, about an hour.
 - Monday May 5, 2:30pm - 4:00pm, 9:00pm - 2:00am **6.5 hours** Frontend setup, base functionality.
 - Monday May 12, 4:00pm - 6:00pm, 11:00pm - 1:30am **4.5 hours** book tiles, search function.
-- Thursday May 15, 2:00pm - 
+- Thursday May 15, 2:00pm - 8:00pm, 9:00pm - 

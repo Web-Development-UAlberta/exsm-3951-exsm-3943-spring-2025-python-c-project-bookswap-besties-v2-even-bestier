@@ -2,36 +2,92 @@
 <html lang="en">
 
 <head>
+  {% load static %}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/static/css/styles.css" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-size: 1.125rem;       /* ~18px, Tailwind text-lg */
+      line-height: 1.75rem;
+    }
+  
+    h1 {
+      font-size: 2.25rem;        /* Tailwind text-4xl */
+      line-height: 2.5rem;
+      font-weight: 600;
+    }
+  
+    h2 {
+      font-size: 1.875rem;       /* Tailwind text-3xl */
+      line-height: 2.25rem;
+      font-weight: 600;
+    }
+  
+    h3 {
+      font-size: 1.5rem;         /* Tailwind text-2xl */
+      font-weight: 500;
+    }
+  
+    small, .text-sm {
+      font-size: 0.95rem;
+    }
+  </style>
   <title>{% block title %}BookSwap{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+<body class="bg-[url('/static/images/bookswapbackgroundsmall.webp')] 
+             bg-repeat bg-fixed text-gray-900 min-h-screen flex flex-col"
+      style="font-family: 'Lora', serif;">
 
-  <header class="bg-white shadow p-4 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <a href="/" class="text-xl font-bold">BookSwap</a>
-      <nav class="space-x-4 text-sm">
+  <header class="bg-white/20 backdrop-blur-lg shadow p-4 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <a href="{% url 'browse_books' %}" class="inline-block">
+      <img src="{% static 'images/bookswaplogo.png' %}" alt="BookSwap Logo"
+      class="h-24 -my-2 w-auto object-contain" />
+    </a>
+      <nav class="space-x-4 text-md text-neutral-800">
         {% if user.is_authenticated %}
-        <a href="{% url 'library' %}" class="hover:underline">Listings</a>
-        <a href="{% url 'browse_books' %}" class="hover:underline">Browse</a>
-        <a href="{% url 'notifications' %}" class="hover:underline notification-link">
-          Notifications
-          {% if user.unread_notification_count > 0 %}
-          <span class="unread-notifications-badge">{{ user.unread_notification_count }}</span>
-          {% endif %}
-        </a>
-        <a href="{% url 'profile_settings' %}" class="hover:underline">Profile</a>
+          <a href="{% url 'library' %}"
+              style="color: #825d3f;"
+              class="{% if request.path == '/listing/' %}underline{% else %}hover:underline{% endif %}">
+              My Library
+          </a>
+      
+          <a href="{% url 'browse_books' %}"
+              style="color: #825d3f;"
+              class="{% if request.path == '/browse/' %}underline{% else %}hover:underline{% endif %}">
+              Browse
+          </a>
+      
+          <a href="{% url 'notifications' %}"
+              style="color: #825d3f;"
+              class="{% if '/notifications/' in request.path %}underline{% else %}hover:underline{% endif %} notification-link">
+              Notifications
+              {% if user.unread_notification_count > 0 %}
+                <span class="unread-notifications-badge">{{ user.unread_notification_count }}</span>
+              {% endif %}
+          </a>
+      
+          <a href="{% url 'profile_settings' %}"
+              style="color: #825d3f;"
+              class="{% if request.path == '/profile/settings/' %}underline{% else %}hover:underline{% endif %}">
+              My Profile
+          </a>
         {% endif %}
-        <a href="{% url 'help_faq' %}" class="hover:underline">Help</a>
+      
+        <a href="{% url 'help_faq' %}"
+            style="color: #825d3f;"
+            class="{% if '/help/' in request.path %}underline{% else %}hover:underline{% endif %}">
+            Help
+        </a>
       
         {% if user.is_authenticated %}
-          <a href="{% url 'logout' %}" class="text-red-600 hover:underline">Logout</a>
+          <a href="{% url 'logout' %}" class="text-pink-500 hover:underline">Logout</a>
         {% else %}
-          <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Login</a>
+          <a href="{% url 'login' %}" class="text-green-600 hover:underline">Login</a>
         {% endif %}
       </nav>
     </div>
@@ -41,9 +97,15 @@
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="bg-white text-center text-sm p-4 border-t mt-4">
+  <footer class="bg-white/20 backdrop-blur-lg text-center text-sm p-4 border-t mt-4">
     &copy; 2025 BookSwap. All rights reserved.
   </footer>
+
+  <style>
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Cormorant Garamond', serif !important;
+    }
+  </style>
 
 </body>
 </html>

@@ -91,8 +91,12 @@ def view_book_listing(request, book_listing_id):
     book_listing = get_object_or_404(BookListing, pk=book_listing_id)
     return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
 
-# TODO: Create Book listing view (which will trigger notifications creation)
-# Create
+@login_required
+def book_listing_view(request):
+    my_books = BookListing.objects.filter(member_owner=request.user)
+    return render(request, "book-listings/book-listing.html", {
+        "my_books": my_books
+    })
 
 # Update
 @login_required
@@ -105,3 +109,11 @@ def edit_book_listing(request, book_listing_id):
 def delete_book_listing(request, book_listing_id):
     book_listing = get_object_or_404(BookListing, pk=book_listing_id)
     return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
+
+@login_required
+def wishlist_view(request):
+    wishlist_items = WishList.objects.filter(member=request.user)
+    context = {
+        "wishlist": wishlist_items
+    }
+    return render(request, "wishlist/wishlist.html", context)

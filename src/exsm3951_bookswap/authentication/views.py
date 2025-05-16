@@ -19,7 +19,7 @@ def signup(request):
 
 def user_login(request):
     if request.user.is_authenticated:
-        return redirect('library')
+        return redirect('browse_books')
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -29,7 +29,7 @@ def user_login(request):
             next_url = request.GET.get('next')
             if next_url:
                 return redirect(next_url)
-            return redirect('library')
+            return redirect('browse_books')
         else: 
             messages.error(request, "username or password is not valid! Try again!")
             return redirect('login')

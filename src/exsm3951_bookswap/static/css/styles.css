@@ -1,4 +1,9 @@
-
+body {
+  background-image: url("../images/bookswapbackgroundsmall.webp");
+  background-repeat: repeat;
+  background-attachment: fixed;
+  background-size: auto;
+}
 
 .notification-link {
   position: relative;

@@ -1,23 +1,24 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+  {% load static %}
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/static/css/styles.css" />
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <title>{% block title %}BookSwap{% endblock %}</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+<body class="bg-[url('/static/images/bookswapbackgroundsmall.webp')] 
+             bg-repeat bg-fixed text-gray-900 min-h-screen flex flex-col">
 
-  <header class="bg-white shadow p-4 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <a href="{% url 'browse_books' %}" class="inline-block">
-        <img src="{% static 'images/bookswaplogo.png' %}" alt="BookSwap Logo"
-             class="h-20 w-auto object-contain" />
-      </a>
+  <header class="bg-white/20 backdrop-blur-lg shadow p-4 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto flex justify-between items-center">
+    <a href="{% url 'browse_books' %}" class="inline-block">
+      <img src="{% static 'images/bookswaplogo.png' %}" alt="BookSwap Logo"
+            class="h-20 w-auto object-contain" />
+    </a>
       <nav class="space-x-4 text-sm">
         {% if user.is_authenticated %}
           <a href="{% url 'book_listing' %}"
@@ -67,7 +68,7 @@
     {% block content %}{% endblock %}
   </main>
 
-  <footer class="bg-white text-center text-sm p-4 border-t mt-4">
+  <footer class="bg-white/20 backdrop-blur-lg text-center text-sm p-4 border-t mt-4">
     &copy; 2025 BookSwap. All rights reserved.
   </footer>
 

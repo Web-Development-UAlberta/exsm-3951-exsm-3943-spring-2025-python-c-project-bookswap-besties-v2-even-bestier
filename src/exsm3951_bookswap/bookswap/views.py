@@ -10,7 +10,13 @@ from django.contrib import messages
 
 @login_required
 def library_view(request):    
-    return render(request, "library/library.html")
+    search_title = request.GET.get('search_title', '')
+    # filtering for book listings of books that contain the title that is being searched for
+    # exclude the book listings owned by logged in user
+    book_listings = []
+    if search_title != '':
+        book_listings = BookListing.objects.filter(book__title__icontains=search_title).exclude(member_owner=request.user)
+    return render(request, "library/library.html", {'book_listings': book_listings})
 
 @login_required
 def view_my_book_listings(request):

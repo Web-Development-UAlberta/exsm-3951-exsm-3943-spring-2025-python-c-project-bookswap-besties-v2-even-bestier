@@ -87,7 +87,7 @@ def book_create_from_search(request):
         form = BookForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('library')
+            return redirect('browse_books')
 
 
     initial_data = request.GET.dict()  # <- use prefilled query params

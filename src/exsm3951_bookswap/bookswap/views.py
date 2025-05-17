@@ -108,10 +108,10 @@ def create_book_listing(request):
         form = BookListingForm(request.POST)
         if form.is_valid():
             new_listing = form.save()
-            # send a notification to users who have this book on their wishlist
-            # 1. Get all users who have the book in their wishlist
+            # Send a notification to users who have this book on their wishlist
+            # Step 1: Get all users who have the book in their wishlist
             wishlist_items = WishList.objects.filter(book=new_listing.book).exclude(member=request.user)
-            # 2. Create a notification record to each user about that new book listing
+            # Step 2: Create a notification record to each user about that new book listing
             for item in wishlist_items:
                 notification = Notification(
                     title=f'{new_listing.member_owner.full_name} has a listing for the book "{new_listing.book.title}"!',

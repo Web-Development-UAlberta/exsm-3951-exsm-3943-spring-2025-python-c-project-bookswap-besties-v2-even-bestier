@@ -13,3 +13,4 @@
 - Monday May 12, 4:00pm - 6:00pm, 11:00pm - 1:30am **4.5 hours** book tiles, search function.
 - Thursday May 15, 2:00pm - 8:00pm, 9:00pm - 12:00am **8 hours** Split My Library into Listings & Wishlist, add headings,         backgrounds, style form fields, buttons, header, footer, and match form fields from register with settings, correct nav bar for new pages, style nav bar, add & style Logo.
 - Friday May 16, 12:30pm - 3:30pm **3 hours** Layout changes and CSS
+- Saturday May 17, 12:30 - 

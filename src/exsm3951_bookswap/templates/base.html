@@ -76,6 +76,12 @@
               class="{% if request.path == '/browse/' %}underline{% else %}hover:underline{% endif %}">
               Browse
           </a>
+
+          <a href="{% url 'transaction_list' %}"
+              style="color: #825d3f;"
+              class="{% if request.path == '/library/transactions/' %}underline{% else %}hover:underline{% endif %}">
+              Transactions
+          </a>
       
           <a href="{% url 'notifications' %}"
               style="color: #825d3f;"

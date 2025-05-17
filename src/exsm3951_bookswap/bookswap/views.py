@@ -164,3 +164,7 @@ def delete_book_listing(request, book_listing_id):
 def view_wishlist(request):
     wishlist_items = WishList.objects.filter(member=request.user)
     return render(request, 'wishlist/wishlist.html', {'wishlist': wishlist_items})
+
+@login_required
+def transactions_view(request):
+    return render(request, "transaction/transaction.html")

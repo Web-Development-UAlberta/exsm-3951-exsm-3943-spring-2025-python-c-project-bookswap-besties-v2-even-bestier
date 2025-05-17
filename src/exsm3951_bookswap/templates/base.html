@@ -53,7 +53,17 @@
           <a href="{% url 'library' %}"
               style="color: #825d3f;"
               class="{% if request.path == '/listing/' %}underline{% else %}hover:underline{% endif %}">
-              My Library
+              Library
+          </a>
+          <a href="{% url 'view_my_book_listings' %}"
+              style="color: #825d3f;"
+              class="{% if request.path == '/my-book-listings/' %}underline{% else %}hover:underline{% endif %}">
+              My Listings
+          </a>
+          <a href="{% url 'view_wishlist' %}"
+              style="color: #825d3f;"
+              class="{% if request.path == '/wishlist/' %}underline{% else %}hover:underline{% endif %}">
+              My Wishlist
           </a>
       
           <a href="{% url 'browse_books' %}"

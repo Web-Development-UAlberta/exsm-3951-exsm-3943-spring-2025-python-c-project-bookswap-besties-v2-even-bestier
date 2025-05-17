@@ -9,12 +9,14 @@ from django.contrib import messages
 
 
 @login_required
-def library_view(request):
-    my_books = BookListing.objects.filter(member_owner=request.user)
-    wishlist = WishList.objects.filter(member=request.user)      
-    return render(request, "library/library.html", {
-        "my_books": my_books,
-        "wishlist": wishlist
+def library_view(request):    
+    return render(request, "library/library.html")
+
+@login_required
+def view_my_book_listings(request):
+    my_book_listings = BookListing.objects.filter(member_owner=request.user)
+    return render(request, "book-listings/my-book-listings.html", {
+        "my_book_listings": my_book_listings,
     })
 
 @login_required
@@ -64,6 +66,7 @@ def remove_from_wishlist(request, wishlist_id):
     return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
     
 
+@login_required
 def book_search_view(request):
     query = request.GET.get('q', '')
     results = get_books_data(query) if query else []
@@ -105,3 +108,9 @@ def edit_book_listing(request, book_listing_id):
 def delete_book_listing(request, book_listing_id):
     book_listing = get_object_or_404(BookListing, pk=book_listing_id)
     return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
+
+
+@login_required
+def view_wishlist(request):
+    wishlist_items = WishList.objects.filter(member=request.user)
+    return render(request, 'wishlist/wishlist.html', {'wishlist': wishlist_items})

@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transaction
 from .utils.google_books import get_cover_image, get_books_data
-from .forms import BookForm
+from .forms import BookForm, BookListingForm
 from authentication.models import Member
 from notifications.models import Notification
 from django.contrib import messages
@@ -10,7 +10,13 @@ from django.contrib import messages
 
 @login_required
 def library_view(request):    
-    return render(request, "library/library.html")
+    search_title = request.GET.get('search_title', '')
+    # filtering for book listings of books that contain the title that is being searched for
+    # exclude the book listings owned by logged in user
+    book_listings = []
+    if search_title != '':
+        book_listings = BookListing.objects.filter(book__title__icontains=search_title).exclude(member_owner=request.user)
+    return render(request, "library/library.html", {'book_listings': book_listings})
 
 @login_required
 def view_my_book_listings(request):
@@ -96,17 +102,49 @@ def view_book_listing(request, book_listing_id):
 
 # TODO: Create Book listing view (which will trigger notifications creation)
 # Create
+@login_required
+def create_book_listing(request):
+    if request.method == 'POST':
+        form = BookListingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('view_my_book_listings')
+    else:
+        intial_data = {
+            'member_owner': request.user,
+            'price': 0.00,
+        }
+        form = BookListingForm(initial=intial_data)
+        return render(request, 'book-listings/book-listing-form.html', {'form': form, 'title': 'Create Book Listing', 'submit_button_text': 'Create'})
+
 
 # Update
 @login_required
 def edit_book_listing(request, book_listing_id):
     book_listing = get_object_or_404(BookListing, pk=book_listing_id)
-    return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
+    # make sure only the owner can edit their book listing
+    if book_listing.member_owner != request.user:
+        return redirect('view_my_book_listings')
+
+    if request.method == 'POST':
+        form = BookListingForm(request.POST, instance=book_listing)
+        if form.is_valid():
+            form.save()
+            return redirect('view_my_book_listings')
+    else:
+        form = BookListingForm(instance=book_listing)
+        # Make sure the user cannot update the book of an existing listing
+        # form.fields['book'].disabled = True
+        return render(request, 'book-listings/book-listing-form.html', {'form': form, 'title': 'Update Book Listing', 'submit_button_text': 'Save'})
+
 
 # Delete
 @login_required
 def delete_book_listing(request, book_listing_id):
     book_listing = get_object_or_404(BookListing, pk=book_listing_id)
+    if request.method == 'POST':
+        book_listing.delete()
+        return redirect('view_my_book_listings')
     return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
 
 

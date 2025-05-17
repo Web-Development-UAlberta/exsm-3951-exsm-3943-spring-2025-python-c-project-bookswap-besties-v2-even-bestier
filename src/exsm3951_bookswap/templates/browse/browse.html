@@ -38,7 +38,7 @@
         <p class="font-bold">{{ book.title }}</p>
         <p class="text-sm text-gray-600">{{ book.author }}</p>
         <p class="text-xs text-gray-400 mb-2">Genre: {{ book.genre }}</p>
-        <img src="{{ book.image_url }}" alt="No image" />
+        <img src="{{ book.image_url }}" class="mt-4 mx-auto book-img" alt="No image" />
       </div>
       {% if book in my_wishlisted_books %}
         In your wishlist

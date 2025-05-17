@@ -1,5 +1,5 @@
 from django import forms
-from .models import Book
+from .models import Book, BookListing
 
 class BookForm(forms.ModelForm):
     class Meta:
@@ -15,3 +15,17 @@ class BookForm(forms.ModelForm):
             'weight',
             'image_url'
         ]
+        
+class BookListingForm(forms.ModelForm):
+    class Meta:
+        model = BookListing
+        fields = ['book', 'condition', 'price', 'member_owner']
+        widgets = {
+            # 'book': '',
+            'condition': forms.Select(attrs={'class': ''}),
+            'price': forms.NumberInput(attrs={
+                'min': 0,
+                'step': '0.01'
+            }),
+            'member_owner': forms.HiddenInput(),
+        }

@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transaction
 from .utils.google_books import get_cover_image, get_books_data
-from .forms import BookForm
+from .forms import BookForm, BookListingForm
 from authentication.models import Member
 from notifications.models import Notification
 from django.contrib import messages
@@ -96,6 +96,21 @@ def view_book_listing(request, book_listing_id):
 
 # TODO: Create Book listing view (which will trigger notifications creation)
 # Create
+@login_required
+def create_book_listing(request):
+    if request.method == 'POST':
+        form = BookListingForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('view_my_book_listings')
+    else:
+        intial_data = {
+            'member_owner': request.user,
+            'price': 0.00,
+        }
+        form = BookListingForm(initial=intial_data)
+        return render(request, 'book-listings/book-listing-form.html', {'form': form, 'title': 'Create Book Listing', 'submit_button_text': 'Create'})
+
 
 # Update
 @login_required

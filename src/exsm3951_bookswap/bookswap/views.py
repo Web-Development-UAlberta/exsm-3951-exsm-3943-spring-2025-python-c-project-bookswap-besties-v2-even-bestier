@@ -116,7 +116,21 @@ def create_book_listing(request):
 @login_required
 def edit_book_listing(request, book_listing_id):
     book_listing = get_object_or_404(BookListing, pk=book_listing_id)
-    return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
+    # make sure only the owner can edit their book listing
+    if book_listing.member_owner != request.user:
+        return redirect('view_my_book_listings')
+
+    if request.method == 'POST':
+        form = BookListingForm(request.POST, instance=book_listing)
+        if form.is_valid():
+            form.save()
+            return redirect('view_my_book_listings')
+    else:
+        form = BookListingForm(instance=book_listing)
+        # Make sure the user cannot update the book of an existing listing
+        # form.fields['book'].disabled = True
+        return render(request, 'book-listings/book-listing-form.html', {'form': form, 'title': 'Update Book Listing', 'submit_button_text': 'Save'})
+
 
 # Delete
 @login_required

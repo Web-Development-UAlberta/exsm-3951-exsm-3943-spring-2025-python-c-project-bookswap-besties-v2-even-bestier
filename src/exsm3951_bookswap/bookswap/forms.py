@@ -21,11 +21,14 @@ class BookListingForm(forms.ModelForm):
         model = BookListing
         fields = ['book', 'condition', 'price', 'member_owner']
         widgets = {
-            # 'book': '',
-            'condition': forms.Select(attrs={'class': ''}),
+            'book': forms.Select(attrs={
+                'class': 'w-full border rounded-xl px-3 py-2'
+            }),
+            'condition': forms.Select(attrs={'class': 'w-full border rounded-xl px-3 py-2'}),
             'price': forms.NumberInput(attrs={
                 'min': 0,
-                'step': '0.01'
+                'step': '0.01',
+                'class': 'w-full border rounded-xl px-3 py-2'
             }),
             'member_owner': forms.HiddenInput(),
         }

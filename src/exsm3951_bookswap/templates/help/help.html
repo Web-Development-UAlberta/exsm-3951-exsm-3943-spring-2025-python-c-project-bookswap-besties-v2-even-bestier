@@ -5,46 +5,72 @@
 <div class="text-center">
   <h2 class="text-6xl font-semibold inline-block mb-6 px-6 py-2 rounded-xl backdrop-blur-lg"
       style="color: #825d3f; background-color: rgba(255, 255, 255, 0.4); text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
-    Help/FAQ
+    Help / FAQ
   </h2>
 </div>
 
-<div class="space-y-6">
-  <div>
-    <h3 class="font-semibold text-lg">Can I get notified when a book I want becomes available?</h3>
-    <p class="text-sm text-gray-700">Yes! Add the book to your Wishlist. 
-      You’ll receive a notification when it’s listed by another user.
-    </p>
+<div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-md space-y-4">
+
+  <!-- FAQ Item 1 -->
+  <div class="border border-gray-200 rounded-lg overflow-hidden">
+    <button type="button" class="w-full text-left px-4 py-3 font-semibold bg-gray-100 hover:bg-gray-200 focus:outline-none flex justify-between items-center" onclick="toggleAnswer(this)">
+      Can I get notified when a book I want becomes available?
+      <span class="ml-2 transition-transform duration-200">&#x25BC;</span>
+    </button>
+    <div class="hidden px-4 py-3 text-sm text-gray-700 bg-white">
+      Yes! Add the book to your Wishlist. You’ll receive a notification when it’s listed by another user.
+    </div>
   </div>
 
-  <div>
-    <h3 class="font-semibold text-lg">How do I list a book?</h3>
-    <p class="text-sm text-gray-700">Go to your Library and click “Add Book.” 
-      You can choose whether to sell, swap, or make the book available for offers. 
-      Set the condition and price if applicable.
-    </p>
+  <!-- FAQ Item 2 -->
+  <div class="border border-gray-200 rounded-lg overflow-hidden">
+    <button type="button" class="w-full text-left px-4 py-3 font-semibold bg-gray-100 hover:bg-gray-200 focus:outline-none flex justify-between items-center" onclick="toggleAnswer(this)">
+      How do I list a book?
+      <span class="ml-2 transition-transform duration-200">&#x25BC;</span>
+    </button>
+    <div class="hidden px-4 py-3 text-sm text-gray-700 bg-white">
+      Go to your Library and click “Add Book.” You can choose whether to sell, swap, or make the book available for offers. Set the condition and price if applicable.
+    </div>
   </div>
 
-  <div>
-    <h3 class="font-semibold text-lg">How does swapping work?</h3>
-    <p class="text-sm text-gray-700">When you find a book you want, you can offer one of your listed books in exchange. 
-      The owner can accept, decline, or counter-offer,
-       up to 3 back-and-forth rounds are allowed.
-    </p>
+  <!-- FAQ Item 3 -->
+  <div class="border border-gray-200 rounded-lg overflow-hidden">
+    <button type="button" class="w-full text-left px-4 py-3 font-semibold bg-gray-100 hover:bg-gray-200 focus:outline-none flex justify-between items-center" onclick="toggleAnswer(this)">
+      How does swapping work?
+      <span class="ml-2 transition-transform duration-200">&#x25BC;</span>
+    </button>
+    <div class="hidden px-4 py-3 text-sm text-gray-700 bg-white">
+      When you find a book you want, you can offer one of your listed books in exchange. The owner can accept, decline, or counter-offer, with up to 3 back-and-forth rounds.
+    </div>
   </div>
 
-  <div>
-    <h3 class="font-semibold text-lg">How is shipping handled?</h3>
-    <p class="text-sm text-gray-700">Shipping is flat-rate. 
-      Once an offer is accepted, you can generate a label from your Profile page.
-    </p>
-  </div>
+  <!-- FAQ Item 4 -->
+  <div class="border border-gray-200 rounded-lg overflow-hidden">
+    <button type="button" class="w-full text-left px-4 py-3 font-semibold bg-gray-100 hover:bg-gray-200 focus:outline-none flex justify-between items-center" onclick="toggleAnswer(this)">
+      How is shipping handled?
+      <span class="ml-2 transition-transform duration-200">&#x25BC;</span>
+    </button>
+    <div class="hidden px-4 py-3 text-sm text-gray-700 bg-white">
+      Shipping is flat-rate and simple! Once your swap or purchase is confirmed, you can generate a shipping label directly from your Profile & Settings page. Just enter the recipient’s address, package weight, and choose either Standard or Priority shipping. A printable label will be created for you, complete with tracking. You’ll also get a confirmation number to track your shipment.
+    </div>
 
-  <div>
-    <h3 class="font-semibold text-lg">What if a book is damaged or not as described?</h3>
-    <p class="text-sm text-gray-700">Users are required to specify the condition of books accurately. 
-      You can leave a rating and report any issues in the Profile or Notifications section.
-    </p>
-  </div>
-</div>
+    <script>
+      function toggleAnswer(button) {
+        const answer = button.nextElementSibling;
+        const icon = button.querySelector("span");
+        const isOpen = !answer.classList.contains("hidden");
+
+        // Close all open answers
+        document.querySelectorAll("button + div").forEach(div => div.classList.add("hidden"));
+        document.querySelectorAll("button span").forEach(span => span.style.transform = "rotate(0deg)");
+
+        // Toggle current one
+        if (!isOpen) {
+          answer.classList.remove("hidden");
+          icon.style.transform = "rotate(180deg)";
+        }
+      }
+    </script>
+  <!--ChatGPT. (2025). JavaScript code for toggle FAQ answers on click. OpenAI. Retrieved from https://chat.openai.com.-->
+
 {% endblock %}

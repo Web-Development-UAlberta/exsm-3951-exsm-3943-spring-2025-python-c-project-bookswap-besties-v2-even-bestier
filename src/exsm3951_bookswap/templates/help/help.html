@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Help / FAQ - BookSwap{% endblock %}
+{% block title %}Help / FAQ - About BookSwap{% endblock %}
 {% block content %}
 
 <div class="text-center">
   <h2 class="text-6xl font-semibold inline-block mb-6 px-6 py-2 rounded-xl backdrop-blur-lg"
       style="color: #825d3f; background-color: rgba(255, 255, 255, 0.4); text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
-    Help / FAQ
+    Help / FAQ / About
   </h2>
 </div>
 
@@ -53,24 +53,38 @@
     <div class="hidden px-4 py-3 text-sm text-gray-700 bg-white">
       Shipping is flat-rate and simple! Once your swap or purchase is confirmed, you can generate a shipping label directly from your Profile & Settings page. Just enter the recipient’s address, package weight, and choose either Standard or Priority shipping. A printable label will be created for you, complete with tracking. You’ll also get a confirmation number to track your shipment.
     </div>
+  </div>
 
-    <script>
-      function toggleAnswer(button) {
-        const answer = button.nextElementSibling;
-        const icon = button.querySelector("span");
-        const isOpen = !answer.classList.contains("hidden");
+  <!-- About Section -->
+  <div class="bg-white p-6 rounded-lg shadow-lg">
+    <h3 class="font-semibold text-2xl mb-4">📖 About BookSwap</h3>
+    <p class="text-sm text-gray-700">
+      BookSwap is a community-driven platform designed for book lovers to easily swap, sell, or buy books from one another. We believe in the power of sharing stories and knowledge through books. Our mission is to create a seamless, fair, and friendly environment where users can connect, exchange, and enjoy books—whether through trade, sale, or purchase.
+    </p>
+    <p class="text-sm text-gray-700 mt-4">
+      Our platform provides a robust set of features to help you manage your personal library, wishlist, and transaction history. Whether you're looking to find that rare book you've been searching for or offer your own collection, BookSwap is your go-to space for all things book exchange.
+    </p>
+  </div>
+</div>
 
-        // Close all open answers
-        document.querySelectorAll("button + div").forEach(div => div.classList.add("hidden"));
-        document.querySelectorAll("button span").forEach(span => span.style.transform = "rotate(0deg)");
 
-        // Toggle current one
-        if (!isOpen) {
-          answer.classList.remove("hidden");
-          icon.style.transform = "rotate(180deg)";
-        }
+  <script>
+    function toggleAnswer(button) {
+      const answer = button.nextElementSibling;
+      const icon = button.querySelector("span");
+      const isOpen = !answer.classList.contains("hidden");
+
+      // Close all open answers
+      document.querySelectorAll("button + div").forEach(div => div.classList.add("hidden"));
+      document.querySelectorAll("button span").forEach(span => span.style.transform = "rotate(0deg)");
+
+      // Toggle current one
+      if (!isOpen) {
+        answer.classList.remove("hidden");
+        icon.style.transform = "rotate(180deg)";
       }
-    </script>
+    }
+  </script>
   <!--ChatGPT. (2025). JavaScript code for toggle FAQ answers on click. OpenAI. Retrieved from https://chat.openai.com.-->
 
 {% endblock %}

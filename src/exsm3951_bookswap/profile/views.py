@@ -4,25 +4,20 @@ from .forms import CustomEditUserForm
 from authentication.models import Member
 from django.contrib import messages
 
+
 @login_required
 def profile_settings_view(request):
-    return render(request, "profile/settings.html")
-
-@login_required
-def update_account(request, pk):
-    user = get_object_or_404(Member, pk=pk)
+    user = request.user
     if request.method == 'POST':
-        post_data = request.POST.copy()
-        form = CustomEditUserForm(post_data, isinstance=user)
-        user.first_name = request.POST.get('first_name')
-        user.last_name = request.POST.get('last_name')
-        #finish entering fields here
-
-        messages.success(request, "Profile updated successfully!")
-        return redirect('library') #where should we redirect to?
+        form = CustomEditUserForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('profile_settings')
+        else:
+            messages.error(request, "Please correct the errors below.")
     else:
-        form = CustomEditUserForm(isinstance=user)
-        context = {
-            'form': form,
-        }
-    return render(request, 'profile/settings.html', context)
+        form = CustomEditUserForm(instance=user)
+    
+    context = {'form': form}
+    return render(request, "profile/settings.html", context)

@@ -136,6 +136,9 @@ def edit_book_listing(request, book_listing_id):
 @login_required
 def delete_book_listing(request, book_listing_id):
     book_listing = get_object_or_404(BookListing, pk=book_listing_id)
+    if request.method == 'POST':
+        book_listing.delete()
+        return redirect('view_my_book_listings')
     return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
 
 

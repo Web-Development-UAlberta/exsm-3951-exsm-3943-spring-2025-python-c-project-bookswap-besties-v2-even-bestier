@@ -365,34 +365,32 @@ class SwapModelTests(TestCase):
 #FRONT END TESTS
 
 class LibraryViewTests(TestCase):
-    def test_book_listing_view(self):
+    def test_book_listing_appears_in_my_book_listings_page(self):
         member=CreateMember()
         book=CreateBook()
         CreateListing(book, member)
 
         self.client.force_login(member)
         
-        response = self.client.get('/library/')
+        response = self.client.get('/library/my-book-listings/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'The Great Gatsby')
 
-    def test_wishlist_appears_in_library(self):
+    def test_wishlist_item_appears_in_wishlist_page(self):
         member=CreateMember()
         book=CreateBook()
         WishList.objects.create(member=member, book=book)
-
         self.client.force_login(member)
 
-        response = self.client.get('/library/')
+        response = self.client.get('/library/wishlist/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'The Great Gatsby')
 
     def test_empty_state_library_view(self):
         member=CreateMember()
-
         self.client.force_login(member)
 
-        response=self.client.get('/library/')
+        response=self.client.get('/library/my-book-listings/')
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "You don't have any book listings yet.") 
 
@@ -431,5 +429,11 @@ class NavigationTests(TestCase):
         self.client.force_login(member)
         response=self.client.get('/library/')
 
-        self.assertContains(response, 'My Library')
+        self.assertContains(response, 'Library')
+        self.assertContains(response, 'My Listings')
+        self.assertContains(response, 'My Wishlist')
         self.assertContains(response, 'Browse')        
+        self.assertContains(response, 'Notifications')
+        self.assertContains(response, 'My Profile')
+        self.assertContains(response, 'Help')
+        self.assertContains(response, 'Logout')

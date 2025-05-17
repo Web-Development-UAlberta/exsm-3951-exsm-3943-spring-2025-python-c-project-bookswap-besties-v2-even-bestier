@@ -107,7 +107,19 @@ def create_book_listing(request):
     if request.method == 'POST':
         form = BookListingForm(request.POST)
         if form.is_valid():
-            form.save()
+            new_listing = form.save()
+            # send a notification to users who have this book on their wishlist
+            # 1. Get all users who have the book in their wishlist
+            wishlist_items = WishList.objects.filter(book=new_listing.book).exclude(member=request.user)
+            # 2. Create a notification record to each user about that new book listing
+            for item in wishlist_items:
+                notification = Notification(
+                    title=f'{new_listing.member_owner.full_name} has a listing for the book "{new_listing.book.title}"!',
+                    message=f'Follow the link to the book listing <a style="color: blue;" href="/library/book-listings/{new_listing.id}">{new_listing.book.title}</a>',
+                    member=item.member,
+                )
+                notification.save()
+                
             return redirect('view_my_book_listings')
     else:
         intial_data = {

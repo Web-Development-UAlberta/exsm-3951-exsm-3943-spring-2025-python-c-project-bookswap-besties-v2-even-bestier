@@ -1,103 +1,142 @@
-# University of Alberta - EXSM 3951 - Python Project 
-### Project Name: BookSwap Besties V2 Even Bestier
+# 📚 University of Alberta - EXSM 3951
+## **Project Name: BookSwap Besties V2 Even Bestier**
 
 **Project Authors:** 
  + Nancy Randell, 
  + Justin Bertok, 
  + Diana Cuccarolo
-<br>
-<br>
 
-## Django Setup/Startup when joining the group as a developer:
+---
 
-1. Clone the repo into your github Repo
+## 📝 Description
+
+**BookSwap** is a community-driven platform built for book lovers to easily swap, sell, or buy books from one another. We believe in the power of sharing stories and knowledge through books.  
+
+Our mission is to create a seamless, fair, and friendly environment where users can connect, exchange, and enjoy books—whether through trade, sale, or purchase.
+
+The platform offers a robust set of features to help users manage their personal library, wishlist, and transaction history. Whether you're looking to track down a rare book or offer your own collection, BookSwap is your go-to space for all things book exchange.
+
+---
+
+## 🚀 Project Setup & Startup
+
+### Prerequisites
+- Python 3.13
+- Git (to clone the repository)
+
+### Installation Steps
+
+1. **Clone the repository**
 
     ```bash
     git clone https://github.com/Web-Development-UAlberta/exsm-3951-exsm-3943-spring-2025-python-c-project-bookswap-besties-v2-even-bestier.git
     cd exsm-3951-exsm-3943-spring-2025-python-c-project-bookswap-besties-v2-even-bestier
     ```
-2. Python `3.13` is the version used in this project
-
-3. Create a virtual environment for the python project (recommended)
-    ```
+2. **(Recommended) Create a virtual environment**
+    ```bash
     python -m venv venv
     ```
-4. Activate the virtual environment
+3. **Activate the virtual environment**
     
-    For mac/linux:
-    ```
-    source venv/bin/activate
-    ```
-    
-    For windows:
-    ```
-    venv/Scripts/activate
-    ```
-    After the venv is activated, you should see `(venv)` in the terminal prompt
-5. Install project dependencies:
-    ```
+    - macOS/Linux:
+        ```bash
+        source venv/bin/activate
+        ```
+
+    - Windows:
+        ```bash
+        venv\Scripts\activate
+        ```
+    - After the venv is activated, you should see `(venv)` in the terminal prompt
+
+4. **Install dependencies**
+    ```bash
     pip install -r requirements.txt
     ```
 
-6. For the first time, run all migrations
-    ```
+5. **Run database migrations**
+    ```bash
     python src/exsm3951_bookswap/manage.py migrate 
     ```
-7. Now you are ready to run the server
-    ```
+6. **Start the development server**
+    ```bash
     python src/exsm3951_bookswap/manage.py runserver 
     ```
-8. Once the server is running you can visit the app at http://127.0.0.1:8000/
+7. Visit the app at: [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 
 
-## Project Usage
+## 👨‍💻 Project Usage – User Flow Walkthrough
 
-A walk through of the User Flow:
-
-### 1. Register a new account
-- On the login page, click to register
-- Then fill in the information requireed to register a new account (username, passowrd, etc...)
+### 1. Register a New Account
+- On the login page, click "Register".
+- Fill in your username, password, and other required information.
 
 ### 2. Login
-- Once you have signed up, on the login page enter your credentials (username, password) to log in
+- Enter your credentials to access your account.
 
-### 3. Profile Page
-- To update your profile info, navigate to the Profile Page
-- There you need to update the full name, email, shipping address, and book genre preference
+### 3. Update Profile
+- Go to the Profile Page.
+- Add your full name, email, shipping address, and genre preferences.
 
-### 4. Browse for books that I'm interested in
-- On the navbar, click on Browse
-- Then search for a book by their isbn / title / author / genre
-- A popup will display the result where you can click on edit/save to add the book to the library of the app (if it hasn't been added yet)
+### 4. Browse for Books
+- Click "Browse" in the navbar.
+- Search by ISBN, title, author, or genre.
+- A popup will display results. Add books to the library if they aren't already listed.
 
-### 5. Add a book to your wishlist
-- Any book present in the library can be added to your wishlist so that you could be notified when there are book listings of that book
-- Wishlisted books are listed on the home page under "My Wishlist"
+### 5. Wishlist a Book
+- Add any book in the library to your wishlist.
+- Wishlisted books appear on your homepage under “My Wishlist”.
 
-### 6. Make a listing for a book you own
-- Once a book is present in the library (after being added from a search on the browse page), you can create a book listing for a copy you own of that book
-- On the Books listings page, you can click to create a new book listing
-- When creating a book listing you can set the condition and price you want to sell the book for.
+### 6. List a Book for Sale
+- Add a listing for any book in the library.
+- Set the condition and price for your book.
 
-### 7. Request book listing from seller to buy
-- On the Books Listings page,  you can search for a book to see if there is a listing(s)
-- If you find a listing you want to buy, you can click on the "Request Buy" button which will notify the seller to approve or reject the offer.
-- If approved, the seller will finalize the details of the sale transaction, and you will be notified that you bought the book with the shipping details
-- If the seller rejected, you will be notified of it
+### 7. Buy a Book
+- Search available listings.
+- Click "Request Buy" to notify the seller.
+- Seller approves or rejects your request.
+- If approved, you'll be notified and receive shipping details.
 
-### 6. Request book listing to swap
-- On the Books Listing page, you can search for a book to see if there is a listing(s)
-- If you find a listing you are interested in and you want to offer to swap your book listing(s) with theirs, then you can click the "Offer Swap" button
-- You will then be presented with a form to fill with the swap details (Which book listing you are offering)
-- Once you confirm your swap offer, the seller be notified of it
-- If approved, the seller will finalize the details of the swap transaction, and you will be notified that your swap has been accepted with the shipping details
-- If the seller rejected the swap, you will be notified of  it
+### 8. Swap a Book
+- Search for listings.
+- Click "Offer Swap" and choose one of your own listings to offer.
+- Seller approves or rejects the offer.
+- You'll be notified of the outcome.
 
+---
 
+## ✅ Features
 
+- 📚 Manage personal book listings  
+- 🔎 Search by ISBN, title, author, or genre  
+- 💖 Wishlist system with notifications  
+- 🔄 Book swapping functionality  
+- 💸 Secure buy/sell listings  
+- 🛠️ User profile management  
 
+---
 
- 
+## 🧪 Running Tests
+
+To run the test suite:
+
+    ```bash
+    python src/exsm3951_bookswap/manage.py test
+    ```
+
+## Citations & Acknowlegements
+
+help.html: ChatGPT. (2025). JavaScript code for toggle FAQ answers on click. OpenAI. Retrieved from https://chat.openai.com
+
+settings.html: OpenAI. (2025). Mock shipping form with confirmation modal using HTML, Tailwind CSS, and JavaScript. ChatGPT (May 17, 2025) response. https://chat.openai.com/
+
+tests.py: Integrity Error with help from OpenAI ChatGPT 3.5, May 7/25 
+tests.py: member.objects.get with help from OpenAI ChatGPT 3.5, May 3/25
+tests.py: reset password with help from OpenAI ChatGPT 3.5, May 3/25
+tests.py: swap_transactions with help from OpenAI ChatGPT 3.5, May 3/25
+
+## 📬 Contact
+For any questions or support, feel free to contact the authors via the course forum or GitHub issues.
 
 

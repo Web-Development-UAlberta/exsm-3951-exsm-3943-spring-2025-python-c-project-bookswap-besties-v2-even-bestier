@@ -19,7 +19,7 @@ def mark_notification_as_read(request, notification_id):
 
 @login_required
 def delete_notification(request, notification_id):
-    notification = get_object_or_404(Notification, pk=notification_id, user=request.user)
+    notification = get_object_or_404(Notification, pk=notification_id, member=request.user)
     notification.delete()
     return redirect("notifications")
 

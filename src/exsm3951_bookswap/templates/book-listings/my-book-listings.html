@@ -23,16 +23,16 @@
 
 <section class="mb-8 mt-8">
   <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-    {% for listing in my_book_listings|dictsort:"book.title" %}
+    {% for listing in my_book_listings|dictsort:"library_item.book.title" %}
     <a href="{% url 'view_book_listing' listing.id %}">
       <div class="bg-white shadow p-3 rounded flex flex-col justify-between">
         <div>
-          <p class="font-bold">{{ listing.book.title }}</p>
-          <p class="text-sm text-gray-600">{{ listing.book.author }}</p>
+          <p class="font-bold">{{ listing.library_item.book.title }}</p>
+          <p class="text-sm text-gray-600">{{ listing.library_item.book.author }}</p>
           <p class="text-xs text-gray-400">Condition: {{ listing.condition }}</p>
           <p class="text-xs text-gray-400">Price: ${{ listing.price }}</p>
         </div>
-        <img src="{{ listing.book.image_url }}" class="mt-4 mx-auto book-img" alt="No image" />
+        <img src="{{ listing.library_item.book.image_url }}" class="mt-4 mx-auto book-img" alt="No image" />
       </div>
     </a>
     {% empty %}

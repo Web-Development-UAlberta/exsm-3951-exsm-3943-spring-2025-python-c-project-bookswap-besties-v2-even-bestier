@@ -29,15 +29,14 @@
 {% if request.GET.search_title != '' %}
   <section class="mb-8 mt-8">
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-      {% for listing in book_listings %}
+      {% for library_item in library_items %}
         <div class="bg-white shadow p-3 rounded flex flex-col justify-between">
           <div>
-            <p><span class="font-bold">{{ listing.book.title }}</span></p>
-            <p class="text-sm text-gray-600">Author: {{ listing.book.author }}</p>
-            <p class="text-sm text-gray-600">Condition: {{ listing.condition }}</p>
+            <p><span class="font-bold">{{ library_item.book.title }}</span></p>
+            <p class="text-sm text-gray-600">Author: {{ library_item.book.author }}</p>
           </div>
-          <img src="{{ listing.book.image_url }}" class="mt-4 mx-auto book-img" alt="No image" />
-          <form method="POST" action="{% url 'remove_from_my_library' listing.id %}">
+          <img src="{{ library_item.book.image_url }}" class="mt-4 mx-auto book-img" alt="No image" />
+          <form method="POST" action="{% url 'remove_from_my_library' library_item.id %}">
             {% csrf_token %}
             <button class="text-white bg-gradient-to-br from-pink-400 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-xl text-sm px-3 py-2 text-center mt-4 me-2 mb-2" type="submit">Remove</button>
           </form>

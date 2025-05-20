@@ -16,6 +16,14 @@
   <button type="submit" class="bg-green-600 text-white px-4 py-1 rounded-xl hover:bg-green-700">
     Search For Listings
   </button>
+  {% if request.GET.search_title %}
+    <div class="mb-4 flex justify-center sm:justify-start">
+      <a href="{% url 'library' %}"
+        class="bg-green-600 text-white px-4 py-1 rounded-xl hover:bg-green-700">
+        Cancel Search
+      </a>
+    </div>
+  {% endif %}
 </form>
 
 {% if request.GET.search_title != '' %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transaction
+from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transaction, My_Library
 from .utils.google_books import get_cover_image, get_books_data
 from .forms import BookForm, BookListingForm
 from authentication.models import Member
@@ -14,13 +14,33 @@ def my_library_view(request):
     # only include the book listings owned by logged in user
     book_listings = []
     if search_title:
-        book_listings = Review.objects.filter(book__title__icontains=search_title, member_id=request.user)
+        book_listings = My_Library.objects.filter(book__title__icontains=search_title, member_id=request.user)
     else:
-        book_listings = Review.objects.filter(member_id=request.user)
+        book_listings = My_Library.objects.filter(member_id=request.user)
     return render(request, "library/my_library.html", {'book_listings': book_listings})
 
 @login_required
-def library_view(request):    
+def add_to_library(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+
+    # Add the book as a library item for the user
+    library_item = My_Library(book=book, member=request.user)
+    library_item.save()
+
+
+    # Redirect back to where they came from
+    return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
+
+@login_required
+def remove_from_my_library(request, listing_id):
+    library_item = get_object_or_404(My_Library, id=listing_id)
+    library_item.delete()
+    
+    return redirect(request.META.get('HTTP_REFERER', 'my_library'))
+
+
+@login_required
+def library_view(request):  #All Listings"  
     search_title = request.GET.get('search_title', '')
     # filtering for book listings of books that contain the title that is being searched for
     # exclude the book listings owned by logged in user
@@ -28,6 +48,7 @@ def library_view(request):
     if search_title != '':
         book_listings = BookListing.objects.filter(book__title__icontains=search_title).exclude(member_owner=request.user)
     return render(request, "library/library.html", {'book_listings': book_listings})
+
 
 @login_required
 def view_my_book_listings(request):
@@ -50,6 +71,11 @@ def browse_books_view(request):
         "my_wishlisted_books": request.user.wishlist_books.all(),
         "my_library_books": my_library_books,
     })
+
+@login_required
+def view_wishlist(request):
+    wishlist_items = WishList.objects.filter(member=request.user)
+    return render(request, 'wishlist/wishlist.html', {'wishlist': wishlist_items})
 
 @login_required
 def add_to_wishlist(request, book_id):
@@ -84,17 +110,7 @@ def remove_from_wishlist(request, wishlist_id):
     
     return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
     
-@login_required
-def add_to_library(request, book_id):
-    book = get_object_or_404(Book, id=book_id)
 
-    # Add the book as a library item for the user
-    library_item = Review(book=book, member=request.user)
-    library_item.save()
-
-
-    # Redirect back to where they came from
-    return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
 
 
 @login_required
@@ -185,7 +201,3 @@ def delete_book_listing(request, book_listing_id):
     return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
 
 
-@login_required
-def view_wishlist(request):
-    wishlist_items = WishList.objects.filter(member=request.user)
-    return render(request, 'wishlist/wishlist.html', {'wishlist': wishlist_items})

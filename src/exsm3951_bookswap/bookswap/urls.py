@@ -15,6 +15,7 @@ urlpatterns = [
     path('book-listings/<int:book_listing_id>/edit', views.edit_book_listing, name='edit_book_listing'),
     path('book-listings/<int:book_listing_id>/delete', views.delete_book_listing, name='delete_book_listing'),
     path('my-library/', views.my_library_view, name='my_library'),
-    path('library/add/<int:book_id>/', views.add_to_library, name='add_to_library'),
+    path('my_library/add/<int:book_id>/', views.add_to_library, name='add_to_my_library'),
+    path('my_library/remove/<int:listing_id>/', views.remove_from_my_library, name='remove_from_my_library'),
     
 ]

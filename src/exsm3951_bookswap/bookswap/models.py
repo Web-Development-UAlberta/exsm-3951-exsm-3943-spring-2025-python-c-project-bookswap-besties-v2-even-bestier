@@ -62,7 +62,7 @@ class BookListing(models.Model):
 class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
     member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=False)
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=True)
     review = models.TextField()
     
     create_at = models.DateTimeField(auto_now_add=True)
@@ -76,6 +76,15 @@ A member can have many books on their wish list
 A book can be part of many members' wish list
 """
 class WishList(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
+
+    #make sure the combination of member and book is unique
+    class Meta:
+        unique_together = ('member', 'book')
+
+
+class My_Library(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
 

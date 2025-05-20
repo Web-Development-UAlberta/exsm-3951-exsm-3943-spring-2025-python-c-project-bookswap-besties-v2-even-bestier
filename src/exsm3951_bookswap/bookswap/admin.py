@@ -6,7 +6,7 @@ class BookAdmin(admin.ModelAdmin):
     list_display = ['id', 'isbn', 'title', 'author', 'genre', 'description', 'pub_date', 'language', 'weight']
     
 class BookListingAdmin(admin.ModelAdmin):
-    list_display = ['id', 'book', 'member_owner', 'price', 'condition']
+    list_display = ['id', 'library_item', 'member_owner', 'price', 'condition']
     
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ['id', 'book', 'member', 'rating', 'review']

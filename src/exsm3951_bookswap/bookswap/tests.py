@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transaction
+from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transaction, LibraryItem
 from authentication.models import Member
 from django.contrib.auth.tokens import default_token_generator
 from django.db import IntegrityError
@@ -32,8 +32,10 @@ def CreateBook():
     return book
 
 def CreateListing(book, member):
+    library_item = LibraryItem(book=book, member=member)
+    library_item.save()
     listing = BookListing.objects.create(
-        book=book,
+        library_item=library_item,
         member_owner=member,
         condition='Fair',
         price=15.00
@@ -160,16 +162,19 @@ class BookListingModelTests(TestCase):
         
         self.assertEqual(listing.condition, 'Fair')
         self.assertEqual(listing.price, 15.00)
-        self.assertEqual(listing.book.title, 'The Great Gatsby')
+        self.assertEqual(listing.library_item.book.title, 'The Great Gatsby')
         self.assertEqual(listing.member_owner.email, 'johndoe@example.com')
 
     def test_create_book_listing_condition_not_a_choice(self):
         member = CreateMember()
         book = CreateBook()
         
+        library_item = LibraryItem(book=book, member=member)
+        library_item.save()
+        
         #create listing
         BookListing.objects.create(
-            book=book,
+            library_item=library_item,
             member_owner=member,
             condition='Extremely Perfect!',
             price=12.50
@@ -239,7 +244,7 @@ class TransactionModelTests(TestCase):
         )
 
         self.assertEqual(transaction.transaction_type, 'Sale')
-        self.assertEqual(transaction.book_listing.book.title, 'The Great Gatsby')
+        self.assertEqual(transaction.book_listing.library_item.book.title, 'The Great Gatsby')
         self.assertEqual(transaction.from_member.email, 'johndoe@example.com')
         self.assertEqual(transaction.to_member.email, 'mtwain@example.com')
         self.assertEqual(transaction.shipment.shipment_cost, 25.00)

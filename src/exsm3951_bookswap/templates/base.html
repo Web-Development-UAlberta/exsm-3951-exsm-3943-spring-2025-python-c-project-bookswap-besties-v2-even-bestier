@@ -57,7 +57,7 @@
         {% if user.is_authenticated %}
 
           <span style="color: #825d3f;" class="text-md mr-4">
-            Welcome, {{ user.first_name|default:user.username }}
+            Welcome, {{ user.first_name|default:user.username }}!
           </span>
 
           <a href="{% url 'my_library' %}"

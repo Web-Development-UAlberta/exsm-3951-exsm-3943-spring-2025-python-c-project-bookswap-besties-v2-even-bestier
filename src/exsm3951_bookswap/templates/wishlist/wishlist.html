@@ -11,18 +11,18 @@
 </div>
 
 <section>
-  <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
     {% for item in wishlist %}
       <div class="bg-amber-50 shadow p-3 rounded-xl flex flex-col justify-between">
         <div>
-          <p class="font-bold">{{ item.book.title }}</p>
-          <p class="text-sm text-gray-600">{{ item.book.author }}</p>
-          <p class="text-xs text-gray-400">Genre: {{ item.book.genre }}</p>
+          <p class="text-xl font-bold text-[#825d3f]">{{ item.book.title }}</p>
+          <p class="text-lg text-[#825d3f]">{{ item.book.author }}</p>
+          <p class="text-md text-[#825d3f]">Genre: {{ item.book.genre }}</p>
           <img src="{{ item.book.image_url }}" class="mt-4 mx-auto book-img" alt="No image" />
         </div>
         <form method="POST" action="{% url 'remove_from_wishlist' item.id %}">
           {% csrf_token %}
-          <button class="text-white bg-gradient-to-br from-pink-400 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-xl text-sm px-3 py-2 text-center mt-4 me-2 mb-2" type="submit">Remove</button>
+          <button class="text-white bg-gradient-to-br from-pink-400 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-xl text-md px-5 py-1.5 text-center mt-4 me-2 mb-2" type="submit">Remove</button>
         </form>
       </div>
     {% empty %}

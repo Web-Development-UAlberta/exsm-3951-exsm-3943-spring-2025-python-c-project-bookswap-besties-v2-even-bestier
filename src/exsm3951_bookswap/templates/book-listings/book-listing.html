@@ -4,62 +4,63 @@
 {% block content %}
 
 <!-- Display the Listing -->
-<div class="max-w-md mx-auto bg-white rounded-xl shadow-md p-6">
+<div class="max-w-md mx-auto bg-amber-50 rounded-xl shadow-md p-6 text-[#825d3f]">
 
-  <h2 class="text-2xl font-bold mb-4 flex justify-between">
+  <h2 class="text-2xl font-bold mb-4 flex justify-center">
     <span>
       {% if user == book_listing.member_owner  %} 
       My 
       {% endif %}
       Book Listing
     </span>
-    <div>
-      {% if user == book_listing.member_owner  %} 
-      <!-- Seller buttons -->
-      <a href="{% url 'edit_book_listing' book_listing.id %}" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Edit</a>
-      <form class="inline" method="POST" action="{% url 'delete_book_listing' book_listing.id %}">
-        {% csrf_token %}
-        <button type="submit" class="text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Delete</button>
-      </form>
-      <a href="{% url 'view_my_book_listings' %}" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Close</a>
-      {% else %}
-      <!-- buyer buttons -->
-       <a href="" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Buy</a>
-       <a href="" class="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Swap</a>
-      {% endif %}
-    </div>
   </h2>
 
   <!-- Book title -->
-  <div class="p-3">
+  <div class="p-3 text-center">
     <h5 class="text-lg font-bold">Book</h5>
-    <div class="bg-violet-100 shadow p-3 rounded">
+    <div class="bg-amber-50 shadow-lg p-3 rounded-xl">
       <p class="font-bold">{{ book_listing.library_item.book.title }}</p>
       <p class="text-sm text-gray-600">{{ book_listing.library_item.book.author }}</p>
       <img src="{{ book_listing.library_item.book.image_url }}" alt="No image" />
     </div>
   </div>
   <!-- Condition -->
-  <div class="p-3">
+  <div class="p-3 text-center">
     <h5 class="text-lg font-bold">Condition</h5>
     <p>
       {{ book_listing.condition }}
     </p>
   </div>
   <!-- Seller name -->
-  <div class="p-3">
+  <div class="p-3 text-center">
     <h5 class="text-lg font-bold">Seller</h5>
     <p>
       {{ book_listing.member_owner.full_name }}
     </p>
   </div>
   <!-- Price -->
-  <div class="p-3">
+  <div class="p-3 text-center">
     <h5 class="text-lg font-bold">Price</h5>
     <p>
       ${{ book_listing.price }}
     </p>
   </div>
+
+  <div class="flex flex-wrap gap-9 justify-center mt-4">
+  {% if user == book_listing.member_owner  %} 
+  <!-- Seller buttons -->
+  <form class="inline" method="POST" action="{% url 'delete_book_listing' book_listing.id %}">
+    {% csrf_token %}
+    <button type="submit" class="text-white bg-gradient-to-br from-pink-600 to-pink-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Delete</button>
+  </form>
+  <a href="{% url 'edit_book_listing' book_listing.id %}" class="text-white text-md bg-gradient-to-r from-blue-500 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-8 py-1.5 text-center">Edit</a>
+  <a href="{% url 'view_my_book_listings' %}" class="text-white bg-gradient-to-r from-green-700 to-green-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-600 dark:focus:ring-green-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Close</a>
+  {% else %}
+  <!-- buyer buttons -->
+    <a href="" class="text-white bg-gradient-to-r from-blue-500 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Buy</a>
+    <a href="" class="text-white bg-gradient-to-r from-blue-500 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Swap</a>
+  {% endif %}
+</div>
 
 </div>
 

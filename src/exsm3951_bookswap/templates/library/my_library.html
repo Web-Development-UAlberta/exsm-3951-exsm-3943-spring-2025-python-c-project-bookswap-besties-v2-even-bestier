@@ -10,21 +10,33 @@
   </h2>
 </div>
 
-<form method="get" class="mb-4 flex flex-col sm:flex-row gap-2">
-  <input type="text" name="search_title" placeholder="Search by title..." value="{{ request.GET.search_title }}"
-         class="border rounded px-2 py-1 rounded-xl w-full sm:w-2/3" required>
-  <button type="submit" class="bg-green-600 text-white px-4 py-1 rounded-xl hover:bg-green-700">
-    Search My Library
-  </button>
-  {% if request.GET.search_title %}
-    <div class="mb-4 flex justify-center sm:justify-start">
-      <a href="{% url 'my_library' %}"
-        class="bg-green-600 text-white px-4 py-1 rounded-xl hover:bg-green-700">
-        Cancel Search
-      </a>
-    </div>
-  {% endif %}
+
+<form method="get" action="{% url 'my_library' %}" class="w-full max-w-4xl mx-auto mb-2">
+  <div class="flex flex-col gap-3">
+    
+    <input type="text" name="search_title" required
+           value="{{ request.GET.search_title }}"
+           placeholder="Search by title..."
+           class="bg-amber-50 w-full px-4 py-2 rounded-xl border border-amber-400 focus:outline-none focus:ring-2 focus:ring-[#825d3f] transition" />
+
+      <div class="flex justify-center">
+        <button type="submit"
+                class="bg-green-600 text-white px-10 py-2 rounded-xl hover:bg-green-700 transition">
+          Search My Library
+        </button>
+      </div>
+
+  </div>
 </form>
+
+{% if request.GET.search_title %}
+  <div class="w-full max-w-4xl mx-auto mb-6 flex justify-center">
+    <a href="{% url 'my_library' %}"
+       class="bg-pink-400 text-white px-4 py-2 rounded-xl hover:bg-pink-500 transition text-center">
+      Cancel Search
+    </a>
+  </div>
+{% endif %}
 
 {% if request.GET.search_title != '' %}
   <section class="mb-8 mt-8">
@@ -41,11 +53,7 @@
             <button class="text-white bg-gradient-to-br from-pink-400 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-xl text-sm px-3 py-2 text-center mt-4 me-2 mb-2" type="submit">Remove</button>
           </form>
         </div>
-
-      {% empty %}
-      <p>Search result for <strong>{{ request.GET.search_title }}</strong> found no listings</p>
       {% endfor %}
-    </div>
   </section>
 {% endif %}
 

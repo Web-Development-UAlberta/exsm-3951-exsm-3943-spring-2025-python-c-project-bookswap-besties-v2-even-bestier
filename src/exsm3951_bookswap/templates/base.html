@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <style>
     body {
       font-size: 1.125rem;       /* ~18px, Tailwind text-lg */
@@ -47,77 +48,58 @@
              bg-repeat bg-fixed text-gray-900 min-h-screen flex flex-col"
       style="font-family: 'Lora', serif;">
 
-  <header class="bg-white/20 backdrop-blur-lg shadow p-4 sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto flex justify-between items-center">
-    <a href="{% url 'browse_books' %}" class="inline-block">
-      <img src="{% static 'images/bookswaplogo.png' %}" alt="BookSwap Logo"
-      class="h-24 -my-2 w-auto object-contain" />
-    </a>
-      <nav class="space-x-4 text-md text-neutral-800">
-        {% if user.is_authenticated %}
+  <header class="bg-white/20 backdrop-blur-lg shadow sticky top-0 z-50 w-full" x-data="{ open: false }">
+    <div class="max-w-7xl mx-auto px-4 py-4">
 
-          <span style="color: #825d3f;" class="text-md mr-4">
-            Welcome, {{ user.first_name|default:user.username }}!
-          </span>
+      <!-- Top Row -->
+      <div class="flex items-center justify-between sm:items-start sm:justify-between">
 
-          <a href="{% url 'my_library' %}"
-              style="color: #825d3f;"
-              class="{% if request.path == '/my-library/' %}underline{% else %}hover:underline{% endif %}">
-              My Library
+        <!-- Logo -->
+        <div class="flex-shrink-0">
+          <a href="{% url 'browse_books' %}">
+            <img src="{% static 'images/bookswaplogo.png' %}" alt="BookSwap Logo"
+                class="h-20 sm:h-24 w-auto object-contain" />
           </a>
+        </div>
 
-          <a href="{% url 'view_my_book_listings' %}"
-              style="color: #825d3f;"
-              class="{% if request.path == '/my-book-listings/' %}underline{% else %}hover:underline{% endif %}">
-              My Listings
-          </a>
+        <!-- Desktop right side: welcome + nav -->
+        <div class="hidden sm:flex flex-col items-end text-right">
 
-          <a href="{% url 'view_wishlist' %}"
-              style="color: #825d3f;"
-              class="{% if request.path == '/wishlist/' %}underline{% else %}hover:underline{% endif %}">
-              My Wishlist
-          </a>
+          {% if user.is_authenticated %}
+            <div class="text-[#825d3f] text-md mb-1">
+              Welcome, {{ user.first_name|default:user.username }}
+            </div>
+          {% endif %}
 
-          <a href="{% url 'library' %}"
-              style="color: #825d3f;"
-              class="{% if request.path == '/listing/' %}underline{% else %}hover:underline{% endif %}">
-              All Listings
-          </a>
-      
-          <a href="{% url 'browse_books' %}"
-              style="color: #825d3f;"
-              class="{% if request.path == '/browse/' %}underline{% else %}hover:underline{% endif %}">
-              Browse
-          </a>
-      
-          <a href="{% url 'notifications' %}"
-              style="color: #825d3f;"
-              class="{% if '/notifications/' in request.path %}underline{% else %}hover:underline{% endif %} notification-link">
-              Notifications
-              {% if user.unread_notification_count > 0 %}
-                <span class="unread-notifications-badge">{{ user.unread_notification_count }}</span>
-              {% endif %}
-          </a>
-      
-          <a href="{% url 'profile_settings' %}"
-              style="color: #825d3f;"
-              class="{% if request.path == '/profile/settings/' %}underline{% else %}hover:underline{% endif %}">
-              My Profile
-          </a>
-        {% endif %}
-      
-        <a href="{% url 'help_faq' %}"
-            style="color: #825d3f;"
-            class="{% if '/help/' in request.path %}underline{% else %}hover:underline{% endif %}">
-            Help
-        </a>
-      
-        {% if user.is_authenticated %}
-          <a href="{% url 'logout' %}" class="text-pink-500 hover:underline">Logout</a>
-        {% else %}
-          <a href="{% url 'login' %}" class="text-green-600 hover:underline">Login</a>
-        {% endif %}
-      </nav>
+          <nav class="flex space-x-4 text-md text-neutral-800">
+            {% include 'partials/nav_links.html' %}
+          </nav>
+        </div>
+
+        <!-- Mobile hamburger -->
+        <button @click="open = !open" class="sm:hidden text-[#825d3f] focus:outline-none mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Mobile Welcome Message -->
+      {% if user.is_authenticated %}
+        <div class="sm:hidden mt-2 text-center text-[#825d3f] text-md">
+          Welcome, {{ user.first_name|default:user.username }}
+        </div>
+      {% endif %}
+
+      <!-- Mobile Dropdown Menu -->
+      <div x-show="open" x-transition class="sm:hidden mt-3">
+        <nav class="flex flex-col items-center space-y-2 text-md text-neutral-800">
+          {% include 'partials/nav_links.html' %}
+        </nav>
+      </div>
+
     </div>
   </header>
 

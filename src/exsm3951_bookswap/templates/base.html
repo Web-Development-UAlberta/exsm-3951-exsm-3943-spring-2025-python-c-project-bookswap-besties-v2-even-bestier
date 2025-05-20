@@ -55,20 +55,33 @@
     </a>
       <nav class="space-x-4 text-md text-neutral-800">
         {% if user.is_authenticated %}
-          <a href="{% url 'library' %}"
+
+          <span style="color: #825d3f;" class="text-md mr-4">
+            Welcome, {{ user.first_name|default:user.username }}
+          </span>
+
+          <a href="{% url 'my_library' %}"
               style="color: #825d3f;"
-              class="{% if request.path == '/listing/' %}underline{% else %}hover:underline{% endif %}">
-              Library
+              class="{% if request.path == '/my-library/' %}underline{% else %}hover:underline{% endif %}">
+              My Library
           </a>
+
           <a href="{% url 'view_my_book_listings' %}"
               style="color: #825d3f;"
               class="{% if request.path == '/my-book-listings/' %}underline{% else %}hover:underline{% endif %}">
               My Listings
           </a>
+
           <a href="{% url 'view_wishlist' %}"
               style="color: #825d3f;"
               class="{% if request.path == '/wishlist/' %}underline{% else %}hover:underline{% endif %}">
               My Wishlist
+          </a>
+
+          <a href="{% url 'library' %}"
+              style="color: #825d3f;"
+              class="{% if request.path == '/listing/' %}underline{% else %}hover:underline{% endif %}">
+              All Listings
           </a>
       
           <a href="{% url 'browse_books' %}"

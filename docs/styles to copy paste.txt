@@ -1,0 +1,11 @@
+text-[#825d3f]
+
+color: #825d3f
+
+border border-amber-400
+
+bg-amber-50
+
+bg-amber-100
+
+rounded-xl

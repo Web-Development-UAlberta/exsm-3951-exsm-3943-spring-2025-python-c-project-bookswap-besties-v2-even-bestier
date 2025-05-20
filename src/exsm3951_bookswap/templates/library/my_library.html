@@ -10,4 +10,33 @@
   </h2>
 </div>
 
+<form method="get" class="mb-4 flex flex-col sm:flex-row gap-2">
+  <input type="text" name="search_title" placeholder="Search by title..." value="{{ request.GET.search_title }}"
+         class="border rounded px-2 py-1 rounded-xl w-full sm:w-2/3" required>
+  <button type="submit" class="bg-green-600 text-white px-4 py-1 rounded-xl hover:bg-green-700">
+    Search My Library
+  </button>
+</form>
+
+{% if request.GET.search_title != '' %}
+  <section class="mb-8 mt-8">
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+      {% for listing in book_listings %}
+      <a href="{% url 'view_book_listing' listing.id %}">
+        <div class="bg-white shadow p-3 rounded flex flex-col justify-between">
+          <div>
+            <p><span class="font-bold">{{ listing.book.title }}</span></p>
+            <p class="text-sm text-gray-600">Author: {{ listing.book.author }}</p>
+            <p class="text-sm text-gray-600">Condition: {{ listing.condition }}</p>
+          </div>
+          <img src="{{ listing.book.image_url }}" class="mt-4 mx-auto book-img" alt="No image" />
+        </div>
+      </a>
+      {% empty %}
+      <p>Search result for <strong>{{ request.GET.search_title }}</strong> found no listings</p>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
 {% endblock %}

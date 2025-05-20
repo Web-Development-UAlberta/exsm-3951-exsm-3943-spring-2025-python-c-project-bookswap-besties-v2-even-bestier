@@ -62,7 +62,7 @@ class BookListing(models.Model):
 class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
     member = models.ForeignKey(Member, on_delete=models.SET_NULL, null=True)
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=False)
+    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)], null=True)
     review = models.TextField()
     
     create_at = models.DateTimeField(auto_now_add=True)

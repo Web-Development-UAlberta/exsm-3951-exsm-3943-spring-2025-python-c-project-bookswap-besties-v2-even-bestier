@@ -7,6 +7,9 @@ from authentication.models import Member
 from notifications.models import Notification
 from django.contrib import messages
 
+@login_required
+def my_library_view(request):
+    return render(request, 'library/my_library.html')
 
 @login_required
 def library_view(request):    

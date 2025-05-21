@@ -128,6 +128,10 @@ def book_create_from_search(request):
         if form.is_valid():
             form.save()
             return redirect('browse_books')
+        
+        return render(request, 'partials/book_form.html', {'form': form})
+        
+    else:
     
         initial_data = request.GET.dict()  # <- use prefilled query params
         form = BookForm(initial=initial_data)

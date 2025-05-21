@@ -23,3 +23,4 @@ class Member(AbstractUser):
     def library_items(self):
         from bookswap.models import LibraryItem
         return LibraryItem.objects.filter(member=self)
+

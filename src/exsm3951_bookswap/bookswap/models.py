@@ -38,7 +38,6 @@ class Book(models.Model):
     def __str__(self):
         return self.title
 
-
 class LibraryItem(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
@@ -90,8 +89,6 @@ class WishList(models.Model):
     #make sure the combination of member and book is unique
     class Meta:
         unique_together = ('member', 'book')
-
-
 
 class Shipment(models.Model):
     shipment_date = models.DateField(null=False, validators=[validate_shipment_date])

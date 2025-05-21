@@ -124,7 +124,7 @@ def book_search_view(request):
 @login_required
 def book_create_from_search(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
+        form = BookListingForm(request.POST, user=request.user)
         if form.is_valid():
             form.save()
             return redirect('browse_books')
@@ -167,6 +167,7 @@ def create_book_listing(request):
             'price': 0.00,
         }
         form = BookListingForm(initial=intial_data, user=request.user)
+
         # form.fields['library_item'].choices = LibraryItem.objects.filter(member=request.user).all()
         return render(request, 'book-listings/book-listing-form.html', {'form': form, 'title': 'Create Book Listing', 'submit_button_text': 'Create'})
 

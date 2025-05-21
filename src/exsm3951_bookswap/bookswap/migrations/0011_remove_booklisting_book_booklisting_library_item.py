@@ -11,13 +11,13 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='booklisting',
-            name='book',
-        ),
-        migrations.AddField(
-            model_name='booklisting',
-            name='library_item',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='bookswap.libraryitem'),
-        ),
+        # migrations.RemoveField(
+        #     model_name='booklisting',
+        #     name='book',
+        # ),
+        # migrations.AddField(
+        #     model_name='booklisting',
+        #     name='library_item',
+        #     field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='bookswap.libraryitem'),
+        # ),
     ]

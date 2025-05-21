@@ -40,8 +40,6 @@
 
 {% if request.GET.search_title != '' %}
   <section class="mb-8 mt-8">
-    
-    {% if book_listings %}
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
       {% for library_item in library_items %}
         <div class="bg-white shadow p-3 rounded flex flex-col justify-between">
@@ -65,7 +63,6 @@
           Search result for <strong>{{ request.GET.search_title }}</strong> found no listings
         </p>
       </div>
-    {% endif %}
     
   </section>
 {% endif %}

@@ -38,6 +38,14 @@ class Book(models.Model):
     def __str__(self):
         return self.title
     
+class LibraryItem(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
+
+
+    def __str__(self):
+        return f"{self.book.title}"    
+
 
 class BookListing(models.Model):
     
@@ -47,7 +55,7 @@ class BookListing(models.Model):
         fair = "Fair"
         poor = "Poor"
         
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
+    library_item = models.ForeignKey(LibraryItem, on_delete=models.CASCADE, null=True)
     member_owner = models.ForeignKey(Member, on_delete=models.CASCADE, null=False, related_name='book_listings')
     condition = models.CharField(
         max_length=4,
@@ -57,7 +65,6 @@ class BookListing(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
-
 
 class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
@@ -76,15 +83,6 @@ A member can have many books on their wish list
 A book can be part of many members' wish list
 """
 class WishList(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
-    member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
-
-    #make sure the combination of member and book is unique
-    class Meta:
-        unique_together = ('member', 'book')
-
-
-class My_Library(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
 

@@ -1,22 +1,22 @@
 {% load static %}
-<div class="bg-white rounded shadow p-4 flex flex-col hover:shadow-lg transition">
+<div class="bg-amber-50 border border-amber-300 rounded-xl shadow-lg p-4 flex flex-col hover:shadow-lg transition">
   <!-- Book Cover -->
   {% if book.image_url %}
     <img src="{{ book.image_url }}"
          alt="{{ book.title }} cover"
-         class="mb-3 w-full h-40 object-cover rounded bg-gray-100">
+         class="mb-3 w-full h-80 object-contain rounded-xl bg-amber-50">
   {% else %}
     <img src="{% static 'images/placeholder_cover.svg' %}"
          alt="Placeholder cover"
-         class="mb-3 w-full h-40 object-cover rounded bg-gray-100">
+         class="mb-3 w-full h-80 object-cover rounded bg-amber-50">
   {% endif %}
 
   <!-- Book Info -->
-  <div class="flex-grow">
-    <h3 class="text-lg font-bold text-gray-800 truncate">{{ book.title }}</h3>
-    <p class="text-sm text-gray-600 mb-1">by {{ book.author }}</p>
-    <p class="text-xs text-gray-500">Genre: {{ book.genre }}</p>
-    <p class="text-xs text-gray-500">Condition: {{ book.condition }}</p>
+  <div class="flex-grow text-center text-[#825d3f]">
+    <h3 class="text-md font-bold">{{ book.title }}</h3>
+    <p class="text-sm mb-1">by {{ book.author }}</p>
+    <p class="text-sm">Genre: {{ book.genre }}</p>
+    <!-- <p class="text-sm">Condition: {{ book.condition }}</p> -->
     
     {% if book.rating %}
       <p class="text-sm text-yellow-500 mt-1">

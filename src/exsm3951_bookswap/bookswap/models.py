@@ -37,7 +37,7 @@ class Book(models.Model):
 
     def __str__(self):
         return self.title
-    
+
 class LibraryItem(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
@@ -45,7 +45,6 @@ class LibraryItem(models.Model):
 
     def __str__(self):
         return f"{self.book.title}"
-    
 
 class BookListing(models.Model):
     

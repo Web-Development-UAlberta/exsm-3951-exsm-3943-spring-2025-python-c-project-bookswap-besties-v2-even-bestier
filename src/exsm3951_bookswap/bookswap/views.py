@@ -23,10 +23,9 @@ def my_library_view(request):
 def add_to_library(request, book_id):
     book = get_object_or_404(Book, id=book_id)
 
-     # Add the book as a library item for the user
+    # Add the book as a library item for the user
     new_library_item = LibraryItem(book=book, member=request.user)
     new_library_item.save()
-
 
     # Redirect back to where they came from
     return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
@@ -146,7 +145,7 @@ def view_book_listing(request, book_listing_id):
 @login_required
 def create_book_listing(request):
     if request.method == 'POST':
-        form = BookListingForm(request.POST)
+        form = BookListingForm(request.POST, user=request.user)
         if form.is_valid():
             new_listing = form.save()
             # Send a notification to users who have this book on their wishlist
@@ -168,6 +167,8 @@ def create_book_listing(request):
             'price': 0.00,
         }
         form = BookListingForm(initial=intial_data, user=request.user)
+
+        # form.fields['library_item'].choices = LibraryItem.objects.filter(member=request.user).all()
         return render(request, 'book-listings/book-listing-form.html', {'form': form, 'title': 'Create Book Listing', 'submit_button_text': 'Create'})
 
 

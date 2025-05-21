@@ -82,7 +82,7 @@
       <!-- Welcome (centered ) -->
       {% if user.is_authenticated %}
         <div class="absolute left-1/2 transform -translate-x-1/2 text-center text-[#825d3f] text-2xl font-medium">
-          Welcome, {{ user.first_name|default:user.username }}
+          Welcome, {{ user.first_name|default:user.username }}!
         </div>
       {% endif %}
         <!--Burger menu animation-->

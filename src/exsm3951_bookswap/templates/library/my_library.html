@@ -46,7 +46,6 @@
           <div>
             <p><span class="font-bold">{{ library_item.book.title }}</span></p>
             <p class="text-sm text-gray-600">Author: {{ library_item.book.author }}</p>
-            <p class="text-md text-[#825d3f]">Condition: {{ listing.condition }}</p>
           </div>
           <img src="{{ library_item.book.image_url }}" class="mt-4 mx-auto book-img" alt="No image" />
           <form method="POST" action="{% url 'remove_from_my_library' library_item.id %}">

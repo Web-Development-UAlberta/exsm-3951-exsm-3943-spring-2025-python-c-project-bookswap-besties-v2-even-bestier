@@ -3,7 +3,7 @@
 - **ALL** Tuesday Apil 22, 9pm -10:30 MDT **1.5 hours**
 - **All** Wednesday April 23 6:30pm - 7:00pm MDT **.5 hours**
 - **ALL** Thursday April 24 8:30pm - 9pm MDT **.5 hours**
-- **ALL** Monday May 19 5:00pm - 6:00pm MDT **1 hour**
+- **ALL** Monday May 19 5:00pm - 6:00pm MDT **1 hour** **5 official group hours**
 
 
 ## Justin
@@ -17,3 +17,5 @@
 - Saturday May 17, 12:30 - 4:00pm, 5:00 - 6:30pm, 10:00pm-1:00am **8hours** Sale and swap logic
 - Sunday May 18, 11:30pm - 4:30am **5hours** -Swap and listing logic. 
 - Monday May 19, 7:00pm - 8:00pm, 11:00pm - 2:30am **4.5 hours** Styling and consistency
+- Tuesday May 20, 2:00pm - 5:00pm, 11:00pm - 4:30am **8.5 hours** Styling and nav bar function
+- Wednesday May 21, 2:00pm - 5:00pm **3hours** styling, bugs fixes, minor UI/UX improvements, presentation prep. **61 hours**

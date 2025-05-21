@@ -74,17 +74,18 @@
     <div class="flex items-center justify-between xl:hidden w-full px-4 py-2 relative">
 
       <!-- Logo (left) -->
-      <a href="{% url 'browse_books' %}" class="shrink-0">
-        <img src="{% static 'images/bookswaplogo.png' %}" alt="BookSwap Logo"
-            class="h-16 w-auto object-contain" />
-      </a>
-
-      <!-- Welcome (centered ) -->
-      {% if user.is_authenticated %}
-        <div class="absolute left-1/2 transform -translate-x-1/2 text-center text-[#825d3f] text-2xl font-medium">
-          Welcome, {{ user.first_name|default:user.username }}!
+        <div class="flex items-center space-x-4">
+          <a href="{% url 'browse_books' %}">
+            <img src="{% static 'images/bookswaplogo.png' %}" alt="BookSwap Logo"
+                  class="h-14 sm:h-20 md:h-24 w-auto object-contain" />
+          </a>
+          
+          {% if user.is_authenticated %}
+            <span class="text-[#825d3f] text-lg font-medium whitespace-nowrap">
+              Welcome, {{ user.first_name|default:user.username }}!
+            </span>
+          {% endif %}
         </div>
-      {% endif %}
         <!--Burger menu animation-->
       <div
         x-show="open"

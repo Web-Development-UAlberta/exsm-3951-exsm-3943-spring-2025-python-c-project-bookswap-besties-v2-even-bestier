@@ -39,7 +39,7 @@
                 <p class="text-md text-[#825d3f]">Condition: {{ listing.condition }}</p>
                 <p class="text-md text-[#825d3f]">Price: ${{ listing.price }}</p>
               </div>
-              <img src="{{ listing.book.image_url }}" class="mt-4 mx-auto book-img" alt="No image" />
+              <img src="{{ listing.library_item.book.image_url }}" class="mt-4 mx-auto book-img" alt="No image" />
             </div>
           </a>
         {% endfor %}

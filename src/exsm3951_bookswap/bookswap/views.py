@@ -45,7 +45,7 @@ def library_view(request):  #All Listings"
     # exclude the book listings owned by logged in user
     book_listings = []
     if search_title != '':
-        book_listings = BookListing.objects.filter(book__title__icontains=search_title).exclude(member_owner=request.user)
+        book_listings = BookListing.objects.filter(library_item__book__title__icontains=search_title).exclude(member_owner=request.user)
     return render(request, "library/library.html", {'book_listings': book_listings})
 
 
@@ -158,8 +158,8 @@ def create_book_listing(request):
             # Step 2: Create a notification record to each user about that new book listing
             for item in wishlist_items:
                 notification = Notification(
-                    title=f'{new_listing.member_owner.full_name} has a listing for the book "{new_listing.book.title}"!',
-                    message=f'Follow the link to the book listing <a style="color: blue;" href="/library/book-listings/{new_listing.id}">{new_listing.book.title}</a>',
+                    title=f'{new_listing.member_owner.full_name} has a listing for the book "{new_listing.library_item.book.title}"!',
+                    message=f'Follow the link to the book listing <a style="color: blue;" href="/library/book-listings/{new_listing.id}">{new_listing.library_item.book.title}</a>',
                     member=item.member,
                 )
                 notification.save()

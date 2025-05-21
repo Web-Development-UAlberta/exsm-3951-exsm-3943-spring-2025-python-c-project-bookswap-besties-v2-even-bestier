@@ -14,9 +14,9 @@ def my_library_view(request):
     # only include the book listings owned by logged in user
     library_items = []
     if search_title:
-        library_items = LibraryItem.objects.filter(book__title__icontains=search_title, member_id=request.user)
+        library_items = LibraryItem.objects.filter(book__title__icontains=search_title, member_id=request.user).order_by('book__title')
     else:
-        library_items = LibraryItem.objects.filter(member_id=request.user)
+        library_items = LibraryItem.objects.filter(member_id=request.user).order_by('book__title')
     return render(request, "library/my_library.html", {'library_items': library_items})
 
 @login_required
@@ -28,7 +28,7 @@ def add_to_library(request, book_id):
     new_library_item.save()
 
     # Redirect back to where they came from
-    return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
+    return redirect('my_library')
 
 @login_required
 def remove_from_my_library(request, listing_id):

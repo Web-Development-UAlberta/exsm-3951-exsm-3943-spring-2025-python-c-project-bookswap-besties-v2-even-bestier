@@ -18,3 +18,8 @@ class Member(AbstractUser):
     @property 
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    @property
+    def library_items(self):
+        from bookswap.models import LibraryItem
+        return LibraryItem.objects.filter(member=self)

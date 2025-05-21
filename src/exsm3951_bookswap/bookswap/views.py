@@ -245,7 +245,7 @@ def buy_book(request, book_listing_id):
 @login_required
 def transactions_view(request):
     # get all transaction that the user is from ("receiver of transaction") or to ("initiater") in
-    transactions = Transaction.objects.filter(Q(from_member=request.user) | Q(to_member=request.user))
+    transactions = Transaction.objects.filter(Q(from_member=request.user) | Q(to_member=request.user)).order_by('-id')
     return render(request, "transactions/transactions.html", {'transactions': transactions})
 
 

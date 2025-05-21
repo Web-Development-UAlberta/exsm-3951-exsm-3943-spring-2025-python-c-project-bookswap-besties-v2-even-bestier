@@ -1,9 +1,10 @@
+from datetime import datetime
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transaction, LibraryItem
+from django.db.models import Q
+from .models import Book, BookListing, Review, WishList, Shipment, Transaction, LibraryItem
 from .utils.google_books import get_cover_image, get_books_data
 from .forms import BookForm, BookListingForm
-from authentication.models import Member
 from notifications.models import Notification
 from django.contrib import messages
 
@@ -39,19 +40,19 @@ def remove_from_my_library(request, listing_id):
 
 
 @login_required
-def library_view(request):  #All Listings"  
+def library_view(request):  # All Listings"  
     search_title = request.GET.get('search_title', '')
     # filtering for book listings of books that contain the title that is being searched for
     # exclude the book listings owned by logged in user
     book_listings = []
     if search_title != '':
-        book_listings = BookListing.objects.filter(library_item__book__title__icontains=search_title).exclude(member_owner=request.user)
+        book_listings = BookListing.objects.filter(library_item__book__title__icontains=search_title, is_closed=False).exclude(member_owner=request.user)
     return render(request, "library/library.html", {'book_listings': book_listings})
 
 
 @login_required
 def view_my_book_listings(request):
-    my_book_listings = BookListing.objects.filter(member_owner=request.user)
+    my_book_listings = BookListing.objects.filter(member_owner=request.user).exclude(is_closed=True)
     return render(request, "book-listings/my-book-listings.html", {
         "my_book_listings": my_book_listings,
     })
@@ -85,7 +86,7 @@ def add_to_wishlist(request, book_id):
     wishlist_item.save()
     
     # Create notifications for all the listing(s) of the book
-    book_listings = BookListing.objects.filter(library_item__book=book)
+    book_listings = BookListing.objects.filter(library_item__book=book).exclude(is_closed=True)
     my_book_listings = request.user.book_listings.all()
 
     for book_listing in book_listings:
@@ -185,12 +186,12 @@ def edit_book_listing(request, book_listing_id):
         return redirect('view_my_book_listings')
 
     if request.method == 'POST':
-        form = BookListingForm(request.POST, instance=book_listing)
+        form = BookListingForm(request.POST, instance=book_listing, user=request.user)
         if form.is_valid():
             form.save()
             return redirect('view_my_book_listings')
     else:
-        form = BookListingForm(instance=book_listing)
+        form = BookListingForm(instance=book_listing, user=request.user)
         # Make sure the user cannot update the book of an existing listing
         # form.fields['book'].disabled = True
         return render(request, 'book-listings/book-listing-form.html', {'form': form, 'title': 'Update Book Listing', 'submit_button_text': 'Save'})
@@ -205,4 +206,97 @@ def delete_book_listing(request, book_listing_id):
         return redirect('view_my_book_listings')
     return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
 
+# Buy Transaction 
+@login_required
+def buy_book(request, book_listing_id):
+    book_listing = get_object_or_404(BookListing, pk=book_listing_id)
 
+    if request.method == 'POST':
+        # create a pending transaction for the book listing
+        shipment = Shipment(
+            shipment_date=datetime.now().date(),
+            shipment_cost=10.00,
+            weight=2,
+            address="1st AVE EAST Mock Town, Canada"
+        )
+        shipment.save()
+        transaction = Transaction(
+            transaction_type=Transaction.TransactionType.sale,
+            transaction_status=Transaction.TransactionStatus.pending,
+            shipment=shipment,
+            book_listing=book_listing,
+            from_member=book_listing.member_owner,
+            to_member=request.user,
+            cost=float(book_listing.price) + float(shipment.shipment_cost),
+        )
+        transaction.save()
+        # notify the owner of the book listing of the buy offer so they can accept / reject it
+        notification = Notification(
+            member=book_listing.member_owner,
+            message=f'You have a buy offer on your listing! <a style="color: blue;" href="/library/transactions/{transaction.id}">View Offer</a>',
+            title=f"Buy Offer for {book_listing.library_item.book.title}!"
+        )
+        notification.save()
+        messages.success(request, f"Buy offer sent!")
+    
+    return redirect('library') # all listings page
+
+
+@login_required
+def transactions_view(request):
+    # get all transaction that the user is from ("receiver of transaction") or to ("initiater") in
+    transactions = Transaction.objects.filter(Q(from_member=request.user) | Q(to_member=request.user))
+    return render(request, "transactions/transactions.html", {'transactions': transactions})
+
+
+@login_required
+def transaction_view(request, transaction_id):
+    transaction = get_object_or_404(Transaction, pk=transaction_id)
+    return render(request, "transactions/transaction.html", {'transaction': transaction})
+
+@login_required
+def accept_transaction(request, transaction_id):
+    transaction = get_object_or_404(Transaction, pk=transaction_id)
+    # accepting a buy offer
+    # change the library item's owner to the 'to' member
+    new_owner = transaction.to_member
+    library_item = transaction.book_listing.library_item
+    library_item.member = new_owner
+    library_item.save()
+    # notify the to memeber about the accepted transaction and the new library item in their library
+    notification = Notification(
+        member=new_owner,
+        message=f'Your buy offer was accepted for {library_item.book.title}! <a style="color: blue;" href="/library/my-library/">View your library with the new item</a>',
+        title=f"Buy Offer accepted :)"
+    )
+    notification.save()
+
+    # close the book listing so it is not live
+    transaction.book_listing.is_closed = True
+    transaction.book_listing.save()
+    
+    # mark the transaction as accepted
+    transaction.transaction_status = Transaction.TransactionStatus.accepted
+    transaction.save()
+    
+    messages.success(request, "Transaction Accepted!")
+    # future enhancement: Add the selling price to the member's balance
+    return render(request, "transactions/transaction.html", {'transaction': transaction})
+
+@login_required
+def reject_transaction(request, transaction_id):
+    transaction = get_object_or_404(Transaction, pk=transaction_id)
+    
+    # Mark transaction as rejected
+    transaction.transaction_status = Transaction.TransactionStatus.rejected
+    transaction.save()
+
+    # notify the to memeber about the rejected transaction
+    notification = Notification(
+        member=transaction.to_member,
+        message=f'Your buy offer was rejected for {transaction.book_listing.library_item.book.title}! <a style="color: blue;" href="/library/transactions/{transaction.id}">View transaction details</a>',
+        title=f"Buy Offer rejected :("
+    )
+    notification.save()
+    messages.success(request, "Transaction Rejected!")
+    return render(request, "transactions/transaction.html", {'transaction': transaction})

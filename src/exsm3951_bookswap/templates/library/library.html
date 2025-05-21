@@ -27,7 +27,7 @@
 </form>
 
 <section class="mb-8 mt-8">
-  {% if request.GET.search_title != '' %}
+  {% if request.GET.search_title != None %}
     {% if book_listings %}
       <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
         {% for listing in book_listings %}

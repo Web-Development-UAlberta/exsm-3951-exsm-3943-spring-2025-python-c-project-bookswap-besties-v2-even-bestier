@@ -1,0 +1,78 @@
+{% extends "base.html" %} {% load bookswap_tags %} {% block title %}
+Transaction{% endblock %} {% block content %}
+
+<!-- Display the Listing -->
+<div
+  class="max-w-md mx-auto bg-amber-50 rounded-xl shadow-md p-6 text-[#825d3f]"
+>
+  <h2 class="text-2xl font-bold mb-4 flex justify-center">
+    <span> Transaction </span>
+  </h2>
+
+  <div class="p-3 text-center">
+    <div class="bg-amber-50 shadow-lg p-3 rounded-xl">
+      <p class="font-bold">
+        {{ transaction.book_listing.library_item.book.title }}
+      </p>
+      <p class="text-sm text-gray-600">
+        {{ transaction.book_listing.library_item.book.author }}
+      </p>
+      <p class="text-sm text-gray-600">${{ transaction.book_listing.price }}</p>
+      <p class="text-sm text-gray-600">
+        Shipping Address: {{ transaction.shipment.address }}
+      </p>
+      <p class="text-sm text-gray-600">
+        Potential Buyer: {{ transaction.to_member.full_name }}
+      </p>
+      <p class="text-sm text-gray-600">
+        Transaction status: {{ transaction.get_transaction_status_display }}
+      </p>
+      <img
+        src="{{ transaction.book_listing.library_item.book.image_url }}"
+        alt="No image"
+      />
+    </div>
+  </div>
+
+  <!-- Only the user that can accept/reject the transaction should see the action buttons -->
+  {% if transaction.from_member == user and transaction.transaction_status == 'Pending' %}
+  <div class="flex flex-wrap gap-9 justify-center mt-4">
+    <form
+      class="inline"
+      method="POST"
+      action="{% url 'accept_transaction' transaction.id %}"
+    >
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="text-white bg-gradient-to-br from-green-600 to-green-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-xl text-md px-5 py-1.5 text-center"
+      >
+        Accept
+      </button>
+    </form>
+    <form
+      class="inline"
+      method="POST"
+      action="{% url 'reject_transaction' transaction.id %}"
+    >
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="text-white bg-gradient-to-br from-pink-600 to-pink-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-xl text-md px-5 py-1.5 text-center"
+      >
+        Reject
+      </button>
+    </form>
+  </div>
+  {% elif transaction.transaction_status == 'Pending' %}
+  <div class="flex flex-wrap gap-9 justify-center mt-4">
+    This transaction is {{ transaction.get_transaction_status_display }}
+  </div>
+  {% else %}
+  <div class="flex flex-wrap gap-9 justify-center mt-4">
+    This transaction was {{ transaction.get_transaction_status_display }}
+  </div>
+  {% endif %}
+</div>
+
+{% endblock %}

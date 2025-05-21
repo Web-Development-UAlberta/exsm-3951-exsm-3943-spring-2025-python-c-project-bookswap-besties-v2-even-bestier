@@ -45,3 +45,4 @@ class BookListingForm(forms.ModelForm):
     def get_library_item_choices(self, user):
         choices = [(obj.id, str(obj)) for obj in LibraryItem.objects.filter(member=user)]
         return choices
+

@@ -20,6 +20,9 @@
       <span class="unread-notifications-badge">{{ user.unread_notification_count }}</span>
     {% endif %}
   </a>
+  <a href="{% url 'transactions_view' %}" class="text-[#825d1f] hover:underline px-2 text-center w-[8rem] break-words leading-tight">
+    Transactions
+  </a>
   <a href="{% url 'profile_settings' %}" class="text-[#825d1f] hover:underline px-2 text-center w-[6rem] break-words leading-tight">
     My Profile
   </a>

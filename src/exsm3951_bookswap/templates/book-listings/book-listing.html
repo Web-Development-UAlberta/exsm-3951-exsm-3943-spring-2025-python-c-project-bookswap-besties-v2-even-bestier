@@ -56,7 +56,10 @@
   <a href="{% url 'view_my_book_listings' %}" class="text-white bg-gradient-to-r from-green-700 to-green-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-600 dark:focus:ring-green-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Close</a>
   {% else %}
   <!-- buyer buttons -->
-    <a href="" class="text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-500 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Buy</a>
+    <form class="inline" method="POST" action="{% url 'buy_book' book_listing.id %}">
+    {% csrf_token %}
+      <button type="submit" class="text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-500 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Buy offer</button>
+    </form>
     <a href="" class="text-white bg-gradient-to-r from-green-700 to-green-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-500 dark:focus:ring-green-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Swap</a>
   {% endif %}
 </div>

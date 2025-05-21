@@ -14,8 +14,13 @@ urlpatterns = [
     path('book-listings/<int:book_listing_id>/', views.view_book_listing, name='view_book_listing'),
     path('book-listings/<int:book_listing_id>/edit', views.edit_book_listing, name='edit_book_listing'),
     path('book-listings/<int:book_listing_id>/delete', views.delete_book_listing, name='delete_book_listing'),
+    path('book-listings/<int:book_listing_id>/buy_book', views.buy_book, name='buy_book'),
     path('my-library/', views.my_library_view, name='my_library'),
     path('my_library/add/<int:book_id>/', views.add_to_library, name='add_to_my_library'),
     path('my_library/remove/<int:listing_id>/', views.remove_from_my_library, name='remove_from_my_library'),
+    path('transactions/', views.transactions_view, name='transactions_view'),
+    path('transactions/<int:transaction_id>/', views.transaction_view, name='transaction_view'),
+    path('transactions/<int:transaction_id>/accept', views.accept_transaction, name='accept_transaction'),
+    path('transactions/<int:transaction_id>/reject', views.reject_transaction, name='reject_transaction'),
     
 ]

@@ -42,7 +42,6 @@ class LibraryItem(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, null=False)
 
-
     def __str__(self):
         return f"{self.book.title}"    
 
@@ -64,6 +63,7 @@ class BookListing(models.Model):
     price =  models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0.01)], null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_closed = models.BooleanField(default=False, null=False)
     
 
 class Review(models.Model):
@@ -94,6 +94,7 @@ class Shipment(models.Model):
     shipment_date = models.DateField(null=False, validators=[validate_shipment_date])
     shipment_cost = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0.00)], null=False)
     weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.01, validators=[MinValueValidator(0.01)], null=False)
+    address = models.TextField(max_length=255, blank=False, null=False)
     
        
 class Swap(models.Model):
@@ -106,15 +107,22 @@ class Transaction(models.Model):
         sale = "Sale"
         swap = "Swap"
         
+    class TransactionStatus(models.TextChoices):
+        pending = "Pending"
+        accepted = "Accepted"
+        rejected = "Rejected"
+        
         
     transaction_type = models.CharField(max_length=4, choices=TransactionType.choices, null=False)
-    transaction_date = models.DateField(null=False)
+    transaction_status = models.CharField(max_length=8, choices=TransactionStatus.choices, default=TransactionStatus.pending, null=False)
+    transaction_date = models.DateField(auto_now_add=True, null=False)
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, null=False)
     book_listing = models.ForeignKey(BookListing, on_delete=models.CASCADE, null=False)
     from_member = models.ForeignKey(Member, related_name="from_member", on_delete=models.CASCADE, null=False)
     to_member = models.ForeignKey(Member, related_name="to_member", on_delete=models.CASCADE, null=False)
     cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=0)
     swap = models.ForeignKey(Swap, on_delete=models.CASCADE, null=True, blank=True)  # null when transaction_type is Sale
+    
 
 
     def clean(self):

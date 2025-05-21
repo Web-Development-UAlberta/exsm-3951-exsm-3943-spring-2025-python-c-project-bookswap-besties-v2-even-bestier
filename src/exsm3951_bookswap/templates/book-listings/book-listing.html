@@ -6,7 +6,7 @@
 <!-- Display the Listing -->
 <div class="max-w-md mx-auto bg-amber-50 rounded-xl shadow-md p-6 text-[#825d3f]">
 
-  <h2 class="text-2xl font-bold mb-4 flex justify-center">
+  <h2 class="text-4xl font-bold mb-4 flex justify-center">
     <span>
       {% if user == book_listing.member_owner  %} 
       My 
@@ -17,30 +17,29 @@
 
   <!-- Book title -->
   <div class="p-3 text-center">
-    <h5 class="text-lg font-bold">Book</h5>
     <div class="bg-amber-50 shadow-lg p-3 rounded-xl">
       <p class="font-bold">{{ book_listing.library_item.book.title }}</p>
-      <p class="text-sm text-gray-600">{{ book_listing.library_item.book.author }}</p>
+      <p class="text-lg">{{ book_listing.library_item.book.author }}</p>
       <img src="{{ book_listing.library_item.book.image_url }}" alt="No image" />
     </div>
   </div>
   <!-- Condition -->
   <div class="p-3 text-center">
-    <h5 class="text-lg font-bold">Condition</h5>
+    <h5 class="text-2xl font-bold">Condition</h5>
     <p>
       {{ book_listing.condition }}
     </p>
   </div>
   <!-- Seller name -->
   <div class="p-3 text-center">
-    <h5 class="text-lg font-bold">Seller</h5>
+    <h5 class="text-2xl font-bold">Seller</h5>
     <p>
       {{ book_listing.member_owner.full_name }}
     </p>
   </div>
   <!-- Price -->
   <div class="p-3 text-center">
-    <h5 class="text-lg font-bold">Price</h5>
+    <h5 class="text-2xl font-bold">Price</h5>
     <p>
       ${{ book_listing.price }}
     </p>
@@ -57,8 +56,8 @@
   <a href="{% url 'view_my_book_listings' %}" class="text-white bg-gradient-to-r from-green-700 to-green-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-600 dark:focus:ring-green-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Close</a>
   {% else %}
   <!-- buyer buttons -->
-    <a href="" class="text-white bg-gradient-to-r from-blue-500 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Buy</a>
-    <a href="" class="text-white bg-gradient-to-r from-blue-500 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Swap</a>
+    <a href="" class="text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-500 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Buy</a>
+    <a href="" class="text-white bg-gradient-to-r from-green-700 to-green-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-500 dark:focus:ring-green-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Swap</a>
   {% endif %}
 </div>
 

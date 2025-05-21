@@ -204,5 +204,3 @@ def delete_book_listing(request, book_listing_id):
         book_listing.delete()
         return redirect('view_my_book_listings')
     return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
-
-

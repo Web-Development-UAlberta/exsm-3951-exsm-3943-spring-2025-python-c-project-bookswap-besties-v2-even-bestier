@@ -74,17 +74,18 @@
     <div class="flex items-center justify-between xl:hidden w-full px-4 py-2 relative">
 
       <!-- Logo (left) -->
-      <a href="{% url 'browse_books' %}" class="shrink-0">
-        <img src="{% static 'images/bookswaplogo.png' %}" alt="BookSwap Logo"
-            class="h-16 w-auto object-contain" />
-      </a>
-
-      <!-- Welcome (centered ) -->
-      {% if user.is_authenticated %}
-        <div class="absolute left-1/2 transform -translate-x-1/2 text-center text-[#825d3f] text-2xl font-medium">
-          Welcome, {{ user.first_name|default:user.username }}!
+        <div class="flex items-center space-x-4">
+          <a href="{% url 'browse_books' %}">
+            <img src="{% static 'images/bookswaplogo.png' %}" alt="BookSwap Logo"
+                  class="h-14 sm:h-20 md:h-24 w-auto object-contain" />
+          </a>
+          
+          {% if user.is_authenticated %}
+            <span class="text-[#825d3f] text-lg font-medium whitespace-nowrap">
+              Welcome, {{ user.first_name|default:user.username }}!
+            </span>
+          {% endif %}
         </div>
-      {% endif %}
         <!--Burger menu animation-->
       <div
         x-show="open"
@@ -94,9 +95,9 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100 translate-y-0"
         x-transition:leave-end="opacity-0 -translate-y-2"
-        class="xl:hidden fixed top-[80px] right-4 w-[175px] z-[9999] bg-amber-50/85 backdrop-blur-lg py-8 px-4 rounded-xl"
+        class="xl:hidden fixed top-[80px] right-4 w-[166px] z-[9999] bg-amber-50/85 backdrop-blur-lg py-8 px-4 rounded-xl"
       >
-        <nav class="flex flex-col items-center space-y-2 text-md text-[#825d3f]">
+        <nav class="flex flex-col items-center space-y-6 text-md text-[#825d3f]">
           {% include 'partials/nav_links.html' %}
         </nav>
       </div>

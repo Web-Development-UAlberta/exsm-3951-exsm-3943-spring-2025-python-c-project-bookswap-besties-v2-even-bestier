@@ -10,21 +10,35 @@
   </h2>
 </div>
 
-<form method="get" class="mb-4 flex flex-col sm:flex-row gap-2">
-  <input type="text" name="search_title" placeholder="Search by title..." value="{{ request.GET.search_title }}"
-         class="border rounded-xl bg-amber-50 border border-amber-400 px-2 py-1 rounded-xl w-full sm:w-2/3" required>
-  <button type="submit" class="bg-green-600 text-white px-4 py-1 rounded-xl hover:bg-green-700">
+<form method="get" class="mb-2">
+  <input
+    type="text"
+    name="search_title"
+    placeholder="Search by title..."
+    value="{{ request.GET.search_title }}"
+    class="border rounded-xl bg-amber-50 border-amber-400 px-4 py-2 w-full"
+    required
+  />
+</form>
+
+<!-- Button Group -->
+<div class="flex flex-col sm:flex-row gap-2 justify-center items-center">
+  {% if request.GET.search_title %}
+    <a
+      href="{% url 'library' %}"
+      class="bg-pink-400 text-white px-6 py-2 rounded-xl hover:bg-pink-500 w-64 text-center"
+    >
+      Cancel Search
+    </a>
+  {% endif %}
+  <button
+    type="submit"
+    form="search-form"
+    class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700 w-64 text-center"
+  >
     Search For Listings
   </button>
-  {% if request.GET.search_title %}
-    <div class="mb-4 flex justify-center sm:justify-start">
-      <a href="{% url 'library' %}"
-        class="bg-green-600 text-white px-4 py-1 rounded-xl hover:bg-green-700">
-        Cancel Search
-      </a>
-    </div>
-  {% endif %}
-</form>
+</div>
 
 <section class="mb-8 mt-8">
   {% if request.GET.search_title != None %}

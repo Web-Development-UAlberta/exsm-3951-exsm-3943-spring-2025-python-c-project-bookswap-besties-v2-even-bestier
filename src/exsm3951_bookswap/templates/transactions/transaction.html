@@ -17,14 +17,14 @@ Transaction{% endblock %} {% block content %}
       <p class="text-sm text-gray-600">
         {{ transaction.book_listing.library_item.book.author }}
       </p>
-      <p class="text-sm text-gray-600">${{ transaction.book_listing.price }}</p>
-      <p class="text-sm text-gray-600">
+      <p class="text-md">${{ transaction.book_listing.price }}</p>
+      <p class="text-md">
         Shipping Address: {{ transaction.shipment.address }}
       </p>
-      <p class="text-sm text-gray-600">
+      <p class="text-md">
         Potential Buyer: {{ transaction.to_member.full_name }}
       </p>
-      <p class="text-sm text-gray-600">
+      <p class="text-md">
         Transaction status: {{ transaction.get_transaction_status_display }}
       </p>
       <img

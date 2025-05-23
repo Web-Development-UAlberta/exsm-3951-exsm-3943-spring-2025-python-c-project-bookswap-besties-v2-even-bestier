@@ -266,12 +266,12 @@ def accept_transaction(request, transaction_id):
     transaction = get_object_or_404(Transaction, pk=transaction_id)
     # accepting a buy / swap offer
     # go through each transaction detail, and transfer ownership of the book to the to_member
-    transaction_details = transaction.transaction_detials.all()
+    transaction_details = transaction.transaction_details.all()
     for detail in transaction_details:
         new_owner = detail.to_member
         # transfer ownership of the library item
         library_item = detail.book_listing.library_item
-        library_item.member_owner = new_owner
+        library_item.member = new_owner
         library_item.save()
         # mark book listing as closed so it cannot be interacted with again
         book_listing = detail.book_listing
@@ -290,7 +290,7 @@ def accept_transaction(request, transaction_id):
     transaction.transaction_status = Transaction.TransactionStatus.accepted
     transaction.save()
     
-    messages.success(request, f"{transaction.transaction_type} Transaction Accepted!")
+    messages.success(request, f"You accepted the {transaction.transaction_type} transaction!")
     # future enhancement: Add the selling price to the member's balance
     return render(request, "transactions/transaction.html", {'transaction': transaction})
 
@@ -309,5 +309,5 @@ def reject_transaction(request, transaction_id):
         title=f"Buy Offer rejected :("
     )
     notification.save()
-    messages.success(request, "Transaction Rejected!")
+    messages.success(request, f"You rejected {transaction.transaction_type} transaction!")
     return render(request, "transactions/transaction.html", {'transaction': transaction})

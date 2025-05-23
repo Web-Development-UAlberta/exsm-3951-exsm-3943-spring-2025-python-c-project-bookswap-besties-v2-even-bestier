@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Review, WishList, Shipment, Transaction, BookListing, TransactionDetail
+from .models import Book, Review, WishList, Shipment, Transaction, BookListing, TransactionDetail, LibraryItem
 
 
 class BookAdmin(admin.ModelAdmin):
@@ -26,6 +26,9 @@ class TransactionAdmin(admin.ModelAdmin):
 class TransactionDetailAdmin(admin.ModelAdmin):
     list_display = ['id', 'transaction', 'shipment', 'book_listing', 'from_member', 'to_member', 'cost']
     
+class LibraryItemAdmin(admin.ModelAdmin):
+    list_display = ['id', 'book', 'member']
+    
          
 admin.site.register(Book, BookAdmin)
 admin.site.register(Review, ReviewAdmin)
@@ -34,4 +37,5 @@ admin.site.register(Shipment, ShipmentAdmin)
 admin.site.register(Transaction, TransactionAdmin)
 admin.site.register(TransactionDetail, TransactionDetailAdmin)
 admin.site.register(BookListing, BookListingAdmin)
+admin.site.register(LibraryItem, LibraryItemAdmin)
     

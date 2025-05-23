@@ -6,36 +6,38 @@ Transaction{% endblock %} {% block content %}
   class="max-w-md mx-auto bg-amber-50 rounded-xl shadow-md p-6 text-[#825d3f]"
 >
   <h2 class="text-2xl font-bold mb-4 flex justify-center">
-    <span> Transaction </span>
+    <span> {{ transaction.transaction_type }} Transaction </span>
   </h2>
 
-  <div class="p-3 text-center">
+
+  <h3>Details:</h3>
+
+  {% for detail in transaction.transaction_details.all %}
+  <div class="p-3 text-center mb-4">
     <div class="bg-amber-50 shadow-lg p-3 rounded-xl">
       <p class="font-bold">
-        {{ transaction.book_listing.library_item.book.title }}
+        {{ detail.book_listing.library_item.book.title }}
       </p>
       <p class="text-sm text-gray-600">
-        {{ transaction.book_listing.library_item.book.author }}
+        Author: {{ detail.book_listing.library_item.book.author }}
       </p>
-      <p class="text-md">${{ transaction.book_listing.price }}</p>
+      <p class="text-md">${{ detail.book_listing.price }}</p>
       <p class="text-md">
-        Shipping Address: {{ transaction.shipment.address }}
-      </p>
-      <p class="text-md">
-        Potential Buyer: {{ transaction.to_member.full_name }}
+        Shipping Address: {{ detail.shipment.address }}
       </p>
       <p class="text-md">
-        Transaction status: {{ transaction.get_transaction_status_display }}
+        Transfers to member: {{ detail.to_member.full_name }}
       </p>
       <img
-        src="{{ transaction.book_listing.library_item.book.image_url }}"
+        src="{{ detail.book_listing.library_item.book.image_url }}"
         alt="No image"
       />
     </div>
   </div>
+  {% endfor %}
 
   <!-- Only the user that can accept/reject the transaction should see the action buttons -->
-  {% if transaction.from_member == user and transaction.transaction_status == 'Pending' %}
+  {% if transaction.receiver_member == user and transaction.transaction_status == 'Pending' %}
   <div class="flex flex-wrap gap-9 justify-center mt-4">
     <form
       class="inline"

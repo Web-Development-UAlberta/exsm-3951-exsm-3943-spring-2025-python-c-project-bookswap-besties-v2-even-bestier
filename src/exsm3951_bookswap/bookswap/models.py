@@ -119,7 +119,7 @@ class Transaction(models.Model):
 
     def clean(self):
         super().clean()
-        if self.from_member == self.to_member:
+        if self.initiator_member == self.receiver_member:
             raise ValidationError("A member cannot sell/swap with themselves")
     
     def save(self, *args, **kwargs):
@@ -135,3 +135,14 @@ class TransactionDetail(models.Model):
     shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, null=False)
     cost = models.DecimalField(max_digits=6, decimal_places=2, null=False,  default=Decimal("0.00"))
     
+    def clean(self):
+        super().clean()
+        if self.from_member == self.to_member:
+            raise ValidationError("A member cannot transfer a library item with themselves")
+    
+        if self.book_listing.is_closed:
+            raise ValidationError("Cannot create a transaction detail with a closed book listing")
+    
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)  

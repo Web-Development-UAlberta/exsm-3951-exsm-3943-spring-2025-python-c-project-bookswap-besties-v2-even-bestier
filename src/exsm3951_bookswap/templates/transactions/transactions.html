@@ -24,13 +24,45 @@
   >
     {{ transaction.transaction_type }} Transaction ({{ transaction.transaction_status }}) 
   </h5>
-  <p class="font-normal text-[#825d3f]">
-    {% if transaction.from_member == user %}
-    {{ transaction.to_member.full_name }} offered to buy <strong>{{ transaction.book_listing.library_item.book.title }}</strong>    
-    {% elif transaction.to_member == user %}
-    You offered to buy <strong>{{ transaction.book_listing.library_item.book.title }}</strong> from {{ transaction.from_member.full_name }}
-    {% endif %}
-  </p>
+
+  {% if transaction.transaction_type == 'Sale' %}
+    <p class="font-normal text-[#825d3f]">
+      {% if transaction.initiator_member == user %}
+        <div>
+          You offered to buy:
+        </div>
+      {% else %}
+        <div>
+          {{ transaction.initiator_member }} offered to buy the book from you:
+        </div>
+      {% endif %}
+      {% for detail in transaction.transaction_details.all %}
+        <div>
+          <strong>
+            {{ detail.book_listing.library_item.book.title }}
+          </strong>
+        </div>
+      {% endfor %}
+    </p>
+  {% else %}
+    <p class="font-normal text-[#825d3f]">
+      {% if transaction.initiator_member == user %}
+        <div>
+          You offered to swap:
+        </div>
+      {% else %}
+        <div>
+          {{ transaction.initiator_member }} offered to swap the books from you:
+        </div>
+      {% endif %}
+      {% for detail in transaction.transaction_details.all %}
+        <div>{{ detail.book_listing.library_item.book.title }}</div>
+      {% endfor %}
+    </p>
+
+  {% endif %}
+
+  
 </a>
 {% empty %}
 <div class="text-[#825d3f]">No transaction.</div>

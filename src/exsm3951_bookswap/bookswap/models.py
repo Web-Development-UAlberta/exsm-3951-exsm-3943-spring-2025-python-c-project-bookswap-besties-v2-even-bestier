@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator, RegexVa
 from authentication.models import Member
 from django.utils import timezone
 from django.core.exceptions import ValidationError
+from decimal import Decimal 
 
 
 def validate_not_future_date(value):
@@ -60,7 +61,7 @@ class BookListing(models.Model):
         max_length=4,
         choices=BookCondition.choices, default=BookCondition.new, null=False
     )
-    price =  models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0.01)], null=False)
+    price =  models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(Decimal("0.01"))], null=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_closed = models.BooleanField(default=False, null=False)
@@ -89,16 +90,17 @@ class WishList(models.Model):
     #make sure the combination of member and book is unique
     class Meta:
         unique_together = ('member', 'book')
+        
+
+class Swap(models.Model):
+    create_at = models.DateTimeField(auto_now_add=True)
+    
 
 class Shipment(models.Model):
     shipment_date = models.DateField(null=False, validators=[validate_shipment_date])
     shipment_cost = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0.00)], null=False)
     weight = models.DecimalField(max_digits=7, decimal_places=3, default=0.01, validators=[MinValueValidator(0.01)], null=False)
     address = models.TextField(max_length=255, blank=False, null=False)
-    
-       
-class Swap(models.Model):
-    create_at = models.DateTimeField(auto_now_add=True)
     
     
 class Transaction(models.Model):
@@ -120,10 +122,9 @@ class Transaction(models.Model):
     book_listing = models.ForeignKey(BookListing, on_delete=models.CASCADE, null=False)
     from_member = models.ForeignKey(Member, related_name="from_member", on_delete=models.CASCADE, null=False)
     to_member = models.ForeignKey(Member, related_name="to_member", on_delete=models.CASCADE, null=False)
-    cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=0)
-    swap = models.ForeignKey(Swap, on_delete=models.CASCADE, null=True, blank=True)  # null when transaction_type is Sale
+    cost = models.DecimalField(max_digits=6, decimal_places=2, null=False,  default=Decimal("0.00"))
+    swap = models.ForeignKey('Swap', on_delete=models.CASCADE, null=True, blank=True)  # keep track of swaps
     
-
 
     def clean(self):
         super().clean()
@@ -133,3 +134,4 @@ class Transaction(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
+        

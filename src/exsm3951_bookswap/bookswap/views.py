@@ -7,6 +7,7 @@ from .utils.google_books import get_cover_image, get_books_data
 from .forms import BookForm, BookListingForm
 from notifications.models import Notification
 from django.contrib import messages
+from decimal import Decimal 
 
 @login_required
 def my_library_view(request):
@@ -111,8 +112,6 @@ def remove_from_wishlist(request, wishlist_id):
     return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
     
 
-
-
 @login_required
 def book_search_view(request):
     query = request.GET.get('q', '')
@@ -169,7 +168,7 @@ def create_book_listing(request):
     else:
         intial_data = {
             'member_owner': request.user,
-            'price': 0.00,
+            'price': Decimal("0.01"),
         }
         form = BookListingForm(initial=intial_data, user=request.user)
 
@@ -215,7 +214,7 @@ def buy_book(request, book_listing_id):
         # create a pending transaction for the book listing
         shipment = Shipment(
             shipment_date=datetime.now().date(),
-            shipment_cost=10.00,
+            shipment_cost=Decimal("10.00"),
             weight=2,
             address="1st AVE EAST Mock Town, Canada"
         )
@@ -227,7 +226,7 @@ def buy_book(request, book_listing_id):
             book_listing=book_listing,
             from_member=book_listing.member_owner,
             to_member=request.user,
-            cost=float(book_listing.price) + float(shipment.shipment_cost),
+            cost=Decimal(str(book_listing.price)) + Decimal(str(shipment.shipment_cost)),
         )
         transaction.save()
         # notify the owner of the book listing of the buy offer so they can accept / reject it

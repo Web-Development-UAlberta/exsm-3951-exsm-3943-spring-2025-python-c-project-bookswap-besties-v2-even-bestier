@@ -91,10 +91,6 @@ class WishList(models.Model):
         unique_together = ('member', 'book')
         
 
-class Swap(models.Model):
-    create_at = models.DateTimeField(auto_now_add=True)
-    
-
 class Shipment(models.Model):
     shipment_date = models.DateField(null=False, validators=[validate_shipment_date])
     shipment_cost = models.DecimalField(max_digits=6, decimal_places=2, validators=[MinValueValidator(0.00)], null=False)
@@ -117,12 +113,8 @@ class Transaction(models.Model):
     transaction_type = models.CharField(max_length=4, choices=TransactionType.choices, null=False)
     transaction_status = models.CharField(max_length=8, choices=TransactionStatus.choices, default=TransactionStatus.pending, null=False)
     transaction_date = models.DateField(auto_now_add=True, null=False)
-    shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, null=False)
-    book_listing = models.ForeignKey(BookListing, on_delete=models.CASCADE, null=False)
-    from_member = models.ForeignKey(Member, related_name="from_member", on_delete=models.CASCADE, null=False)
-    to_member = models.ForeignKey(Member, related_name="to_member", on_delete=models.CASCADE, null=False)
-    cost = models.DecimalField(max_digits=6, decimal_places=2, null=False,  default=Decimal("0.00"))
-    swap = models.ForeignKey('Swap', on_delete=models.CASCADE, null=True, blank=True)  # keep track of swaps
+    initiator_member = models.ForeignKey(Member, related_name="from_member", on_delete=models.CASCADE, null=False)
+    receiver_member = models.ForeignKey(Member, related_name="to_member", on_delete=models.CASCADE, null=False)
     
 
     def clean(self):
@@ -134,3 +126,13 @@ class Transaction(models.Model):
         self.full_clean()
         super().save(*args, **kwargs)
         
+
+
+class TransactionDetail(models.Model):
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, null=False)
+    book_listing = models.ForeignKey(BookListing, on_delete=models.CASCADE, null=False)
+    from_member = models.ForeignKey(Member, related_name="transaction_detail_from_member", on_delete=models.CASCADE, null=False)
+    to_member = models.ForeignKey(Member, related_name="transaction_detail_to_member", on_delete=models.CASCADE, null=False)
+    shipment = models.ForeignKey(Shipment, on_delete=models.CASCADE, null=False)
+    cost = models.DecimalField(max_digits=6, decimal_places=2, null=False,  default=Decimal("0.00"))
+    

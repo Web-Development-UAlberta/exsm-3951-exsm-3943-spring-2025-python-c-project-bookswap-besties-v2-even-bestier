@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Review, WishList, Swap, Shipment, Transaction, BookListing
+from .models import Book, Review, WishList, Shipment, Transaction, BookListing, TransactionDetail
 
 
 class BookAdmin(admin.ModelAdmin):
@@ -15,24 +15,23 @@ class ReviewAdmin(admin.ModelAdmin):
 class WishListAdmin(admin.ModelAdmin):
     list_display = ['id', 'book', 'member']
     
-        
-class SwapAdmin(admin.ModelAdmin):
-    list_display = ['id'] 
-    
        
 class ShipmentAdmin(admin.ModelAdmin):
     list_display = ['id', 'shipment_date', 'shipment_cost'] 
     
     
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ['transaction_type', 'transaction_date', 'shipment', 'book_listing', 'from_member', 'to_member', 'cost', 'swap']
+    list_display = ['id', 'transaction_type', 'transaction_date', 'initiator_member', 'receiver_member']
+
+class TransactionDetailAdmin(admin.ModelAdmin):
+    list_display = ['id', 'transaction', 'shipment', 'book_listing', 'from_member', 'to_member', 'cost']
     
          
 admin.site.register(Book, BookAdmin)
 admin.site.register(Review, ReviewAdmin)
 admin.site.register(WishList, WishListAdmin)
-admin.site.register(Swap, SwapAdmin)
 admin.site.register(Shipment, ShipmentAdmin)
 admin.site.register(Transaction, TransactionAdmin)
+admin.site.register(TransactionDetail, TransactionDetailAdmin)
 admin.site.register(BookListing, BookListingAdmin)
     

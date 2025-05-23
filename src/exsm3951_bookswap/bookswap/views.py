@@ -2,7 +2,7 @@ from datetime import datetime
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .models import Book, BookListing, Review, WishList, Shipment, Transaction, LibraryItem
+from .models import Book, BookListing, Review, WishList, Shipment, Transaction, TransactionDetail, LibraryItem
 from .utils.google_books import get_cover_image, get_books_data
 from .forms import BookForm, BookListingForm
 from notifications.models import Notification
@@ -212,6 +212,14 @@ def buy_book(request, book_listing_id):
 
     if request.method == 'POST':
         # create a pending transaction for the book listing
+        transaction = Transaction(
+            transaction_type=Transaction.TransactionType.sale,
+            transaction_status=Transaction.TransactionStatus.pending,
+            initiator_member=request.user,
+            receiver_member=book_listing.member_owner,
+        )
+        transaction.save()
+
         shipment = Shipment(
             shipment_date=datetime.now().date(),
             shipment_cost=Decimal("10.00"),
@@ -219,16 +227,16 @@ def buy_book(request, book_listing_id):
             address="1st AVE EAST Mock Town, Canada"
         )
         shipment.save()
-        transaction = Transaction(
-            transaction_type=Transaction.TransactionType.sale,
-            transaction_status=Transaction.TransactionStatus.pending,
-            shipment=shipment,
+        
+        transaction_detail = TransactionDetail(
+            transaction=transaction,
             book_listing=book_listing,
-            from_member=book_listing.member_owner,
-            to_member=request.user,
+            shipment=shipment,
             cost=Decimal(str(book_listing.price)) + Decimal(str(shipment.shipment_cost)),
+            from_member=book_listing.member_owner,  # book listing is transfering from 'from_member' to the logged in user
+            to_member=request.user,
         )
-        transaction.save()
+        transaction_detail.save()
         # notify the owner of the book listing of the buy offer so they can accept / reject it
         notification = Notification(
             member=book_listing.member_owner,
@@ -256,29 +264,33 @@ def transaction_view(request, transaction_id):
 @login_required
 def accept_transaction(request, transaction_id):
     transaction = get_object_or_404(Transaction, pk=transaction_id)
-    # accepting a buy offer
-    # change the library item's owner to the 'to' member
-    new_owner = transaction.to_member
-    library_item = transaction.book_listing.library_item
-    library_item.member = new_owner
-    library_item.save()
-    # notify the to memeber about the accepted transaction and the new library item in their library
-    notification = Notification(
-        member=new_owner,
-        message=f'Your buy offer was accepted for {library_item.book.title}! <a style="color: blue;" href="/library/my-library/">View your library with the new item</a>',
-        title=f"Buy Offer accepted :)"
-    )
-    notification.save()
+    # accepting a buy / swap offer
+    # go through each transaction detail, and transfer ownership of the book to the to_member
+    transaction_details = transaction.transaction_detials.all()
+    for detail in transaction_details:
+        new_owner = detail.to_member
+        # transfer ownership of the library item
+        library_item = detail.book_listing.library_item
+        library_item.member_owner = new_owner
+        library_item.save()
+        # mark book listing as closed so it cannot be interacted with again
+        book_listing = detail.book_listing
+        book_listing.is_closed = True
+        book_listing.save()
+        
+        # notify the 'to_memeber' about the accepted transaction and the new library item in their library
+        notification = Notification(
+            member=new_owner,
+            message=f'Your {transaction.transaction_type} offer was accepted for {library_item.book.title}! <a style="color: blue;" href="/library/my-library/">View your library with the new item</a>',
+            title=f"{transaction.transaction_type} Offer accepted :)"
+        )
+        notification.save()
 
-    # close the book listing so it is not live
-    transaction.book_listing.is_closed = True
-    transaction.book_listing.save()
-    
     # mark the transaction as accepted
     transaction.transaction_status = Transaction.TransactionStatus.accepted
     transaction.save()
     
-    messages.success(request, "Transaction Accepted!")
+    messages.success(request, f"{transaction.transaction_type} Transaction Accepted!")
     # future enhancement: Add the selling price to the member's balance
     return render(request, "transactions/transaction.html", {'transaction': transaction})
 

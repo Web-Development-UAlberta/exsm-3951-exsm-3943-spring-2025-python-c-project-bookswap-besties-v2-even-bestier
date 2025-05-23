@@ -113,8 +113,8 @@ class Transaction(models.Model):
     transaction_type = models.CharField(max_length=4, choices=TransactionType.choices, null=False)
     transaction_status = models.CharField(max_length=8, choices=TransactionStatus.choices, default=TransactionStatus.pending, null=False)
     transaction_date = models.DateField(auto_now_add=True, null=False)
-    initiator_member = models.ForeignKey(Member, related_name="from_member", on_delete=models.CASCADE, null=False)
-    receiver_member = models.ForeignKey(Member, related_name="to_member", on_delete=models.CASCADE, null=False)
+    initiator_member = models.ForeignKey(Member, related_name="initiator_member", on_delete=models.CASCADE, null=False)
+    receiver_member = models.ForeignKey(Member, related_name="receiver_member", on_delete=models.CASCADE, null=False)
     
 
     def clean(self):
@@ -124,12 +124,11 @@ class Transaction(models.Model):
     
     def save(self, *args, **kwargs):
         self.full_clean()
-        super().save(*args, **kwargs)
-        
+        super().save(*args, **kwargs)  
 
 
 class TransactionDetail(models.Model):
-    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, null=False)
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, null=False, related_name='transaction_details')
     book_listing = models.ForeignKey(BookListing, on_delete=models.CASCADE, null=False)
     from_member = models.ForeignKey(Member, related_name="transaction_detail_from_member", on_delete=models.CASCADE, null=False)
     to_member = models.ForeignKey(Member, related_name="transaction_detail_to_member", on_delete=models.CASCADE, null=False)

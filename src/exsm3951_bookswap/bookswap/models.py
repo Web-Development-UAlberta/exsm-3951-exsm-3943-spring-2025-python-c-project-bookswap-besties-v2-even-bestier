@@ -1,10 +1,9 @@
 from django.db import models
-from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from authentication.models import Member
 from django.utils import timezone
 from django.core.exceptions import ValidationError
-from decimal import Decimal 
+from decimal import Decimal
 
 
 def validate_not_future_date(value):

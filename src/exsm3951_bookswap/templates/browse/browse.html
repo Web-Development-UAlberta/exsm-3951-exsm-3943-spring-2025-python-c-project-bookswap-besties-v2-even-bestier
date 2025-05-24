@@ -88,7 +88,7 @@
           {% include "partials/book_card.html" with book=book show_wishlist_button=False %}
           <a href="{% url 'book_create_from_search' %}?{{ book|as_querystring:'only=isbn,title,author,genre,description,pub_date,language,image_url' }}"
             class="mt-3 block text-center bg-green-600 text-white py-1 rounded-xl hover:bg-green-700">
-            Review / Edit & Save
+            See More About This Book
           </a>
         </div>
       {% endfor %}

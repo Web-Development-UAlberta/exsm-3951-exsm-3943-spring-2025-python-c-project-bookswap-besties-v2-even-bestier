@@ -15,6 +15,14 @@ class BookForm(forms.ModelForm):
             'weight',
             'image_url'
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        #set some fields to hidden
+        hidden_fields = ['language', 'weight', 'image_url']
+        for field_name in hidden_fields:
+            self.fields[field_name].widget = forms.HiddenInput()
+
         
 class BookListingForm(forms.ModelForm):
     class Meta:

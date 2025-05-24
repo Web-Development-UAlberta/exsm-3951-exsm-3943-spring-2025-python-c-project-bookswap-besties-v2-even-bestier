@@ -136,6 +136,11 @@ def book_create_from_search(request):
         initial_data = request.GET.dict()  # <- use prefilled query params
         form = BookForm(initial=initial_data)
         
+        #make fields readonly
+        for field in form.fields.values():
+            field.widget.attrs['readonly'] = True
+            field.widget.attrs['class'] = field.widget.attrs.get('class', '') + ' bg-gray-100 cursor-not-allowed'
+
     return render(request, 'partials/book_form.html', {'form': form})
 
 

@@ -60,7 +60,19 @@ def view_my_book_listings(request):
 
 @login_required
 def browse_books_view(request):
+    title = request.GET.get('title')
+    author = request.GET.get('author')
+    genre = request.GET.get('genre')
+    
     books = Book.objects.all()
+
+    if title:
+        books = books.filter(title__icontains=title)
+    if author:
+        books = books.filter(author__icontains=author)
+    if genre:
+        books = books.filter(genre__iexact=genre)
+
     my_library_items = LibraryItem.objects.filter(member=request.user).select_related('book')
     my_library_books = [item.book for item in my_library_items]
     # Optional inline search support

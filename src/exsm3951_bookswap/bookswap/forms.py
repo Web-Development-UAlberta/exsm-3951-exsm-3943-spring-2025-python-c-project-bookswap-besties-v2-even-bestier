@@ -54,3 +54,18 @@ class BookListingForm(forms.ModelForm):
         choices = [(obj.id, str(obj)) for obj in LibraryItem.objects.filter(member=user)]
         return choices
 
+
+
+
+class SwapOfferForm(forms.Form):
+    selected_book_listings = forms.ModelMultipleChoiceField(
+        queryset=Book.objects.none(), # override in __init__
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': ''}),  # or can use SelectMultiple
+        required=True,
+    )
+    
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['selected_book_listings'].queryset = BookListing.objects.filter(member_owner=user, is_closed=False)

@@ -2,9 +2,9 @@ from datetime import datetime
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from .models import Book, BookListing, Review, WishList, Shipment, Transaction, LibraryItem
+from .models import Book, BookListing, Review, WishList, Shipment, Transaction, TransactionDetail, LibraryItem
 from .utils.google_books import get_cover_image, get_books_data
-from .forms import BookForm, BookListingForm
+from .forms import BookForm, BookListingForm, SwapOfferForm
 from notifications.models import Notification
 from django.contrib import messages
 from decimal import Decimal 
@@ -233,6 +233,14 @@ def buy_book(request, book_listing_id):
 
     if request.method == 'POST':
         # create a pending transaction for the book listing
+        transaction = Transaction(
+            transaction_type=Transaction.TransactionType.sale,
+            transaction_status=Transaction.TransactionStatus.pending,
+            initiator_member=request.user,
+            receiver_member=book_listing.member_owner,
+        )
+        transaction.save()
+
         shipment = Shipment(
             shipment_date=datetime.now().date(),
             shipment_cost=Decimal("10.00"),
@@ -240,16 +248,16 @@ def buy_book(request, book_listing_id):
             address="1st AVE EAST Mock Town, Canada"
         )
         shipment.save()
-        transaction = Transaction(
-            transaction_type=Transaction.TransactionType.sale,
-            transaction_status=Transaction.TransactionStatus.pending,
-            shipment=shipment,
+        
+        transaction_detail = TransactionDetail(
+            transaction=transaction,
             book_listing=book_listing,
-            from_member=book_listing.member_owner,
-            to_member=request.user,
+            shipment=shipment,
             cost=Decimal(str(book_listing.price)) + Decimal(str(shipment.shipment_cost)),
+            from_member=book_listing.member_owner,  # book listing is transfering from 'from_member' to the logged in user
+            to_member=request.user,
         )
-        transaction.save()
+        transaction_detail.save()
         # notify the owner of the book listing of the buy offer so they can accept / reject it
         notification = Notification(
             member=book_listing.member_owner,
@@ -265,7 +273,7 @@ def buy_book(request, book_listing_id):
 @login_required
 def transactions_view(request):
     # get all transaction that the user is from ("receiver of transaction") or to ("initiater") in
-    transactions = Transaction.objects.filter(Q(from_member=request.user) | Q(to_member=request.user)).order_by('-id')
+    transactions = Transaction.objects.filter(Q(initiator_member=request.user) | Q(receiver_member=request.user)).order_by('-id')
     return render(request, "transactions/transactions.html", {'transactions': transactions})
 
 
@@ -277,29 +285,51 @@ def transaction_view(request, transaction_id):
 @login_required
 def accept_transaction(request, transaction_id):
     transaction = get_object_or_404(Transaction, pk=transaction_id)
-    # accepting a buy offer
-    # change the library item's owner to the 'to' member
-    new_owner = transaction.to_member
-    library_item = transaction.book_listing.library_item
-    library_item.member = new_owner
-    library_item.save()
-    # notify the to memeber about the accepted transaction and the new library item in their library
-    notification = Notification(
-        member=new_owner,
-        message=f'Your buy offer was accepted for {library_item.book.title}! <a style="color: blue;" href="/library/my-library/">View your library with the new item</a>',
-        title=f"Buy Offer accepted :)"
-    )
-    notification.save()
+    # accepting a buy / swap offer
+    # go through each transaction detail, and transfer ownership of the book to the to_member
+    transaction_details = transaction.transaction_details.all()
+    transactions_to_reject = set()
+    for detail in transaction_details:
+        new_owner = detail.to_member
+        # transfer ownership of the library item
+        library_item = detail.book_listing.library_item
+        library_item.member = new_owner
+        library_item.save()
+        # mark book listing as closed so it cannot be interacted with again
+        book_listing = detail.book_listing
+        book_listing.is_closed = True
+        book_listing.save()
+        
+        # notify the 'to_memeber' about the accepted transaction and the new library item in their library
+        notification = Notification(
+            member=new_owner,
+            message=f'Your {transaction.transaction_type} offer was accepted for {library_item.book.title}! <a style="color: blue;" href="/library/my-library/">View your library with the new item</a>',
+            title=f"{transaction.transaction_type} Offer accepted :)"
+        )
+        notification.save()
+        
+        # collect any other transaction that deals with the book listings invovled in this transaction
+        other_transaction_details = TransactionDetail.objects.filter(book_listing=book_listing).exclude(transaction=transaction)
+        for detail in other_transaction_details:
+            transactions_to_reject.add(detail.transaction)
+            
 
-    # close the book listing so it is not live
-    transaction.book_listing.is_closed = True
-    transaction.book_listing.save()
-    
     # mark the transaction as accepted
     transaction.transaction_status = Transaction.TransactionStatus.accepted
     transaction.save()
     
-    messages.success(request, "Transaction Accepted!")
+    # other transactions to reject which invovled the same book listing that was accepted in this transaction
+    for t in transactions_to_reject:
+        t.transaction_status = Transaction.TransactionStatus.rejected
+        t.save()
+        notification = Notification(
+            member=t.initiator_member,
+            message=f'Your {t.transaction_type} offer was rejected! <a style="color: blue;" href="/library/transactions/{t.id}">View transaction details</a>',
+            title=f"{t.transaction_type} Offer rejected :("
+        )
+        notification.save()
+    
+    messages.success(request, f"You accepted the {transaction.transaction_type} transaction!")
     # future enhancement: Add the selling price to the member's balance
     return render(request, "transactions/transaction.html", {'transaction': transaction})
 
@@ -313,10 +343,75 @@ def reject_transaction(request, transaction_id):
 
     # notify the to memeber about the rejected transaction
     notification = Notification(
-        member=transaction.to_member,
-        message=f'Your buy offer was rejected for {transaction.book_listing.library_item.book.title}! <a style="color: blue;" href="/library/transactions/{transaction.id}">View transaction details</a>',
-        title=f"Buy Offer rejected :("
+        member=transaction.initiator_member,
+        message=f'Your {transaction.transaction_type} offer was rejected! <a style="color: blue;" href="/library/transactions/{transaction.id}">View transaction details</a>',
+        title=f"{transaction.transaction_type} Offer rejected :("
     )
     notification.save()
-    messages.success(request, "Transaction Rejected!")
+    messages.success(request, f"You rejected {transaction.transaction_type} transaction!")
     return render(request, "transactions/transaction.html", {'transaction': transaction})
+
+
+@login_required
+def swap_offer_view(request, book_listing_id):
+    # the book listing the logged in user is trying to swap for
+    book_listing = get_object_or_404(BookListing, pk=book_listing_id)
+    
+    if request.method == 'POST':
+        form = SwapOfferForm(request.POST, user=request.user)
+        # import pdb; pdb.set_trace()
+        if form.is_valid():
+            selected_book_listings = form.cleaned_data['selected_book_listings']
+            # Create swap transaction
+            transaction = Transaction(
+                transaction_type=Transaction.TransactionType.swap,
+                transaction_status=Transaction.TransactionStatus.pending,
+                initiator_member=request.user,
+                receiver_member=book_listing.member_owner,
+            )
+            transaction.save()
+
+            shipment = Shipment(
+                shipment_date=datetime.now().date(),
+                shipment_cost=Decimal("10.00"),
+                weight=2,
+                address="1st AVE EAST Mock Town, Canada"
+            )
+            shipment.save()
+            # create a transaction detail for the book the logged in member wants to own
+            transaction_detail = TransactionDetail(
+                transaction=transaction,
+                book_listing=book_listing,
+                shipment=shipment,
+                cost=Decimal("0.00"),
+                from_member=transaction.receiver_member,
+                to_member=request.user,
+            )
+            transaction_detail.save()
+            
+            # create a transaction detail for each book listing the logged in user is offering to swap to the receiver
+            for listing in selected_book_listings:
+                transaction_detail = TransactionDetail(
+                    transaction=transaction,
+                    book_listing=listing,
+                    shipment=shipment,
+                    cost=Decimal("0.00"),
+                    from_member=request.user,
+                    to_member=transaction.receiver_member,
+                )
+                transaction_detail.save()
+            # notify the owner of the book listing of the buy offer so they can accept / reject it
+            notification = Notification(
+                member=transaction.receiver_member,
+                message=f'You have a swap offer on your listing! <a style="color: blue;" href="/library/transactions/{transaction.id}">View Offer</a>',
+                title=f"Swap Offer for {book_listing.library_item.book.title}!"
+            )
+            notification.save()
+            messages.success(request, f"Swap offer sent!")
+            return redirect('transaction_view', transaction.id)
+    else:
+        form = SwapOfferForm(user=request.user)
+    
+    my_book_listings = BookListing.objects.filter(member_owner=request.user)
+    my_book_listings_dict = { str(listing.id): listing for listing in my_book_listings }
+    return render(request, 'transactions/swap-form.html', {'form': form, 'my_book_listings_dict': my_book_listings_dict, 'book_listing': book_listing})

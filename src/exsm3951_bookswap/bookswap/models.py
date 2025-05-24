@@ -65,6 +65,10 @@ class BookListing(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_closed = models.BooleanField(default=False, null=False)
     
+    
+    def __str__(self):
+        return f"{self.library_item.book.title} (${self.price})"
+    
 
 class Review(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=False)

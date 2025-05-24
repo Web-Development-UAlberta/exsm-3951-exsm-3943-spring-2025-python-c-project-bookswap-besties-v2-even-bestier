@@ -60,7 +60,7 @@
     {% csrf_token %}
       <button type="submit" class="text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-500 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Buy offer</button>
     </form>
-    <a href="" class="text-white bg-gradient-to-r from-green-700 to-green-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-500 dark:focus:ring-green-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Swap</a>
+    <a href="/library/transactions/swap/{{book_listing.id}}" class="text-white bg-gradient-to-r from-green-700 to-green-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-500 dark:focus:ring-green-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Swap</a>
   {% endif %}
 </div>
 

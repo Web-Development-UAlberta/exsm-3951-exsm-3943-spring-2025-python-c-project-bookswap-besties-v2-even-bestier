@@ -31,3 +31,8 @@ def as_querystring(data, options=""):
         filtered = {k: v for k, v in data.items() if k not in exclude}
 
     return urlencode(filtered)
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(str(key))

@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import Book, BookListing, Review, WishList, Shipment, Transaction, TransactionDetail, LibraryItem
 from .utils.google_books import get_cover_image, get_books_data
-from .forms import BookForm, BookListingForm
+from .forms import BookForm, BookListingForm, SwapOfferForm
 from notifications.models import Notification
 from django.contrib import messages
 from decimal import Decimal 
@@ -311,3 +311,21 @@ def reject_transaction(request, transaction_id):
     notification.save()
     messages.success(request, f"You rejected {transaction.transaction_type} transaction!")
     return render(request, "transactions/transaction.html", {'transaction': transaction})
+
+
+@login_required
+def swap_offer_view(request, book_listing_id):
+    book_listing = get_object_or_404(BookListing, pk=book_listing_id)
+    
+    if request.method == 'POST':
+        form = SwapOfferForm(request.POST, user=request.user, book_listing=book_listing)
+        if form.is_valid():
+            book_listings = form.cleaned_data['book_listings']
+            # TODO: create swap transaction
+            
+    else:
+        form = SwapOfferForm(user=request.user, book_listing=book_listing)
+    
+    my_book_listings = BookListing.objects.filter(member_owner=request.user)
+    my_book_listings_dict = { str(listing.id): listing for listing in my_book_listings }
+    return render(request, 'transactions/swap-form.html', {'form': form, 'my_book_listings_dict': my_book_listings_dict})

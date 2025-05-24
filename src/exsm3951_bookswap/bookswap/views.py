@@ -315,17 +315,64 @@ def reject_transaction(request, transaction_id):
 
 @login_required
 def swap_offer_view(request, book_listing_id):
+    # the book listing the logged in user is trying to swap for
     book_listing = get_object_or_404(BookListing, pk=book_listing_id)
     
     if request.method == 'POST':
-        form = SwapOfferForm(request.POST, user=request.user, book_listing=book_listing)
+        form = SwapOfferForm(request.POST, user=request.user)
+        # import pdb; pdb.set_trace()
         if form.is_valid():
-            book_listings = form.cleaned_data['book_listings']
-            # TODO: create swap transaction
+            selected_book_listings = form.cleaned_data['selected_book_listings']
+            # Create swap transaction
+            transaction = Transaction(
+                transaction_type=Transaction.TransactionType.swap,
+                transaction_status=Transaction.TransactionStatus.pending,
+                initiator_member=request.user,
+                receiver_member=book_listing.member_owner,
+            )
+            transaction.save()
+
+            shipment = Shipment(
+                shipment_date=datetime.now().date(),
+                shipment_cost=Decimal("10.00"),
+                weight=2,
+                address="1st AVE EAST Mock Town, Canada"
+            )
+            shipment.save()
+            # create a transaction detail for the book the logged in member wants to own
+            transaction_detail = TransactionDetail(
+                transaction=transaction,
+                book_listing=book_listing,
+                shipment=shipment,
+                cost=Decimal("0.00"),
+                from_member=transaction.receiver_member,
+                to_member=request.user,
+            )
+            transaction_detail.save()
             
+            # create a transaction detail for each book listing the logged in user is offering to swap to the receiver
+            for listing in selected_book_listings:
+                transaction_detail = TransactionDetail(
+                    transaction=transaction,
+                    book_listing=listing,
+                    shipment=shipment,
+                    cost=Decimal("0.00"),
+                    from_member=request.user,
+                    to_member=transaction.receiver_member,
+                )
+                transaction_detail.save()
+            # notify the owner of the book listing of the buy offer so they can accept / reject it
+            notification = Notification(
+                member=transaction.receiver_member,
+                message=f'You have a swap offer on your listing! <a style="color: blue;" href="/library/transactions/{transaction.id}">View Offer</a>',
+                title=f"Swap Offer for {book_listing.library_item.book.title}!"
+            )
+            notification.save()
+            messages.success(request, f"Swap offer sent!")
+            return redirect('transaction_view', transaction.id)
     else:
-        form = SwapOfferForm(user=request.user, book_listing=book_listing)
+        form = SwapOfferForm(user=request.user)
     
     my_book_listings = BookListing.objects.filter(member_owner=request.user)
     my_book_listings_dict = { str(listing.id): listing for listing in my_book_listings }
-    return render(request, 'transactions/swap-form.html', {'form': form, 'my_book_listings_dict': my_book_listings_dict})
+    return render(request, 'transactions/swap-form.html', {'form': form, 'my_book_listings_dict': my_book_listings_dict, 'book_listing': book_listing})

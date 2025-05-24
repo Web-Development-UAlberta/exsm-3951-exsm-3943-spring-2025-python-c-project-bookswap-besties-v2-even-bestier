@@ -22,5 +22,6 @@ urlpatterns = [
     path('transactions/<int:transaction_id>/', views.transaction_view, name='transaction_view'),
     path('transactions/<int:transaction_id>/accept', views.accept_transaction, name='accept_transaction'),
     path('transactions/<int:transaction_id>/reject', views.reject_transaction, name='reject_transaction'),
+    path('transactions/swap/<int:book_listing_id>', views.swap_offer_view, name='swap_offer_view'),
     
 ]

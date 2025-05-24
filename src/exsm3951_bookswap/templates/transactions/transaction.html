@@ -3,39 +3,89 @@ Transaction{% endblock %} {% block content %}
 
 <!-- Display the Listing -->
 <div
-  class="max-w-md mx-auto bg-amber-50 rounded-xl shadow-md p-6 text-[#825d3f]"
+  class="max-w-full mx-auto bg-amber-50 rounded-xl shadow-md p-6 text-[#825d3f]"
 >
   <h2 class="text-2xl font-bold mb-4 flex justify-center">
-    <span> Transaction </span>
+    <span> {{ transaction.transaction_type }} Transaction </span>
   </h2>
-
-  <div class="p-3 text-center">
+  <div class="p-3 text-center mb-4">
+  {% if transaction.transaction_type == 'Sale' %}
+  <!-- Sale Transaction -->
+    <h3>Details:</h3>
+    {% for detail in transaction.transaction_details.all %}
     <div class="bg-amber-50 shadow-lg p-3 rounded-xl">
-      <p class="font-bold">
-        {{ transaction.book_listing.library_item.book.title }}
-      </p>
+      <p class="font-bold">{{ detail.book_listing.library_item.book.title }}</p>
       <p class="text-sm text-gray-600">
-        {{ transaction.book_listing.library_item.book.author }}
+        Author: {{ detail.book_listing.library_item.book.author }}
       </p>
-      <p class="text-md">${{ transaction.book_listing.price }}</p>
+      <p class="text-md">${{ detail.book_listing.price }}</p>
+      <p class="text-md">Shipping Address: {{ detail.shipment.address }}</p>
       <p class="text-md">
-        Shipping Address: {{ transaction.shipment.address }}
-      </p>
-      <p class="text-md">
-        Potential Buyer: {{ transaction.to_member.full_name }}
-      </p>
-      <p class="text-md">
-        Transaction status: {{ transaction.get_transaction_status_display }}
+        Transfers to member: {{ detail.to_member.full_name }}
       </p>
       <img
-        src="{{ transaction.book_listing.library_item.book.image_url }}"
+        src="{{ detail.book_listing.library_item.book.image_url }}"
         alt="No image"
       />
     </div>
+    {% endfor %}
+  {% else %}
+    <!-- Swap Transaction -->
+    <div class="flex space-x-8">
+      <div class="flex-col">
+        <h2 class="mb-6">
+          {{ transaction.receiver_member.full_name }} receives:
+        </h2>
+        <ul class="grid w-full gap-2 grid-cols-1 overflow-auto" style="max-height: 550px;">
+          {% with initiator_details=transaction.transaction_details.all|get_details_filter_by_from_member:transaction.initiator_member %}
+            {% for detail in initiator_details %}
+              <li>
+                  <div
+                      class="inline-flex p-4 items-center w-full justify-between text-gray-500 bg-white border-2 border-gray-200 rounded-lg dark dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark"
+                  >
+                    <div>
+                        <div class="w-full text-lg font-semibold">{{ detail.book_listing.library_item.book.title }}</div>
+                        <div class="w-full text-sm">Price: ${{ detail.book_listing.price }}</div>
+                    </div>
+                    <img src="{{ detail.book_listing.library_item.book.image_url }}" style="height: 100px" alt="No Image found"/>
+                  </div>
+              </li>
+            {% endfor %}
+          {% endwith %}
+        </ul>
+      </div>
+      <div class="flex-col">
+        <h2 class="mb-6">
+           {{ transaction.initiator_member.full_name }} receives:
+        </h2>
+        {% with receiver_details=transaction.transaction_details.all|get_details_filter_by_from_member:transaction.receiver_member %}
+          {% for detail in receiver_details %}
+          <div
+            class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg dark dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark"
+          >
+            <div class="block flex">
+              <div>
+                <div class="w-full text-lg font-semibold">
+                  {{ detail.book_listing.library_item.book.title }}
+                </div>
+                <div class="w-full text-sm">Price: ${{ detail.book_listing.price }}</div>
+              </div>
+              <img
+                src="{{ detail.book_listing.library_item.book.image_url }}"
+                alt="No Image found"
+              />
+            </div>
+          </div>
+          {% endfor %}
+        {% endwith %}
+      </div>
+    </div>
+    {% endif %}
   </div>
 
+  <!-- Action button / status result -->
   <!-- Only the user that can accept/reject the transaction should see the action buttons -->
-  {% if transaction.from_member == user and transaction.transaction_status == 'Pending' %}
+  {% if transaction.receiver_member == user and transaction.transaction_status == 'Pending' %}
   <div class="flex flex-wrap gap-9 justify-center mt-4">
     <form
       class="inline"

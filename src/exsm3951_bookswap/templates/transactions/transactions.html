@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% block title %}Transactions - BookSwap{% endblock %}
+{% load bookswap_tags %}
 {% block content %}
 
 <div class="text-center">
@@ -24,13 +25,68 @@
   >
     {{ transaction.transaction_type }} Transaction ({{ transaction.transaction_status }}) 
   </h5>
-  <p class="font-normal text-[#825d3f]">
-    {% if transaction.from_member == user %}
-    {{ transaction.to_member.full_name }} offered to buy <strong>{{ transaction.book_listing.library_item.book.title }}</strong>    
-    {% elif transaction.to_member == user %}
-    You offered to buy <strong>{{ transaction.book_listing.library_item.book.title }}</strong> from {{ transaction.from_member.full_name }}
-    {% endif %}
-  </p>
+
+  {% if transaction.transaction_type == 'Sale' %}
+    <p class="font-normal text-[#825d3f]">
+      {% if transaction.initiator_member == user %}
+        <div>
+          You offered to buy:
+        </div>
+      {% else %}
+        <div>
+          {{ transaction.initiator_member }} offered to buy the book from you:
+        </div>
+      {% endif %}
+      {% for detail in transaction.transaction_details.all %}
+        <div>
+          <strong>
+            {{ detail.book_listing.library_item.book.title }}
+          </strong>
+        </div>
+      {% endfor %}
+    </p>
+  {% else %}
+    <p class="font-normal text-[#825d3f]">
+      <!-- You initiated the swap transaction -->
+      {% if transaction.initiator_member == user %}
+        {% with initiator_details=transaction.transaction_details.all|get_details_filter_by_from_member:transaction.initiator_member %}
+          {% for detail in initiator_details %}
+            <p>
+              You offered to swap your book listing: {{ detail.book_listing.library_item.book.title }}
+            </p>
+          {% endfor %}
+        {% endwith %}
+        <hr class="w-full h-1 mx-auto my-4 bg-gray-500 border-0 rounded-sm my-4">
+        {% with receiver_details=transaction.transaction_details.all|get_details_filter_by_from_member:transaction.receiver_member %}
+          {% for detail in receiver_details %}
+            <p>
+              You want to receive the book listing from {{ detail.from_member.full_name }}: {{ detail.book_listing.library_item.book.title }}
+            </p>
+          {% endfor %}
+        {% endwith %}
+      {% else %}
+        <!-- You did not initiate the swap transaction -->
+        {% with receiver_details=transaction.transaction_details.all|get_details_filter_by_from_member:transaction.receiver_member %}
+          {% for detail in receiver_details %}
+            <p>
+              {{ detail.to_member.full_name }} wants to receive your book listing: {{ detail.book_listing.library_item.book.title }}
+            </p>
+          {% endfor %}
+        {% endwith %}
+        <hr class="w-full h-1 mx-auto my-4 bg-gray-500 border-0 rounded-sm my-4">
+        {% with initiator_details=transaction.transaction_details.all|get_details_filter_by_from_member:transaction.initiator_member %}
+          {% for detail in initiator_details %}
+            <p>
+              {{ detail.from_member.full_name }} wants to give you the book listing: {{ detail.book_listing.library_item.book.title }}
+            </p>
+          {% endfor %}
+        {% endwith %}
+      {% endif %}
+    </p>
+
+  {% endif %}
+
+  
 </a>
 {% empty %}
 <div class="text-[#825d3f]">No transaction.</div>

@@ -19,26 +19,25 @@
     class="border rounded-xl bg-amber-50 border-amber-400 px-4 py-2 w-full"
     required
   />
+  <!-- Button Group -->
+  <div class="flex flex-col sm:flex-row gap-2 justify-center items-center mt-5">
+    {% if request.GET.search_title %}
+      <a
+        href="{% url 'library' %}"
+        class="bg-pink-400 text-white px-6 py-2 rounded-xl hover:bg-pink-500 w-64 text-center"
+      >
+        Cancel Search
+      </a>
+    {% endif %}
+    <button
+      type="submit"
+      class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700 w-64 text-center"
+    >
+      Search For Listings
+    </button>
+  </div>
 </form>
 
-<!-- Button Group -->
-<div class="flex flex-col sm:flex-row gap-2 justify-center items-center">
-  {% if request.GET.search_title %}
-    <a
-      href="{% url 'library' %}"
-      class="bg-pink-400 text-white px-6 py-2 rounded-xl hover:bg-pink-500 w-64 text-center"
-    >
-      Cancel Search
-    </a>
-  {% endif %}
-  <button
-    type="submit"
-    form="search-form"
-    class="bg-green-600 text-white px-6 py-2 rounded-xl hover:bg-green-700 w-64 text-center"
-  >
-    Search For Listings
-  </button>
-</div>
 
 <section class="mb-8 mt-8">
   {% if request.GET.search_title != None %}

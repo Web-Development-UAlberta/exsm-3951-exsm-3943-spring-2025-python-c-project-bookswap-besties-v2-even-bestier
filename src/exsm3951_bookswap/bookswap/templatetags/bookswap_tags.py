@@ -31,3 +31,13 @@ def as_querystring(data, options=""):
         filtered = {k: v for k, v in data.items() if k not in exclude}
 
     return urlencode(filtered)
+
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(str(key))
+
+
+@register.filter
+def get_details_filter_by_from_member(transaction_details, member):
+    return [detail for detail in transaction_details if detail.from_member == member]

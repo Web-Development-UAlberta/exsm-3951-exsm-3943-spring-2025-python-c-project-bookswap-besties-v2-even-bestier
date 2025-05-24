@@ -276,6 +276,7 @@ def accept_transaction(request, transaction_id):
     # accepting a buy / swap offer
     # go through each transaction detail, and transfer ownership of the book to the to_member
     transaction_details = transaction.transaction_details.all()
+    transactions_to_reject = set()
     for detail in transaction_details:
         new_owner = detail.to_member
         # transfer ownership of the library item
@@ -294,10 +295,27 @@ def accept_transaction(request, transaction_id):
             title=f"{transaction.transaction_type} Offer accepted :)"
         )
         notification.save()
+        
+        # collect any other transaction that deals with the book listings invovled in this transaction
+        other_transaction_details = TransactionDetail.objects.filter(book_listing=book_listing).exclude(transaction=transaction)
+        for detail in other_transaction_details:
+            transactions_to_reject.add(detail.transaction)
+            
 
     # mark the transaction as accepted
     transaction.transaction_status = Transaction.TransactionStatus.accepted
     transaction.save()
+    
+    # other transactions to reject which invovled the same book listing that was accepted in this transaction
+    for t in transactions_to_reject:
+        t.transaction_status = Transaction.TransactionStatus.rejected
+        t.save()
+        notification = Notification(
+            member=t.initiator_member,
+            message=f'Your {t.transaction_type} offer was rejected! <a style="color: blue;" href="/library/transactions/{t.id}">View transaction details</a>',
+            title=f"{t.transaction_type} Offer rejected :("
+        )
+        notification.save()
     
     messages.success(request, f"You accepted the {transaction.transaction_type} transaction!")
     # future enhancement: Add the selling price to the member's balance
@@ -313,9 +331,9 @@ def reject_transaction(request, transaction_id):
 
     # notify the to memeber about the rejected transaction
     notification = Notification(
-        member=transaction.to_member,
-        message=f'Your buy offer was rejected for {transaction.book_listing.library_item.book.title}! <a style="color: blue;" href="/library/transactions/{transaction.id}">View transaction details</a>',
-        title=f"Buy Offer rejected :("
+        member=transaction.initiator_member,
+        message=f'Your {transaction.transaction_type} offer was rejected! <a style="color: blue;" href="/library/transactions/{transaction.id}">View transaction details</a>',
+        title=f"{transaction.transaction_type} Offer rejected :("
     )
     notification.save()
     messages.success(request, f"You rejected {transaction.transaction_type} transaction!")

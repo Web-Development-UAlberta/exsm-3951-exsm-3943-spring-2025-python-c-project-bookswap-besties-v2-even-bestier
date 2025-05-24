@@ -68,4 +68,4 @@ class SwapOfferForm(forms.Form):
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
         if user:
-            self.fields['selected_book_listings'].queryset = BookListing.objects.filter(member_owner=user)
+            self.fields['selected_book_listings'].queryset = BookListing.objects.filter(member_owner=user, is_closed=False)

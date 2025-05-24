@@ -115,10 +115,13 @@ def remove_from_wishlist(request, wishlist_id):
 @login_required
 def book_search_view(request):
     query = request.GET.get('q', '')
+    
     results = get_books_data(query) if query else []
+    show_modal = bool(results) or request.GET.get('show_modal') == '1'
     return render(request, 'browse/browse.html', {
         "book_data_list": results,
-        "books": Book.objects.all()
+        "books": Book.objects.all(),
+        "show_modal": show_modal,
     })
 
 @login_required
@@ -129,7 +132,7 @@ def book_create_from_search(request):
             form.save()
             return redirect('browse_books')
         
-        return render(request, 'partials/book_form.html', {'form': form})
+        return render(request, 'partials/book_form.html', {'form': form, 'request': request, 'query': request.GET.get('q', '')})
         
     else:
     
@@ -141,7 +144,7 @@ def book_create_from_search(request):
             field.widget.attrs['readonly'] = True
             field.widget.attrs['class'] = field.widget.attrs.get('class', '') + ' bg-gray-100 cursor-not-allowed'
 
-    return render(request, 'partials/book_form.html', {'form': form})
+    return render(request, 'partials/book_form.html', {'form': form, 'request': request, 'query': request.GET.get('q', '')})
 
 
 @login_required

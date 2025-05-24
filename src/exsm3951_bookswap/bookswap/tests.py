@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Book, BookListing, Review, WishList, Shipment, Swap, Transaction, LibraryItem
+from .models import Book, BookListing, Review, WishList, Shipment, Transaction, TransactionDetail, LibraryItem
 from authentication.models import Member
 from django.contrib.auth.tokens import default_token_generator
 from django.db import IntegrityError
@@ -46,7 +46,8 @@ def CreateShipment():
     shipment = Shipment.objects.create(
         shipment_date='2025-05-02',
         shipment_cost=25.00,
-        weight=6.0
+        weight=6.0,
+        address="abc"
     )
     return shipment
 
@@ -236,18 +237,28 @@ class TransactionModelTests(TestCase):
         transaction = Transaction.objects.create(
             transaction_type='Sale',
             transaction_date='2025-05-01',
-            shipment=shipment,
+            initiator_member=sender,
+            receiver_member=receiver,
+        )
+        transaction.save()
+        
+        # create transaction detail
+        transaction_detail = TransactionDetail.objects.create(
+            transaction=transaction,
             book_listing=listing,
+            shipment=shipment,
             from_member=sender,
             to_member=receiver,
             cost=38.00
         )
+        transaction.save()
+        
 
         self.assertEqual(transaction.transaction_type, 'Sale')
-        self.assertEqual(transaction.book_listing.library_item.book.title, 'The Great Gatsby')
-        self.assertEqual(transaction.from_member.email, 'johndoe@example.com')
-        self.assertEqual(transaction.to_member.email, 'mtwain@example.com')
-        self.assertEqual(transaction.shipment.shipment_cost, 25.00)
+        self.assertEqual(transaction_detail.book_listing.library_item.book.title, 'The Great Gatsby')
+        self.assertEqual(transaction_detail.from_member.email, 'johndoe@example.com')
+        self.assertEqual(transaction_detail.to_member.email, 'mtwain@example.com')
+        self.assertEqual(transaction_detail.shipment.shipment_cost, 25.00)
 
     def test_create_transaction_type_not_in_list(self):
         #create members
@@ -269,11 +280,8 @@ class TransactionModelTests(TestCase):
             transaction = Transaction(
                 transaction_type='Garage Sale',
                 transaction_date='2025-05-01',
-                shipment=shipment,
-                book_listing=listing,
-                from_member=sender,
-                to_member=receiver,
-                cost=38.00
+                initiator_member=sender,
+                receiver_member=receiver,
             )
             transaction.full_clean()
             transaction.save()
@@ -327,11 +335,7 @@ class ShipmentModelTests(TestCase):
 
         self.assertRaises(IntegrityError)
 
-class SwapModelTests(TestCase):
-    def test_create_swap(self):
-        swap = Swap.objects.create()
-        self.assertIsNotNone(swap.id)
-
+class SwapTests(TestCase):
     def test_member_with_no_swaps(self):
         member1 = Member.objects.create(
             username='bsmith',
@@ -347,20 +351,27 @@ class SwapModelTests(TestCase):
         shipment = CreateShipment()
 
         # Create a sale transaction (not a swap)
-        Transaction.objects.create(
+        t = Transaction.objects.create(
             transaction_type='Sale',
             transaction_date='2025-05-03',
+            initiator_member=member1,
+            receiver_member=member2,
+        )
+        t.save()
+        t_detail = TransactionDetail.objects.create(
+            transaction=t,
             shipment=shipment,
             book_listing=listing,
             from_member=member1,
             to_member=member2,
             cost=15.00
         )
+        t_detail.save()
 
         # Verify the member has no swap transactions
         swap_transactions = Transaction.objects.filter(
-            swap__isnull=False,
-            from_member=member1
+            transaction_type='Swap',
+            initiator_member=member1
         )
         self.assertEqual(swap_transactions.count(), 0)
         #swap_transactions with help from OpenAI ChatGPT 3.5, May 3/25

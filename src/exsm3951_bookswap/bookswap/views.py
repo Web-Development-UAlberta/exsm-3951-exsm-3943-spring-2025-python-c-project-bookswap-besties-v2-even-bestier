@@ -61,7 +61,8 @@ def view_my_book_listings(request):
 @login_required
 def browse_books_view(request):
     books = Book.objects.all()
-    my_library_books = Review.objects.filter(member=request.user)
+    my_library_items = LibraryItem.objects.filter(member=request.user).select_related('book')
+    my_library_books = [item.book for item in my_library_items]
     # Optional inline search support
     query = request.GET.get('q')
     book_data = get_books_data(query) if query else None  

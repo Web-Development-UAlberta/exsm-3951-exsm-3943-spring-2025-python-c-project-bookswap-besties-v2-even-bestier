@@ -53,12 +53,13 @@
       </form>
       {% endif %}
       {% if book in my_library_books %}
+        <br>  
         In your library
       {% else %}
-      <form method="post" action="{% url 'add_to_my_library' book.id %}">
-        {% csrf_token %}
-        <button class="mt-2 text-blue-600 hover:underline text-md">Add to Library</button>
-      </form>
+        <form method="post" action="{% url 'add_to_my_library' book.id %}">
+          {% csrf_token %}
+          <button class="mt-2 text-blue-600 hover:underline text-md">Add to Library</button>
+        </form>
       {% endif %}
     </div>
   {% empty %}

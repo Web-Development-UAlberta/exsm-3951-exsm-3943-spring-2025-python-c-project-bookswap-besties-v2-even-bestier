@@ -45,9 +45,9 @@ def library_view(request):  # All Listings"
     search_title = request.GET.get('search_title', '')
     # filtering for book listings of books that contain the title that is being searched for
     # exclude the book listings owned by logged in user
-    book_listings = []
-    if search_title != '':
-        book_listings = BookListing.objects.filter(library_item__book__title__icontains=search_title, is_closed=False).exclude(member_owner=request.user)
+    book_listings = BookListing.objects.filter(is_closed=False).exclude(member_owner=request.user)
+    if search_title:
+        book_listings = BookListing.objects.filter(library_item__book__title__icontains=search_title)
     return render(request, "library/library.html", {'book_listings': book_listings})
 
 

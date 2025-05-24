@@ -10,29 +10,30 @@
 </div>
 
 <form method="get" action="{% url 'book_search' %}" class="mb-4 flex justify-center flex-col gap-2">
-  <input type="text" name="q" placeholder="Search by title or ISBN..."
+  <input type="text" name="q" placeholder="Search by title, author or ISBN..."
          class="bg-amber-50 border-2 border-amber-300 hover:border-amber-400 rounded-xl px-2 py-2 w-full" required>
   <button type="submit" class="bg-green-600 text-white px-10 py-2 rounded-xl hover:bg-green-700 w-72 self-center">
     Search for a Book
   </button>
 </form>
 
-<!-- Currently Broken
 {# Filters #} 
-<form method="get" class="mb-6 grid grid-cols-1 sm:grid-cols-4 gap-4">
-  <input type="text" name="title" placeholder="Search title..." class="border-2 rounded-xl px-3 py-2 bg-amber-50 border-amber-300 hover:border-amber-400">
-  <input type="text" name="author" placeholder="Author..." class="border-2 rounded-xl px-3 py-2 bg-amber-50 border-amber-300 hover:border-amber-400">
-  <select name="genre" class="border-2 rounded-xl px-3 py-2 bg-amber-50 border-amber-300 hover:border-amber-400">
-    <option value="">Genre</option>
-    <option value="fiction">Fiction</option>
-    <option value="nonfiction">Non-fiction</option>
-  </select>
-  <input type="number" name="max_price" placeholder="Max Price" class="border-2 rounded-xl px-3 py-2 bg-amber-50 border-amber-300 hover:border-amber-400">
+<form method="get" action="{% url 'browse_books' %}" class="mb-6 grid grid-cols-1 sm:grid-cols-4 gap-4" class="mb-6 grid grid-cols-1 sm:grid-cols-4 gap-4">
+  <input type="text" name="title" placeholder="Search title..." value="{{ request.GET.title }}" class="border-2 rounded-xl px-3 py-2 bg-amber-50 border-amber-300 hover:border-amber-400">
+  <input type="text" name="author" placeholder="Author..." value="{{ request.GET.author }}" class="border-2 rounded-xl px-3 py-2 bg-amber-50 border-amber-300 hover:border-amber-400">
+  <input type="text" name="genre" placeholder="Genre..." value="{{ request.GET.genre }}" class="border-2 rounded-xl px-3 py-2 bg-amber-50 border-amber-300 hover:border-amber-400">
   <button type="submit" class="bg-green-600 text-white px-10 py-2 rounded-xl hover:bg-green-700 w-72 self-center sm:col-span-4 justify-self-center">
     Filter Books
   </button>
+  {% if request.GET.title or request.GET.author or request.GET.genre %}
+  <div class="w-full max-w-4xl mx-auto mb-6 flex justify-center">
+    <a href="{% url 'browse_books' %}"
+       class="bg-pink-400 text-white px-4 py-2 rounded-xl hover:bg-pink-500 transition text-center self-center">
+      Cancel Filter
+    </a>
+  </div>
+{% endif %}
 </form>
--->
 
 {# Book Grid #}
 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">

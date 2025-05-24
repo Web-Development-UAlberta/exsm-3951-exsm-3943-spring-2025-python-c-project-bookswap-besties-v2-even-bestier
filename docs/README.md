@@ -136,6 +136,8 @@ tests.py: member.objects.get with help from OpenAI ChatGPT 3.5, May 3/25
 tests.py: reset password with help from OpenAI ChatGPT 3.5, May 3/25
 tests.py: swap_transactions with help from OpenAI ChatGPT 3.5, May 3/25
 
+browse.html/views.py: OpenAI. (2025). Implementing form-based filtering in Django views and templates using GET parameters. ChatGPT. Retrieved from https://chat.openai.com/
+
 ## 📬 Contact
 For any questions or support, feel free to contact the authors via the course forum or GitHub issues.
 

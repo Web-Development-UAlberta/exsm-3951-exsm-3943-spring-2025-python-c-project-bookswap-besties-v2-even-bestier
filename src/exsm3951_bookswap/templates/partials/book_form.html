@@ -23,10 +23,20 @@
       </div>
     {% endfor %}
 
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
     <button type="submit"
             class="w-full bg-green-600 text-white py-2 px-4 rounded-xl hover:bg-green-700 transition">
       Save Book
     </button>
+    <div class="w-full max-w-4xl mx-auto mb-6 flex justify-center">
+      <a href="{% url 'book_search' %}?q={{ query }}&show_modal=1"
+        class="bg-pink-400 text-white px-4 py-2 rounded-xl hover:bg-pink-500 transition text-center">
+        Cancel
+      </a>
+    </div>
   </form>
 </div>
 {% endblock %}

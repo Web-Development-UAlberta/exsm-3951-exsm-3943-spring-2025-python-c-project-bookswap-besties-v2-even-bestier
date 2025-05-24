@@ -61,7 +61,8 @@ def view_my_book_listings(request):
 @login_required
 def browse_books_view(request):
     books = Book.objects.all()
-    my_library_books = Review.objects.filter(member=request.user)
+    my_library_items = LibraryItem.objects.filter(member=request.user).select_related('book')
+    my_library_books = [item.book for item in my_library_items]
     # Optional inline search support
     query = request.GET.get('q')
     book_data = get_books_data(query) if query else None  
@@ -115,10 +116,13 @@ def remove_from_wishlist(request, wishlist_id):
 @login_required
 def book_search_view(request):
     query = request.GET.get('q', '')
+    
     results = get_books_data(query) if query else []
+    show_modal = bool(results) or request.GET.get('show_modal') == '1'
     return render(request, 'browse/browse.html', {
         "book_data_list": results,
-        "books": Book.objects.all()
+        "books": Book.objects.all(),
+        "show_modal": show_modal,
     })
 
 @login_required
@@ -129,14 +133,19 @@ def book_create_from_search(request):
             form.save()
             return redirect('browse_books')
         
-        return render(request, 'partials/book_form.html', {'form': form})
+        return render(request, 'partials/book_form.html', {'form': form, 'request': request, 'query': request.GET.get('q', '')})
         
     else:
     
         initial_data = request.GET.dict()  # <- use prefilled query params
         form = BookForm(initial=initial_data)
         
-    return render(request, 'partials/book_form.html', {'form': form})
+        #make fields readonly
+        for field in form.fields.values():
+            field.widget.attrs['readonly'] = True
+            field.widget.attrs['class'] = field.widget.attrs.get('class', '') + ' bg-gray-100 cursor-not-allowed'
+
+    return render(request, 'partials/book_form.html', {'form': form, 'request': request, 'query': request.GET.get('q', '')})
 
 
 @login_required

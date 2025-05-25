@@ -41,6 +41,7 @@ TMS follows a three-tier architecture:
 ![ERD Diagram](../src/exsm3951_bookswap/static/images/ERD%20-%20Book%20Swap-revision.4.drawio%20%284%29.svg)
 
 
+
 ### 3.2 Database Schema
 
 **Member** {\
@@ -65,11 +66,17 @@ TMS follows a three-tier architecture:
   "weight": DECIMAL,\
 }
 
+**LibraryItem** {\
+  "_id": ObjectId,\
+  "book_id": ObjectId (ref: Book),\
+  "member": ObjectId (ref: Member),\
+}
+
 **BookListing** {\
-"book_id": ObjectId (ref: Book),
-"member_owner": ObjectId (ref: Member),\
-"condition": ENUM(NEW, GOOD, FAIR, POOR),\
-"price": DECIMAL,\
+  "book_id": ObjectId (ref: Book),\
+  "member_owner": ObjectId (ref: Member),\
+  "condition": ENUM(NEW, GOOD, FAIR, POOR),\
+  "price": DECIMAL,\
 }
 
 **WishList** {\

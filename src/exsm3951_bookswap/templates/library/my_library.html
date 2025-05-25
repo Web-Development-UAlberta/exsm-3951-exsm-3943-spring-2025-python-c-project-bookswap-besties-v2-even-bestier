@@ -50,10 +50,28 @@
 
           </div>
           <img src="{{ library_item.book.image_url }}" class="mt-4 mx-auto book-img" alt="No image" />
+          {% with review=library_item.book.review_set.first %}
+          {% if review and review.rating %}
+            <p class="mt-2 text-center text-yellow-500 text-xl">
+              {% for i in "12345"|slice:":review.rating"|make_list %}
+                ★
+              {% endfor %}
+              {% for i in "12345"|slice:"review.rating:"|make_list %}
+                ☆
+              {% endfor %}
+            </p>
+          {% else %}
+            <p class="mt-2 text-center text-gray-400">No rating yet</p>
+          {% endif %}
+          {% endwith %}
           <form method="POST" action="{% url 'remove_from_my_library' library_item.id %}">
             {% csrf_token %}
             <button class="text-white bg-gradient-to-br from-pink-400 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-xl text-sm px-3 py-2 text-center mt-4 me-2 mb-2" type="submit">Remove</button>
           </form>
+          <a href="{% url 'edit_review' library_item.book.id %}" 
+            class="bg-green-600 text-white px-3 py-2 rounded-xl hover:bg-green-700 mt-2 block text-center">
+            Edit Review
+          </a>
         </div>
       {% empty %}
         <a href="{% url 'browse_books' %}" class="text-4xl font-semibold inline-block mb-6 px-6 py-2 rounded-xl">Click Here to Add Books to Your Library</a>

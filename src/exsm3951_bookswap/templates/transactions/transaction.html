@@ -123,6 +123,13 @@ Transaction{% endblock %} {% block content %}
     This transaction was {{ transaction.get_transaction_status_display }}
   </div>
   {% endif %}
+  <br>
+  <div class="w-full max-w-4xl mx-auto mb-6 flex justify-center">
+    <a href="{% url 'transactions_view' %}"
+       class="bg-pink-400 text-white px-4 py-2 rounded-xl hover:bg-pink-500 transition text-center">
+      Close
+    </a>
+  </div>
 </div>
 
 {% endblock %}

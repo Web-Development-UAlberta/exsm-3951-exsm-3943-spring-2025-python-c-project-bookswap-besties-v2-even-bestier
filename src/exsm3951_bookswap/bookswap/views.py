@@ -267,7 +267,7 @@ def buy_book(request, book_listing_id):
         notification.save()
         messages.success(request, f"Buy offer sent!")
     
-    return redirect('library') # all listings page
+    return redirect('all_listings') # all listings page
 
 
 @login_required

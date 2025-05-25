@@ -55,6 +55,8 @@
             <button class="text-white bg-gradient-to-br from-pink-400 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-xl text-sm px-3 py-2 text-center mt-4 me-2 mb-2" type="submit">Remove</button>
           </form>
         </div>
+      {% empty %}
+        <a href="{% url 'browse_books' %}" class="text-4xl font-semibold inline-block mb-6 px-6 py-2 rounded-xl">Click Here to Add Books to Your Library</a>
       {% endfor %}
       </div>
     {% else %}

@@ -89,7 +89,7 @@ TMS follows a three-tier architecture:
 }
 
 **TransactoinDetail** {\
-  "transaction": (ref: Transaction)\
+  "transaction": (ref: Transaction),\
   "book_listing": ObjectId (ref: BookListing),\
   "from": ObjectId (ref: Member),\
   "to": ObjectId (ref: Member),\
@@ -110,6 +110,14 @@ TMS follows a three-tier architecture:
   "book": ObjectId (ref: Book),\
   "rating": Integer,\
   "comment": String,\
+}
+
+**Notification** {\
+  "_id": ObjectId,\
+  "member": ObjectId (ref: Member),\
+  "title": String,\
+  "is_read": Boolean,\
+  "timestamp": Date,\
 }
 
 

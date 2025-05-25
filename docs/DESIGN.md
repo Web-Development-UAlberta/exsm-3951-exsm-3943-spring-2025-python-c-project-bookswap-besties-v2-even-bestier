@@ -38,7 +38,7 @@ TMS follows a three-tier architecture:
 ### 3.1 ERD 
 
 
-![ERD Diagram](../src/exsm3951_bookswap/static/images/ERD%20-%20Book%20Swap-revision.3.drawio.svg)
+![ERD Diagram](../src/exsm3951_bookswap/static/images/ERD%20-%20Book%20Swap-revision.4.drawio%20%284%29.svg)
 
 
 ### 3.2 Database Schema
@@ -47,9 +47,9 @@ TMS follows a three-tier architecture:
   "_id": ObjectId,\
   "first_name": String,\
   "last_name": String,\
+  "address": String\
   "email": String,\
   "password_hashed": String (hashed),\
-  "address": String\
   "genre_preference": String,\
 }
 
@@ -78,20 +78,23 @@ TMS follows a three-tier architecture:
   "book": ObjectId (ref: Book),\
 }
 
-**Swap** {\
-   "_id": ObjectId,\
-}
-
 **Transaction** {\
   "_id": ObjectId",\
   "transaction_type": ENUM(Sale, Swap),\
+  "transaction_type": ENUM(Pending, Accepted, Rejected),\
   "transaction_date": DATE,\
-  "shipment": ObjectId (ref: User),\
-  "book": ObjectId (ref: Book),\
+  "initiator": ObjectId (ref: Member),\
+  "receiver": ObjectId (ref: Member),\
+  "initiator": ObjectId (ref: Member),\
+}
+
+**TransactoinDetail** {\
+  "transaction": (ref: Transaction)\
+  "book_listing": ObjectId (ref: BookListing),\
   "from": ObjectId (ref: Member),\
   "to": ObjectId (ref: Member),\
+  "shipment": ObjectId (ref: User),\
   "cost": DECIMAL,\
-  "swap": ObjectId (ref: Member),\
 }
 
 **Shipment** {\

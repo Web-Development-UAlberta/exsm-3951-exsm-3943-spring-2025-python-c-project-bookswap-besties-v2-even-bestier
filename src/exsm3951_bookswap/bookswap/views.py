@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import Book, BookListing, Review, WishList, Shipment, Transaction, TransactionDetail, LibraryItem
 from .utils.google_books import get_cover_image, get_books_data
-from .forms import BookForm, BookListingForm, SwapOfferForm
+from .forms import BookForm, BookListingForm, SwapOfferForm, ReviewForm
 from notifications.models import Notification
 from django.contrib import messages
 from decimal import Decimal 
@@ -415,3 +415,26 @@ def swap_offer_view(request, book_listing_id):
     my_book_listings = BookListing.objects.filter(member_owner=request.user)
     my_book_listings_dict = { str(listing.id): listing for listing in my_book_listings }
     return render(request, 'transactions/swap-form.html', {'form': form, 'my_book_listings_dict': my_book_listings_dict, 'book_listing': book_listing})
+
+
+@login_required
+def edit_review(request, book_id):
+    # Make sure the logged-in user owns the book
+    library_item = get_object_or_404(LibraryItem, book__id=book_id, member=request.user)
+    book = library_item.book
+
+    # Try to get an existing review for this book and member, or create a new one
+    review, created = Review.objects.get_or_create(book=book, member=request.user)
+
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, instance=review)
+        if form.is_valid():
+            form.save()
+            return redirect('library')  # Change to your actual library view name
+    else:
+        form = ReviewForm(instance=review)
+
+    return render(request, 'library/edit_review.html', {
+        'form': form,
+        'book': book
+    })

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Book, BookListing, LibraryItem
+from .models import Book, BookListing, LibraryItem, Review
 
 class BookForm(forms.ModelForm):
     class Meta:
@@ -69,3 +69,13 @@ class SwapOfferForm(forms.Form):
         super().__init__(*args, **kwargs)
         if user:
             self.fields['selected_book_listings'].queryset = BookListing.objects.filter(member_owner=user, is_closed=False)
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ['rating', 'review']
+        widgets = {
+            'rating': forms.RadioSelect(choices=[(i, '⭐' * i) for i in range(1, 6)]),
+            'review': forms.Textarea(attrs={'rows': 3}),
+        }

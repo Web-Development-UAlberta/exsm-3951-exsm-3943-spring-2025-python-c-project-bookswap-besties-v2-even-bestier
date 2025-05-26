@@ -35,6 +35,9 @@ def add_to_library(request, book_id):
 @login_required
 def remove_from_my_library(request, listing_id):
     library_item = get_object_or_404(LibraryItem, id=listing_id)
+    if library_item.member != request.user:
+        return redirect('my_library')
+
     library_item.delete()
     
     return redirect(request.META.get('HTTP_REFERER', 'my_library'))
@@ -120,6 +123,9 @@ def add_to_wishlist(request, book_id):
 @login_required
 def remove_from_wishlist(request, wishlist_id):
     wishlist_item = get_object_or_404(WishList, id=wishlist_id)
+    if wishlist_item.member != request.user:
+        return redirect('view_wishlist')
+
     wishlist_item.delete()
     
     return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
@@ -172,7 +178,9 @@ def create_book_listing(request):
     if request.method == 'POST':
         form = BookListingForm(request.POST, user=request.user)
         if form.is_valid():
-            new_listing = form.save()
+            new_listing = form.save(commit=False)
+            new_listing.member_owner = request.user
+            new_listing.save()
             # Send a notification to users who have this book on their wishlist
             # Step 1: Get all users who have the book in their wishlist
             wishlist_items = WishList.objects.filter(book=new_listing.library_item.book).exclude(member=request.user)
@@ -183,8 +191,10 @@ def create_book_listing(request):
                     message=f'Follow the link to the book listing <a style="color: blue;" href="/library/book-listings/{new_listing.id}">{new_listing.library_item.book.title}</a>',
                     member=item.member,
                 )
-                notification.save()
-                
+                notification.save()   
+            return redirect('view_my_book_listings')
+        else:
+            messages.error(request, "You must have a book value greater than 0!  Please try your listing again!")
             return redirect('view_my_book_listings')
     else:
         intial_data = {
@@ -210,6 +220,9 @@ def edit_book_listing(request, book_listing_id):
         if form.is_valid():
             form.save()
             return redirect('view_my_book_listings')
+        else:
+            messages.error(request, "You must have a book value greater than 0! Please try your listing again!")
+            return redirect('view_my_book_listings')
     else:
         form = BookListingForm(instance=book_listing, user=request.user)
         # Make sure the user cannot update the book of an existing listing
@@ -222,6 +235,8 @@ def edit_book_listing(request, book_listing_id):
 def delete_book_listing(request, book_listing_id):
     book_listing = get_object_or_404(BookListing, pk=book_listing_id)
     if request.method == 'POST':
+        if book_listing.member_owner != request.user:
+            return redirect('view_my_book_listings')
         book_listing.delete()
         return redirect('view_my_book_listings')
     return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})
@@ -420,7 +435,10 @@ def swap_offer_view(request, book_listing_id):
 @login_required
 def edit_review(request, book_id):
     # Make sure the logged-in user owns the book
-    library_item = get_object_or_404(LibraryItem, book__id=book_id, member=request.user)
+    library_item = LibraryItem.objects.filter(book__id=book_id, member=request.user).first()
+    if not library_item:
+        raise Http404("Library item not found.")
+    
     book = library_item.book
 
     # Try to get an existing review for this book and member, or create a new one

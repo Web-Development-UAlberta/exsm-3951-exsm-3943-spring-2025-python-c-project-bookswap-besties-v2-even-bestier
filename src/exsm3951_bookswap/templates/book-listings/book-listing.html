@@ -44,6 +44,31 @@
       ${{ book_listing.price }}
     </p>
   </div>
+  <!--  Star Rating + Review (READ-ONLY) -->
+  <div class="p-3 text-center">
+    {% with review=book_listing.library_item.book.review_set.first %}
+      {% if review and review.rating %}
+        <p class="mt-2 text-yellow-500 text-xl">
+          {% for i in "12345"|make_list %}
+            {% if forloop.counter <= review.rating %}
+              ★
+            {% else %}
+              ☆
+            {% endif %}
+          {% endfor %}
+        </p>
+      {% else %}
+        <p class="text-gray-400">No rating yet</p>
+      {% endif %}
+
+      {% if review and review.review %}
+        <p class="mt-2 italic text-gray-700">
+          {{ review.review }}
+        </p>
+      {% endif %}
+    {% endwith %}
+  </div>
+  <!--  End Rating + Review -->
 
   <div class="flex flex-wrap gap-9 justify-center mt-4">
   {% if user == book_listing.member_owner  %} 

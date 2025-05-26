@@ -68,7 +68,6 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | **Test Case**           | **Description**                     | **Expected Result**             | **Error Conditions**                                |
 |-------------------------|-------------------------------------|---------------------------------|-----------------------------------------------------|
 | Add Book                | Save valid book                     | Book saved to user's library    | Invalid/missing fields                              |
-| Add Book (Zero Price)   | Price = 0                           | Book accepted (e.g., donation)  | Negative price rejected                             |
 | Register User           | Save valid user                     | User created                    | Duplicate email/username                            |
 | Update Profile          | Edit user details                   | Profile updated                 | Missing required fields                             |
 | Wishlist Entry          | Add book to wishlist                | Entry saved                     | Duplicate entry blocked                             |
@@ -84,7 +83,7 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 |-------------------------|------------------------------|-----------------------------|--------------------------------------------------|
 | Register User           | Valid info                   | Success                     | Duplicate email                                  |
 | Login                   | Valid credentials            | Session starts              | Invalid creds show error                         |
-| Add Book                | Max-length title, 0 price    | Saved if valid              | Negative values rejected                         |
+| Add Book                | Max-length title             | Saved if valid              | Zero and Negative values rejected                |
 | Submit Review           | Rating + text                | Review saved                | Rating outside 1–5                               |
 | Wishlist                | Add/remove                   | Entry created/removed       | Already exists                                   |
 | Search Books            | Title, author, etc.          | Matches shown               | No results gracefully handled                    |
@@ -115,7 +114,7 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Registration         | Duplicate email                      | “Email in use” shown                     |
 | Password             | Too short                            | Error shown                              |
 | Book Title           | 100 characters                       | Saved                                    |
-| Price                | 0 (donation)                         | Allowed                                  |
+| Price                | 0                                    | Rejected                                 |
 | Price                | Negative                             | Rejected                                 |
 | Pub Date             | Future date                          | Rejected unless marked “Pre-order”       |
 | Condition            | Invalid enum                         | Rejected                                 |

@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Help / FAQ - About BookSwap{% endblock %}
+{% block content %}
+
+<div class="text-center">
+  <h2 class="text-6xl font-semibold inline-block mb-6 px-6 py-2 rounded-xl backdrop-blur-lg"
+      style="color: #825d3f; background-color: rgba(255, 255, 255, 0.4); text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+    About / Help / FAQ 
+  </h2>
+</div>
+
+<div class="max-w-2xl mx-auto bg-amber-50 p-6 rounded-xl shadow-md space-y-4">
+    <!-- About Section -->
+  <div class="bg-amber-50 p-6 rounded-lg shadow-xl">
+    <h3 class="font-semibold text-2xl mb-4 text-[#825d3f]">📖 About BookSwap</h3>
+    <p class="text-md text-[#825d3f]">
+      BookSwap is a community-driven platform designed for book lovers to easily swap, sell, or buy books from one another. 
+      We believe in the power of sharing stories and knowledge through books. 
+      Our mission is to create a seamless, fair, and friendly environment where users can connect, 
+      exchange, and enjoy books—whether through trade, sale, or purchase.
+    </p>
+    <p class="text-md text-[#825d3f] mt-4">
+      Our platform provides a robust set of features to help you manage your personal library, wishlist, and transaction history. 
+      Whether you're looking to find that rare book you've been searching for or offer your own collection, 
+      BookSwap is your go-to space for all things book exchange.
+    </p>
+  </div>
+
+  <h3 class="font-semibold text-2xl mb-4 text-[#825d3f]">ℹ️ Help/FAQ</h3>
+  <!-- FAQ Item 1 -->
+  <div class="border border-amber-400 rounded-xl overflow-hidden">
+    <button type="button" class="w-full text-left px-4 py-3 font-semibold bg-amber-50 hover:bg-amber-100 focus:outline-none flex justify-between items-center text-[#825d3f]" onclick="toggleAnswer(this)">
+      Can I get notified when a book I want becomes available?
+      <span class="ml-2 transition-transform duration-200">&#x25BC;</span>
+    </button>
+    <div class="hidden px-4 py-3 text-md bg-amber-50 text-[#825d3f]">
+      Yes! Add the book to your Wishlist. You’ll receive a notification when it’s listed by another user.
+    </div>
+  </div>
+
+  <!-- FAQ Item 2 -->
+  <div class="border border-amber-400 rounded-lg overflow-hidden">
+    <button type="button" class="w-full text-left px-4 py-3 font-semibold bg-amber-50 hover:bg-amber-100 focus:outline-none flex justify-between items-center text-[#825d3f]" onclick="toggleAnswer(this)">
+      How do I list a book?
+      <span class="ml-2 transition-transform duration-200">&#x25BC;</span>
+    </button>
+    <div class="hidden px-4 py-3 text-md text-[#825d3f] bg-amber-50">
+      Go to your My Listings and click “Create New Listing.” Choose your book and set the condition and price.
+    </div>
+  </div>
+
+  <!-- FAQ Item 3 -->
+  <div class="border border-amber-400 rounded-lg overflow-hidden">
+    <button type="button" class="w-full text-left px-4 py-3 font-semibold bg-amber-50 hover:bg-amber-100 focus:outline-none flex justify-between items-center text-[#825d3f]" onclick="toggleAnswer(this)">
+      How does swapping work?
+      <span class="ml-2 transition-transform duration-200">&#x25BC;</span>
+    </button>
+    <div class="hidden px-4 py-3 text-md text-[#825d3f] bg-amber-50">
+      When you find a book you want, you can offer one of your listed books in exchange. The owner can accept or decline.
+    </div>
+  </div>
+
+  <!-- FAQ Item 4 -->
+  <div class="border border-amber-400 rounded-lg overflow-hidden">
+    <button type="button" class="w-full text-left px-4 py-3 font-semibold bg-amber-50 hover:bg-amber-100 focus:outline-none flex justify-between items-center text-[#825d3f]" onclick="toggleAnswer(this)">
+      How is shipping handled?
+      <span class="ml-2 transition-transform duration-200">&#x25BC;</span>
+    </button>
+    <div class="hidden px-4 py-3 text-md text-[#825d3f] bg-amber-50">
+      Shipping is flat-rate and simple! Once your swap or purchase is confirmed, you can generate a shipping label directly from your Profile page. Just enter the recipient’s address, package weight, and choose either Standard or Priority shipping. A printable label will be created for you, complete with tracking. You’ll also get a confirmation number to track your shipment.
+    </div>
+  </div>
+  
+  <!-- FAQ Item 5 -->
+  <div class="border border-amber-400 rounded-lg overflow-hidden">
+    <button type="button" class="w-full text-left px-4 py-3 font-semibold bg-amber-50 hover:bg-amber-100 focus:outline-none flex justify-between items-center text-[#825d3f]" onclick="toggleAnswer(this)">
+      How do I calculate shipping costs?
+      <span class="ml-2 transition-transform duration-200">&#x25BC;</span>
+    </button>
+    <div class="hidden px-4 py-3 text-md text-[#825d3f] bg-amber-50">
+      Shipping costs are flat rate.  $5.99 for standard, $11.99 for priority.
+    </div>
+  </div>
+
+  <!-- FAQ Item 6 -->
+  <div class="border border-amber-400 rounded-lg overflow-hidden">
+    <button type="button" class="w-full text-left px-4 py-3 font-semibold bg-amber-50 hover:bg-amber-100 focus:outline-none flex justify-between items-center text-[#825d3f]" onclick="toggleAnswer(this)">
+      How do I track my book orders?
+      <span class="ml-2 transition-transform duration-200">&#x25BC;</span>
+    </button>
+    <div class="hidden px-4 py-3 text-md text-[#825d3f] bg-amber-50">
+      Once a book is shipped, you'll receive a tracking number via email. You can also view the status of your order in the “Notifications” section of your profile. Simply click on the order to view the shipping details and real-time updates.
+    </div>
+  </div>
+</div>
+
+  <script>
+    function toggleAnswer(button) {
+      const answer = button.nextElementSibling;
+      const icon = button.querySelector("span");
+      const isOpen = !answer.classList.contains("hidden");
+
+      // Close all open answers
+      document.querySelectorAll("button + div").forEach(div => div.classList.add("hidden"));
+      document.querySelectorAll("button span").forEach(span => span.style.transform = "rotate(0deg)");
+
+      // Toggle current one
+      if (!isOpen) {
+        answer.classList.remove("hidden");
+        icon.style.transform = "rotate(180deg)";
+      }
+    }
+  </script>
+  <!--ChatGPT. (2025). JavaScript code for toggle FAQ answers on click. OpenAI. Retrieved from https://chat.openai.com.-->
+
+{% endblock %}

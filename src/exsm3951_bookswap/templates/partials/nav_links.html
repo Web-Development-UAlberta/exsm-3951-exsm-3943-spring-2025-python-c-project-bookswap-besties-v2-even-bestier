@@ -1,0 +1,37 @@
+{% if user.is_authenticated %}
+  <a href="{% url 'my_library' %}" class="text-[#825d1f] hover:underline px-2 text-center w-[6rem] break-words leading-tight">
+    My Library
+  </a>
+  <a href="{% url 'view_my_book_listings' %}" class="text-[#825d1f] hover:underline px-2 text-center w-[6rem] break-words leading-tight">
+    My Listings
+  </a>
+  <a href="{% url 'view_wishlist' %}" class="text-[#825d1f] hover:underline px-2 text-center w-[6rem] break-words leading-tight">
+    My Wishlist
+  </a>
+  <a href="{% url 'all_listings' %}" class="text-[#825d1f] hover:underline px-2 text-center w-[6rem] break-words leading-tight">
+    All Listings
+  </a>
+  <a href="{% url 'browse_books' %}" class="text-[#825d1f] hover:underline px-2 text-center w-[6rem] break-words leading-tight">
+    Browse
+  </a>
+  <a href="{% url 'notifications' %}" class="text-[#825d1f] hover:underline notification-link px-2 text-center w-[8rem] break-words leading-tight">
+    Notifications
+    {% if user.unread_notification_count > 0 %}
+      <span class="unread-notifications-badge">{{ user.unread_notification_count }}</span>
+    {% endif %}
+  </a>
+  <a href="{% url 'transactions_view' %}" class="text-[#825d1f] hover:underline px-2 text-center w-[8rem] break-words leading-tight">
+    Transactions
+  </a>
+  <a href="{% url 'profile_settings' %}" class="text-[#825d1f] hover:underline px-2 text-center w-[6rem] break-words leading-tight">
+    My Profile
+  </a>
+{% endif %}
+<a href="{% url 'help_faq' %}" class="text-[#825d1f] hover:underline px-2 text-center w-[6rem] break-words leading-tight">
+  About/ Help
+</a>
+{% if user.is_authenticated %}
+  <a href="{% url 'logout' %}" class="text-pink-500 hover:underline px-4 text-center w-[6rem] break-words leading-tight">Logout</a>
+{% else %}
+  <a href="{% url 'login' %}" class="text-green-600 hover:underline px-4 text-center w-[6rem] break-words leading-tight">Login</a>
+{% endif %}

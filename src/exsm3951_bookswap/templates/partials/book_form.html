@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="max-w-xl mx-auto mt-8 bg-amber-50 border border-amber-300 text-[#825d3f] shadow-md rounded-xl p-6 space-y-6">
+  <h1 class="text-5xl text-[#825d3f] text-center">
+    Book Biopic
+  </h1>
+
+  <form method="post" action="" class="space-y-4">
+    {% csrf_token %}
+
+    {% for field in form.visible_fields %}
+      <div>
+        <label class="block text-2xl font-medium text-[#825d3f] rounded-xl bg-amber-50 mb-1">
+          {{ field.label }}
+        </label>
+        {{ field.errors }}
+        {{ field }}
+        {% if field.help_text %}
+          <p class="text-md text-pink mt-1">{{ field.help_text }}</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    {% for hidden in form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    <button type="submit"
+            class="w-full bg-green-600 text-white py-2 px-4 rounded-xl hover:bg-green-700 transition">
+      Save Book
+    </button>
+    <div class="w-full max-w-4xl mx-auto mb-6 flex justify-center">
+      <a href="{% url 'book_search' %}?q={{ query }}&show_modal=1"
+        class="bg-pink-400 text-white px-4 py-2 rounded-xl hover:bg-pink-500 transition text-center">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,3 +1,4 @@
+
 # Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,visualstudio,visualstudiocode,react,reactnative,csharp,dotnetcore,web
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,visualstudio,visualstudiocode,react,reactnative,csharp,dotnetcore,web
 
@@ -911,3 +912,7 @@ $RECYCLE.BIN/
 # Additional files built by Visual Studio
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,visualstudio,visualstudiocode,react,reactnative,csharp,dotnetcore,web
+
+**/db.sqlite3
+
+**/venv

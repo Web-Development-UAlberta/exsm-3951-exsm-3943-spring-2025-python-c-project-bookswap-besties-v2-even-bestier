@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load bookswap_tags %}
+{% block title %}Book Listing{% endblock %}
+{% block content %}
+
+<!-- Display the Listing -->
+<div class="max-w-md mx-auto bg-amber-50 rounded-xl shadow-md p-6 text-[#825d3f]">
+
+  <h2 class="text-4xl font-bold mb-4 flex justify-center">
+    <span>
+      {% if user == book_listing.member_owner  %} 
+      My 
+      {% endif %}
+      Book Listing
+    </span>
+  </h2>
+
+  <!-- Book title -->
+  <div class="p-3 text-center">
+    <div class="bg-amber-50 shadow-lg p-3 rounded-xl">
+      <p class="font-bold">{{ book_listing.library_item.book.title }}</p>
+      <p class="text-lg">{{ book_listing.library_item.book.author }}</p>
+      <img src="{{ book_listing.library_item.book.image_url }}" alt="No image" class="mx-auto max-w-full h-auto object-contain" />
+    </div>
+  </div>
+  <!-- Condition -->
+  <div class="p-3 text-center">
+    <h5 class="text-2xl font-bold">Condition</h5>
+    <p>
+      {{ book_listing.condition }}
+    </p>
+  </div>
+  <!-- Seller name -->
+  <div class="p-3 text-center">
+    <h5 class="text-2xl font-bold">Seller</h5>
+    <p>
+      {{ book_listing.member_owner.full_name }}
+    </p>
+  </div>
+  <!-- Price -->
+  <div class="p-3 text-center">
+    <h5 class="text-2xl font-bold">Price</h5>
+    <p>
+      ${{ book_listing.price }}
+    </p>
+  </div>
+  <!--  Star Rating + Review (READ-ONLY) -->
+  <div class="p-3 text-center">
+    {% with review=book_listing.library_item.book.review_set.first %}
+      {% if review and review.rating %}
+        <p class="mt-2 text-yellow-500 text-xl">
+          {% for i in "12345"|make_list %}
+            {% if forloop.counter <= review.rating %}
+              ★
+            {% else %}
+              ☆
+            {% endif %}
+          {% endfor %}
+        </p>
+      {% else %}
+        <p class="text-gray-400">No rating yet</p>
+      {% endif %}
+
+      {% if review and review.review %}
+        <p class="mt-2 italic text-gray-700">
+          {{ review.review }}
+        </p>
+      {% endif %}
+    {% endwith %}
+  </div>
+  <!--  End Rating + Review -->
+
+  <div class="flex flex-wrap gap-9 justify-center mt-4">
+  {% if user == book_listing.member_owner  %} 
+  <!-- Seller buttons -->
+  <form class="inline" method="POST" action="{% url 'delete_book_listing' book_listing.id %}">
+    {% csrf_token %}
+    <button type="submit" class="text-white bg-gradient-to-br from-pink-600 to-pink-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Delete</button>
+  </form>
+  <a href="{% url 'edit_book_listing' book_listing.id %}" class="text-white text-md bg-gradient-to-r from-blue-500 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-8 py-1.5 text-center">Edit</a>
+  <a href="{% url 'view_my_book_listings' %}" class="text-white bg-gradient-to-r from-green-700 to-green-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-600 dark:focus:ring-green-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Close</a>
+  {% else %}
+  <!-- buyer buttons -->
+    <form class="inline" method="POST" action="{% url 'buy_book' book_listing.id %}">
+    {% csrf_token %}
+      <button type="submit" class="text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-500 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Buy offer</button>
+    </form>
+    <a href="/library/transactions/swap/{{book_listing.id}}" class="text-white bg-gradient-to-r from-green-700 to-green-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-500 dark:focus:ring-green-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Swap</a>
+    <a href="{% url 'all_listings' %}" class="text-white bg-gradient-to-r from-pink-600 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-600 dark:focus:ring-green-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Close</a>
+  {% endif %}
+</div>
+
+</div>
+
+{% endblock %}

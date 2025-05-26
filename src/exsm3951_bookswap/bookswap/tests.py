@@ -410,7 +410,18 @@ class LibraryViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "You don't have any book listings yet.") 
 
-'''
+class WishlistViewTests(TestCase):
+    def test_add_book_to_wishlist(self):
+        member = CreateMember()
+        book = CreateBook()
+
+        self.client.force_login(member)
+        response = self.client.get(f'/library/wishlist/add/{book.id}/')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(WishList.objects.filter(member=member, book=book).exists())
+
+
     def test_remove_book_from_wishlist(self):
         member=CreateMember()
         book = CreateBook()
@@ -420,10 +431,12 @@ class LibraryViewTests(TestCase):
 
         #simulate removal from wishlist
         self.client.force_login(member)
-        response=self.client.post(f'/library/remove_from_wishlist/{wishlist_item.id}/') #adjust this once page is made
+        response=self.client.post(f'/library/wishlist/remove/{wishlist_item.id}/')
 
         self.assertEqual(response.status_code, 302)
-        self.assertNotContains(response, 'The Great Gatsby')
+        self.assertFalse(WishList.objects.filter(id=wishlist_item.id).exists())
+
+''' 
 
 class BrowseViewTests(TestCase):
     def test_book_detail_page(self):
@@ -437,7 +450,8 @@ class BrowseViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'The Great Gatsby')
 
-'''
+        
+  '''
 
 class NavigationTests(TestCase):
     def test_navigation_links(self):
@@ -453,3 +467,20 @@ class NavigationTests(TestCase):
         self.assertContains(response, 'My Profile')
         self.assertContains(response, 'Help')
         self.assertContains(response, 'Logout')
+
+class CreateBookListingViewTests(TestCase):
+    def test_create_book_listing_view(self):
+        member = CreateMember()
+        book = CreateBook()
+        library_item = LibraryItem.objects.create(book=book, member=member)
+
+        self.client.force_login(member)
+        response = self.client.post('/library/book-listings/create', {
+            'library_item': library_item.id,
+            'condition': 'Good',
+            'price': '12.50',
+            'member_owner': member.id
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(BookListing.objects.filter(member_owner=member).exists())

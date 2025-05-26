@@ -436,7 +436,6 @@ class WishlistViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertFalse(WishList.objects.filter(id=wishlist_item.id).exists())
 
-''' 
 
 class BrowseViewTests(TestCase):
     def test_book_detail_page(self):
@@ -445,13 +444,21 @@ class BrowseViewTests(TestCase):
         listing=CreateListing(book, member)
 
         self.client.force_login(member)
-        response = self.client.get(f'/library/{listing.id}/') #adjust this when page is made
+        response = self.client.get(f'/library/book-listings/{listing.id}/')
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'The Great Gatsby')
 
-        
-  '''
+
+class BookSearchModalTests(TestCase):
+    def test_modal_shows_on_search(self):
+        member = CreateMember()
+        self.client.force_login(member)
+        response = self.client.get('/library/browse/search/?q=Gatsby&show_modal=1')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'searchModal')
+
 
 class NavigationTests(TestCase):
     def test_navigation_links(self):
@@ -484,3 +491,94 @@ class CreateBookListingViewTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertTrue(BookListing.objects.filter(member_owner=member).exists())
+
+
+class SwapOfferTests(TestCase):
+    def test_swap_offer_from_renders(self):
+        member = CreateMember()
+        book = CreateBook()
+        listing = CreateListing(book, member)
+
+        self.client.force_login(member)
+        response = self.client.get(f'/library/transactions/swap/{listing.id}')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Swap')
+
+class MultiBookSwapTests(TestCase):
+    def test_multi_book_swap_creates_multiple_transaction_details(self):
+        initiator = CreateMember()
+        receiver = Member.objects.create(
+            username='jane_doe',
+            first_name='Jane',
+            last_name='Doe',
+            email='janedoe@example.com',
+            password='password123',
+            address='789 Maple St'
+        )
+        book_to_receive = CreateBook()
+        listing_to_receive = CreateListing(book_to_receive, receiver)
+
+        #create two books for initiator to offer
+        book1 = Book.objects.create(
+            isbn='111111111',
+            title='Book One',
+            author='Author A',
+            genre='Fiction',
+            description='Test',
+            pub_date='2000-01-01',
+            language='English',
+            weight=1.0
+        )
+
+        book2 = Book.objects.create(
+            isbn='222222222',
+            title='Book Two',
+            author='Author B',
+            genre='Nonfiction',
+            description='Test',
+            pub_date='2000-01-01',
+            language='English',
+            weight=1.0
+        )
+        listing1 = CreateListing(book1, initiator)
+        listing2 = CreateListing(book2, initiator)
+
+        shipment = CreateShipment()
+
+        transaction = Transaction.objects.create(
+            transaction_type='Swap',
+            transaction_status='Pending',
+            initiator_member=initiator,
+            receiver_member=receiver,
+        )
+
+        #requested book
+        TransactionDetail.objects.create(
+            transaction=transaction,
+            book_listing=listing_to_receive,
+            shipment=shipment,
+            from_member=receiver,
+            to_member=initiator,
+            cost=0
+        )
+
+        #offered books
+        TransactionDetail.objects.create(
+            transaction=transaction,
+            book_listing=listing1,
+            shipment=shipment,
+            from_member=initiator,
+            to_member=receiver,
+            cost=0
+        )
+        TransactionDetail.objects.create(
+            transaction=transaction,
+            book_listing=listing2,
+            shipment=shipment,
+            from_member=initiator,
+            to_member=receiver,
+            cost=0
+        )
+
+        self.assertEqual(transaction.transaction_details.count(),3)

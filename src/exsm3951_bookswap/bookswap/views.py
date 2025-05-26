@@ -191,9 +191,11 @@ def create_book_listing(request):
                     message=f'Follow the link to the book listing <a style="color: blue;" href="/library/book-listings/{new_listing.id}">{new_listing.library_item.book.title}</a>',
                     member=item.member,
                 )
-                notification.save()
-                
+                notification.save()   
             return redirect('view_my_book_listings')
+        else:
+            messages.error(request, "You must have a book value greater than 0!")
+            return redirect('create_book_listing')
     else:
         intial_data = {
             'member_owner': request.user,

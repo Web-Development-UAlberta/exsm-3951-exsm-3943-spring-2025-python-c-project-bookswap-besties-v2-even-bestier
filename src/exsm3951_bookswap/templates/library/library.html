@@ -44,7 +44,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
       {% for listing in book_listings %}
         <a href="{% url 'view_book_listing' listing.id %}">
-          <div class="bg-white shadow p-3 rounded flex flex-col justify-between">
+          <div class="bg-amber-50 shadow p-3 rounded-xl flex flex-col justify-between">
             <div>
               <p><span class="text-xl text-[#825d3f] font-bold">{{ listing.book.title }}</span> listed by {{ listing.member_owner.full_name }} </p>
               <p class="text-lg text-[#825d3f]">Author: {{ listing.book.author }}</p>

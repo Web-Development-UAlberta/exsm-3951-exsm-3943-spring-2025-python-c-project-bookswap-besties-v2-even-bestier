@@ -18,7 +18,7 @@
 {% for transaction in transactions %}
 <a
   href="/library/transactions/{{transaction.id}}"
-  class="block p-6 m-6 text-[#825d3f] {% if transaction.transaction_status == 'Pending'%} bg-pink-100 {% elif transaction.transaction_status == 'Accepted'%} bg-green-200 {% else %}bg-red-200{% endif %} border border-amber-400 rounded-xl shadow-lg hover:bg-pink-200 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+  class="block p-6 m-6 text-[#825d3f] {% if transaction.transaction_status == 'Pending'%} bg-pink-100 {% elif transaction.transaction_status == 'Accepted'%} bg-green-200 {% else %}bg-red-200{% endif %} border border-amber-400 rounded-xl shadow-lg hover:bg-blue-200 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
 >
   <h5
     class="mb-2 text-2xl font-bold tracking-tight text-[#825d3f] dark:text-white"

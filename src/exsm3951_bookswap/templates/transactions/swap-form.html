@@ -4,8 +4,8 @@ Swap Form {% endblock %} {% block content %}
 <div
   class="max-w-4xl mx-auto bg-amber-50 rounded-xl shadow-md p-6 text-[#825d3f]"
 >
-  <h2 class="text-2xl font-bold mb-4 flex justify-center">
-    <span> Swap Form </span>
+  <h2 class="text-5xl font-bold mb-4 flex justify-center">
+    <span> Lets Make a Swap! </span>
   </h2>
   <form method="POST" action="{% url 'swap_offer_view' book_listing.id %}" class="space-y-4">
     {% csrf_token %}
@@ -25,8 +25,9 @@ Swap Form {% endblock %} {% block content %}
 
     <div class="flex space-x-8">
       <div class="flex-col">
-        <h2 class="mb-6">
-          Select at least one of your book listings to offer for the swap:
+        <h2 class="mb-6 text-2xl text-center text-[#825d3f]">
+          Step One:<br>
+          Select at least one of your book listings to offer.
         </h2>
         <ul class="grid w-full gap-2 grid-cols-1 overflow-auto" style="max-height: 550px;">
             {% for checkbox in form.selected_book_listings %}
@@ -42,12 +43,12 @@ Swap Form {% endblock %} {% block content %}
                     >
                     <label
                         for="{{ checkbox.id_for_label }}"
-                        class="inline-flex p-4 items-center w-full justify-between text-gray-500 bg-white border-2 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                        class="inline-flex p-4 items-center w-full justify-between text-gray-500 bg-amber-50 border-2 border-amber-300 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-green-600 dark:peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 hover:bg-amber-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
                     >                           
                         <!-- <div class="block flex justify-between"> -->
                             <div>
-                                <div class="w-full text-lg font-semibold">{{ book_listing.library_item.book.title }}</div>
-                                <div class="w-full text-sm">Price: ${{ book_listing.price }}</div>
+                                <div class="text-lg font-semibold">{{ book_listing.library_item.book.title }}</div>
+                                <div class="w-full text-md">Price: ${{ book_listing.price }}</div>
                             </div>
                             <img src="{{ book_listing.library_item.book.image_url }}" style="height: 100px" alt="No Image found"/>
                         <!-- </div> -->
@@ -58,16 +59,20 @@ Swap Form {% endblock %} {% block content %}
         </ul>
       </div>
       <div class="flex-col">
-        <h2 class="mb-6">Book Listing you want to swap for:</h2>
-        <div
-          class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-2 border-gray-200 rounded-lg dark dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark"
+        <h2 class="mb-6 text-2xl text-center text-[#825d3f]">
+          Step Two:<br>
+           Select the book you want<br>
+           in exchange.
+        </h2>
+      <div
+          class="inline-flex items-center justify-between w-full p-5 text-[#825d3f] bg-amber-50 border-2 border-amber-300 rounded-xl dark dark:border-gray-700 peer-checked:border-green-600 dark:peer-checked:border-green-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-gray-600 dark:text-gray-400 dark:bg-gray-800 dark"
         >
           <div class="block flex">
             <div>
               <div class="w-full text-lg font-semibold">
                 {{ book_listing.library_item.book.title }}
               </div>
-              <div class="w-full text-sm">Price: ${{ book_listing.price }}</div>
+              <div class="w-full text-md">Price: ${{ book_listing.price }}</div>
             </div>
             <img
               src="{{ book_listing.library_item.book.image_url }}"

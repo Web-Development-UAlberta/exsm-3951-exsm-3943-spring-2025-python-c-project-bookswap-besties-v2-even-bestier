@@ -18,10 +18,13 @@ class BookForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #set some fields to hidden
         hidden_fields = ['language', 'weight', 'image_url']
-        for field_name in hidden_fields:
-            self.fields[field_name].widget = forms.HiddenInput()
+
+        for field_name, field in self.fields.items():
+            if field_name in hidden_fields:
+                self.fields[field_name].widget = forms.HiddenInput()
+            else:
+                field.widget.attrs['class'] = '!bg-amber-50 w-full rounded-xl px-3 py-2'
 
         
 class BookListingForm(forms.ModelForm):

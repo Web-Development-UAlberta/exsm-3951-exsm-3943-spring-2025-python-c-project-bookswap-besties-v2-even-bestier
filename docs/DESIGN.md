@@ -3,16 +3,7 @@
 ## 1. Introduction
 ### 1.1 Purpose
 This document outlines the architecture and detailed design for the Book Exchange Platform, a web-based application designed for book lovers to exchange, buy, or sell books. The platform leverages intelligent matching, value-aware swap logic, and community-driven features to create a seamless and engaging user experience.
-### 1.2 Scope
-The Book Exchange Platform will enable users to:
-- List books they own, want, or have read.
-- Propose trades, make purchases, or sell books directly.
-- Match with other users based on book preferences and value.
-- Rate and review books and transaction experiences.
-- Search and filter the catalog by genre, author, date, price, and more.
-- Track shipping and delivery costs (mocked).
-- Receive notifications for wishlist matches and counter-offers.
-### 1.3 Definitions
+### 1.2 Definitions
 - **Book Exchange Platform**: The web-based application described in this document.
 - **User**: Any registered member of the platform with access to its features.
 - **Listing**: A book added to the platform with information on ownership and transaction preferences.

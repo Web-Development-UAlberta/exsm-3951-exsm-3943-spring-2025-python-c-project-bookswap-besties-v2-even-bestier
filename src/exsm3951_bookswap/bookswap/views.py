@@ -194,8 +194,8 @@ def create_book_listing(request):
                 notification.save()   
             return redirect('view_my_book_listings')
         else:
-            messages.error(request, "You must have a book value greater than 0!")
-            return redirect('create_book_listing')
+            messages.error(request, "You must have a book value greater than 0!  Please try your listing again!")
+            return redirect('view_my_book_listings')
     else:
         intial_data = {
             'member_owner': request.user,
@@ -219,6 +219,9 @@ def edit_book_listing(request, book_listing_id):
         form = BookListingForm(request.POST, instance=book_listing, user=request.user)
         if form.is_valid():
             form.save()
+            return redirect('view_my_book_listings')
+        else:
+            messages.error(request, "You must have a book value greater than 0! Please try your listing again!")
             return redirect('view_my_book_listings')
     else:
         form = BookListingForm(instance=book_listing, user=request.user)

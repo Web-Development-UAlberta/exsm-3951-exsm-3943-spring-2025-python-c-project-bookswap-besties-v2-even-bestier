@@ -53,17 +53,24 @@
           {% with review=library_item.book.review_set.first %}
           {% if review and review.rating %}
             <p class="mt-2 text-center text-yellow-500 text-xl">
-              {% for i in "12345"|slice:":review.rating"|make_list %}
+            {% for i in "12345"|make_list %}
+              {% if forloop.counter <= review.rating %}
                 ★
-              {% endfor %}
-              {% for i in "12345"|slice:"review.rating:"|make_list %}
+                {% else %}
                 ☆
+                {% endif %}
               {% endfor %}
             </p>
           {% else %}
             <p class="mt-2 text-center text-gray-400">No rating yet</p>
           {% endif %}
+           {% if review and review.review %}
+            <p class="mt-2 text-center text-gray-700 italic">
+              {{ review.review }}
+            </p>
+            {% endif %}
           {% endwith %}
+
           <form method="POST" action="{% url 'remove_from_my_library' library_item.id %}">
             {% csrf_token %}
             <button class="text-white bg-gradient-to-br from-pink-400 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium rounded-xl text-sm px-3 py-2 text-center mt-4 me-2 mb-2" type="submit">Remove</button>

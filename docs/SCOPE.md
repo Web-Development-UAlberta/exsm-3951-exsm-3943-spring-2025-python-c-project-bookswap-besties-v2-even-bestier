@@ -12,7 +12,7 @@ This app is designed for book lovers who want to exchange, sell, or buy books th
 ## Project Goals
 
 - Facilitate fair and flexible book exchanges, sales, and purchases.
-- Provide intelligent swap suggestions that account for book value. (Phase 2 TDB)
+- Provide intelligent swap suggestions that account for book value. (Phase 2)
 - Enable users to manage their personal libraries and wishlists.
 - Ensure a seamless user experience with search, filtering, and notification tools.
 - Simulate core e-commerce features.
@@ -25,41 +25,39 @@ This app is designed for book lovers who want to exchange, sell, or buy books th
 - Users can list books they **own**, **want**, or **have read**.
 - Listings include:
   - Title, author, ISBN (Book ID), Publish Date
-  - Transaction type: Buy, Sell, or Swap (Phase 2)
-  - Book condition: standardized rating (New, Like New, Used, Poor)
+  - Transaction type: Buy, Sell, or Swap
+  - Book condition: standardized rating (New, Good, Fair, Poor)
   - Cash value or suggested trade value
 
-### 🤝 Matching & Swapping Logic (Phase 2)
+### 🤝 Matching & Swapping Logic
 - System suggests swap matches based on:
   - Wishlist and owned books
-  - Value equivalence (e.g., 3x$10 = 1x$30)
-  - Up to **3 rounds of counter-offers** allowed per negotiation
+  - Value equivalence (e.g., 3x$10 = 1x$30) (Phase 2)
+  - Up to **3 rounds of counter-offers** allowed per negotiation (Phase 2)
 
 ### 🔍 Search & Filtering
 - Search by:
-  - Title, author, genre, price range
+  - Title, author, genre
 - Filter by:
-  - Condition, transaction type, publishing date range, user rating, location (optional)
+  - Condition, transaction type, publishing date range, user rating, location (optional) (Phase 2)
 
 ### 👤 User Accounts & Profiles
 - Register/login/logout
 - Personal library and wishlist
 - Review and rating history
-- Saved payment/shipping preferences
+- Saved payment/shipping preferences (Phase 2)
 
 ### ⭐ Ratings & Reviews
 - Users can rate/review books they’ve acquired
-- Reviews visible in book detail and user profiles
+- Reviews visible in my library and my listings
 
 ### 🚚 Shipping & Delivery
-- Shipping cost calculated based on:
-  - Book weight
-  - User and recipient address
-- Simulated label processing (Phase 2)
+- Shipping cost is flat rate
+- Simulated label processing
 
 ### 🔔 Wishlist & Notifications
 - Users get alerts when a desired book becomes available
-- Notifications for swap offers (Phase2), counter-offers (Phase 2), and order status
+- Notifications for swap offers, counter-offers (Phase 2), and order status (Phase 2)
 
 ---
 
@@ -125,9 +123,8 @@ This app is designed for book lovers who want to exchange, sell, or buy books th
 - Users must be able to list books and specify transaction type.
 - System matches based on wishlist and available inventory.
 - Swap matching must support unequal-value combinations. (Phase 2)
-- Ratings and condition affect matching and display.
 - Counter-offer system is limited to 3 exchanges per negotiation. (Phase 2)
-- Shipping is calculated using mocked location and weight data.
+- Shipping is flat rate.
 - All data is stored in a relational DB and modeled with an ERD.
 
 ---
@@ -135,7 +132,6 @@ This app is designed for book lovers who want to exchange, sell, or buy books th
 ## Risks & Constraints
 
 - Swap logic complexity may require iterative development. (Phase 2)
-- Shipping cost calculation depends on est. data.
 - Counter-offer tracking and negotiation logic needs testing. (Phase 2)
 - No real payment integration (mocked only) or shipping service integration (Phase 2).
 

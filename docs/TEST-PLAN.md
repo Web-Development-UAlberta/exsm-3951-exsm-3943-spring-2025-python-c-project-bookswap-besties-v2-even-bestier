@@ -9,7 +9,6 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 - **User Registration & Login**:
   - Register a new user.
   - Login with valid and invalid credentials.
-  - Password reset flow
   - Update user profile (e.g., name, address, genre preference)
 
 - **Book Listing**:
@@ -20,7 +19,7 @@ This test plan is designed to ensure that the core features of the **Book Exchan
   - Add and remove books from the wishlist.
   
 - **Book Browsing and Searching**:
-  - Filter books by title, author, price, and condition.
+  - Filter books by title, and author.
   
 - **Reviews**:
   - Add, edit, and delete reviews for books.
@@ -28,15 +27,15 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 
 - **Swaps**
   - Create swap transactions (single or multiple books)
-  - Support swap negotiation (offer, counter-offer)
+  - Support swap negotiation (offer)
   - Handle swaps cancellations
-  - Record shipment details and handle damage claims
+  - Record shipment details and handle damage claims (Phase 2)
 
 - **Shipment**
   - Record shipment info and validate cost, weight, and date
 
 ### 2.2 Features Not to be Tested
-- **Real Payment Processing**: Mocked in Phase 1
+- **Real Payment Processing**: Phase 2
 - **Shipping Label Integration**: Phase 2
 
 ---
@@ -71,16 +70,12 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Add Book                | Save valid book                     | Book saved to user's library    | Invalid/missing fields                              |
 | Add Book (Zero Price)   | Price = 0                           | Book accepted (e.g., donation)  | Negative price rejected                             |
 | Register User           | Save valid user                     | User created                    | Duplicate email/username                            |
-| Password Reset          | Trigger password reset              | Email sent                      | Invalid email shows error                           |
 | Update Profile          | Edit user details                   | Profile updated                 | Missing required fields                             |
 | Wishlist Entry          | Add book to wishlist                | Entry saved                     | Duplicate entry blocked                             |
 | Review                  | Add review with rating 1–5          | Review saved                    | Invalid rating                                      |
 | Sale Transaction        | Record buyer/seller/book            | Transaction saved               | Invalid refs or duplicate                           |
 | Swap – Basic            | One-for-one swap                    | Swap saved                      | Missing refs or data                                |
 | Swap – Multi-Book       | Multiple-for-one swap               | All books linked correctly      | Book reused in other swap                           |
-| Swap – Negotiation      | Create and respond to offers        | Status updated                  | Invalid offer logic                                 |
-| Shipment                | Record shipment                     | Shipment saved                  | Negative cost, invalid date                         |
-| Damaged Book Claim      | Report damaged book                 | Damage record linked            | Missing description                                 |
 
 
 ### 5.2 Back End – Functions & Validations
@@ -94,9 +89,7 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Wishlist                | Add/remove                   | Entry created/removed       | Already exists                                   |
 | Search Books            | Title, author, etc.          | Matches shown               | No results gracefully handled                    |
 | Swap Initiation         | Offer valid swap             | Swap saved                  | Missing book/member                              |
-| Swap Update             | Counter or cancel swap       | Status reflects change      | Invalid state transition                         |
-| Damaged Shipment        | Report and attach book       | Status = damaged            | Missing damage info                              |
-| Shipment Entry          | Add shipment                 | Validated and saved         | Invalid cost/date                                |
+| Swap Update             | Accept or cancel swap        | Status reflects change      | Invalid state transition                         |
 
 
 
@@ -105,7 +98,6 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | **Form**         | **Test Case**                     | **Expected Result**          | **Error Conditions**                            |
 |------------------|-----------------------------------|------------------------------|--------------------------------------------------|
 | Registration      | Valid input                      | Account created               | Invalid/duplicate email                          |
-| Password Reset    | Enter email                      | Email sent                    | No email: show message                           |
 | Profile Edit      | Update name/address              | Info updated                  | Blank required fields                            |
 | Add Book          | Fill all fields                  | Book appears in user library  | Validation on blanks/invalids                    |
 | Review            | Submit rating + comment          | Saved/reviewed                | Rating invalid                                   |
@@ -113,7 +105,6 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Search            | Case-insensitive queries         | Matched shown                 | Empty result = friendly message                  |
 | Swap Offer        | Choose book + user               | Offer created                 | Missing selection                                |
 | Swap History      | View completed swaps             | List shown or empty message   | No swaps = show empty state                      |
-| Shipment          | Add weight/cost/date             | Saved                         | Negative numbers = error                         |
 
 
 
@@ -128,12 +119,9 @@ This test plan is designed to ensure that the core features of the **Book Exchan
 | Price                | Negative                             | Rejected                                 |
 | Pub Date             | Future date                          | Rejected unless marked “Pre-order”       |
 | Condition            | Invalid enum                         | Rejected                                 |
-| Review Rating        | 0 or 6                               | Validation error                         |
-| Long Review          | >10,000 chars                        | Truncate or block                        |
 | Wishlist             | Add same book again                  | Show error                               |
 | Search               | Special chars                        | Escaped; no crash                        |
 | Swap                 | Same book in two swaps               | Block duplicate use                      |
-| Shipment             | Cost = -1                            | Error message                            |
 | Swap History         | User has 0 swaps                     | Show “no history yet”                    |
 | Unauthorized Access  | Not logged in                        | Redirect to login                        |
 

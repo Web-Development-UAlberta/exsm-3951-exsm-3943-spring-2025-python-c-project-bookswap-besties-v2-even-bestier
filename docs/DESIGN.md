@@ -2,22 +2,22 @@
 
 ## 1. Introduction
 ### 1.1 Purpose
-This document outlines the architecture and detailed design for the Book Exchange Platform, a web-based application designed for book lovers to exchange, buy, or sell books. The platform leverages intelligent matching, value-aware swap logic, and community-driven features to create a seamless and engaging user experience.
+This document outlines the architecture and detailed design for the Book Exchange Platform, a web-based application designed for book lovers to exchange, buy, or sell books. The platform leverages intelligent matching, and community-driven features to create a seamless and engaging user experience.
 ### 1.2 Scope
 The Book Exchange Platform will enable users to:
-- List books they own, want, or have read.
+- List books they own, want, or or would like to sell/swap.
 - Propose trades, make purchases, or sell books directly.
-- Match with other users based on book preferences and value.
-- Rate and review books and transaction experiences.
-- Search and filter the catalog by genre, author, date, price, and more.
+- Match with other users based on wishlists and offers.
+- Rate and review books.
+- Search and filter the catalog by genre, author, and more.
 - Track shipping and delivery costs (mocked).
-- Receive notifications for wishlist matches and counter-offers.
+- Receive notifications for wishlist matches and offers.
 ### 1.3 Definitions
 - **Book Exchange Platform**: The web-based application described in this document.
 - **User**: Any registered member of the platform with access to its features.
-- **Listing**: A book added to the platform with information on ownership and transaction preferences.
+- **Listing**: A book added to the platform with information on ownership and transaction details.
 - **Swap**: A trade proposal between users, potentially involving multiple books.
-- **Counter-offer**: A negotiation response to a swap proposal, with up to 3 permutations allowed.
+- **Counter-offer**: A negotiation response to a swap proposal.
 - **Wishlist**: A list of books a user is actively seeking.
 - **Condition Rating**: A standardized metric describing a book’s physical state (e.g., New, Like New, Used, Poor).
 
@@ -28,7 +28,7 @@ TMS follows a three-tier architecture:
 - Application Layer (Backend)
 - Data Layer (Database)
 ### 2.2 Technology Stack
-- Frontend: Django
+- Frontend: Django and Tailwind
 - Backend: Django
 - Database: Django
 - Authentication: Django
@@ -133,56 +133,59 @@ TMS follows a three-tier architecture:
 #### Key screens include:
 
 - Login/Home
-- Browse Books
-- My Library, Wishlist, Matches
-- Messages and Notifications
-- Profile and Shipping Center
-- Help and FAQ's
+- My Library - Books a User owns.
+- My Listings - Books a user has available to sell/swap.
+- My Wishlist - Books a user is actively seeking.
+- All Listings - Books for sale across the whole platform.
+- Browse Books - A place to find new books, and add them to your Library or Wishlist. 
+- Transactions - A history of completed transactions and their details.
+- Notifications - A place to recieves offers and updates on pending transactions.
+- Profile and Shipping Center - A place to edit your profile information and create shipping labels for sold/swapped items.
+- Help and FAQ's - The help page. 
 
 ### 4.2 Navigation Structure
 
 #### Home:
 - Login / Register
-- Featured Books (For Sale / Swap)
-- Quick Search
-- How It Works
+
+#### My Library 
+- Search library
+- Edit/Review books
+- remove books from Library
+
+#### My Listings
+- Create listing
+- Edit listing
+- Save listing
+
+#### My Wishlist
+- View books on wishlist
+
+#### All Listings
+- Search for listings
+- Offer to buy/swap other listed books.
 
 #### Browse Books:
-- Search: title, author, genre, ISBN
+- Search: title, author
 - Filters:
-  - Condition
-  - Transaction Type
-  - Price Range
-  - User Rating
-  - Location
-- Sort Options
-  - Newest
-  - Price
-  - Condition
+  - Title
+  - Author
+  - Genre
+- Add book to Library
+- Ad book to Wishlist
 
-#### My Library & Matches & Wishlist:
-
-- Add Book to Library
-- Your Books
-  - Toggle Available / Unavailable
-- Manage Listings
-- Suggested Matches
-- Pending Reviews (linked to your books)
-- Wishlist
-  - Wishlist Alerts
-
-#### Messages & Notifications:
-
+#### Notifications:
 - Incoming Swap Offers
 - Counter-Offers
 - Wishlist Notifications
-- Shipping Updates
+
+#### Transactions
+- View Active/Pending/Completed transactions
 
 #### Profile & Shipping Center:
 
 - Edit Account
 - Addresses & Payment Info
-- View Personal Reviews
 - Shipment Tracking (Mocked)
 - Generate Shipping Label (Mocked)
 - Shipping Cost Estimator (Mocked)
@@ -191,7 +194,6 @@ TMS follows a three-tier architecture:
 
 - Blog / Guides
 - FAQ
-- Contact Support
 
 #### Logout:
 
@@ -217,11 +219,11 @@ TMS follows a three-tier architecture:
  ~15 min per development session
 
 **2. Core User Flows**
-- Register -> Add Book -> Mark Available
-- Search -> Filter -> View Book -> Request Swap
+- Register -> Search Book -> Add to Library -> Review & rate
+- Search All Listings -> View Book -> Request Purchase/Swap
 - Receive -> Accept/Decline Offer
 - Wishlist -> Trigger Alert
-- View user profile -> See reviews
+- Profile -> Create Shipping Label -> Submit
 
 2 hours
 
@@ -248,7 +250,7 @@ TMS follows a three-tier architecture:
 - Responsive layout checks
 - User-friendly alerts
 
-1 hour
+Literal Days
 
 **(Optional) Automated Tests**
 - Login flow
@@ -267,7 +269,7 @@ TMS follows a three-tier architecture:
 - CI/CD pipeline configured with GitHub Actions.
 - Automated testing and linting before merges.
 ### 7.3 Production Environment
-- Target: AWS ECS with auto-scaling and load balancing.
+- Target: AWS ECS with auto-scaling and load balancing. **TBD**
 - Live deployment status: **TBD**.
 
 ## 8. High Level Timeline and Milestones

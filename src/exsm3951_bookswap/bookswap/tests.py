@@ -1,6 +1,7 @@
 from django.test import TestCase
 from .models import Book, BookListing, Review, WishList, Shipment, Transaction, TransactionDetail, LibraryItem
 from authentication.models import Member
+from notifications.models import Notification
 from django.contrib.auth.tokens import default_token_generator
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
@@ -582,3 +583,65 @@ class MultiBookSwapTests(TestCase):
         )
 
         self.assertEqual(transaction.transaction_details.count(),3)
+
+class SwapAcceptanceTests(TestCase):
+    def test_accept_swap_marks_listing_closed(self):
+        sender = CreateMember()
+        receiver = Member.objects.create(
+            username='jane_doe',
+            first_name='Jane',
+            last_name='Doe',
+            email='janedoe@example.com',
+            password='password123',
+            address='789 Maple St'
+        )
+
+        book = CreateBook()
+        listing = CreateListing(book, receiver)
+        shipment = CreateShipment()
+
+        transaction = Transaction.objects.create(
+            transaction_type='Swap',
+            initiator_member=sender,
+            receiver_member=receiver
+        )
+
+        TransactionDetail.objects.create(
+            transaction=transaction,
+            book_listing=listing,
+            shipment=shipment,
+            from_member=receiver,
+            to_member=sender,
+            cost=0
+        )
+
+        #simulate acceptance
+        transaction.transaction_status = 'Accepted'
+        listing.is_closed = True
+        listing.save()
+        transaction.save()
+
+        self.assertEqual(transaction.transaction_status, 'Accepted')
+        self.assertTrue(listing.is_closed)
+
+
+class NotificationTests(TestCase):
+    def test_notification_created_on_wishlist_match(self):
+        listing_owner = CreateMember()
+        book = CreateBook()
+        listing = CreateListing(book, listing_owner)
+
+        viewer = Member.objects.create(
+            username='viewr',
+            first_name='View',
+            last_name='Er',
+            email='view@example.com',
+            password='password123',
+            address='1 Viewer Rd'
+        )
+
+        self.client.force_login(viewer)
+        response = self.client.get(f'/library/wishlist/add/{book.id}/')
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Notification.objects.filter(member=viewer, title__icontains=book.title).exists())

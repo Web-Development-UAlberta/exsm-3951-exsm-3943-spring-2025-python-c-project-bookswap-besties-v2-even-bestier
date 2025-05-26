@@ -35,6 +35,9 @@ def add_to_library(request, book_id):
 @login_required
 def remove_from_my_library(request, listing_id):
     library_item = get_object_or_404(LibraryItem, id=listing_id)
+    if library_item.member != request.user:
+        return redirect('my_library')
+
     library_item.delete()
     
     return redirect(request.META.get('HTTP_REFERER', 'my_library'))
@@ -120,6 +123,9 @@ def add_to_wishlist(request, book_id):
 @login_required
 def remove_from_wishlist(request, wishlist_id):
     wishlist_item = get_object_or_404(WishList, id=wishlist_id)
+    if wishlist_item.member != request.user:
+        return redirect('view_wishlist')
+
     wishlist_item.delete()
     
     return redirect(request.META.get('HTTP_REFERER', 'browse_books'))
@@ -172,7 +178,9 @@ def create_book_listing(request):
     if request.method == 'POST':
         form = BookListingForm(request.POST, user=request.user)
         if form.is_valid():
-            new_listing = form.save()
+            new_listing = form.save(commit=False)
+            new_listing.member_owner = request.user
+            new_listing.save()
             # Send a notification to users who have this book on their wishlist
             # Step 1: Get all users who have the book in their wishlist
             wishlist_items = WishList.objects.filter(book=new_listing.library_item.book).exclude(member=request.user)
@@ -222,6 +230,8 @@ def edit_book_listing(request, book_listing_id):
 def delete_book_listing(request, book_listing_id):
     book_listing = get_object_or_404(BookListing, pk=book_listing_id)
     if request.method == 'POST':
+        if book_listing.member_owner != request.user:
+            return redirect('view_my_book_listings')
         book_listing.delete()
         return redirect('view_my_book_listings')
     return render(request, 'book-listings/book-listing.html', {'book_listing': book_listing})

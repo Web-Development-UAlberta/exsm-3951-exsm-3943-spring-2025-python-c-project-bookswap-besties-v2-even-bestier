@@ -430,7 +430,10 @@ def swap_offer_view(request, book_listing_id):
 @login_required
 def edit_review(request, book_id):
     # Make sure the logged-in user owns the book
-    library_item = get_object_or_404(LibraryItem, book__id=book_id, member=request.user)
+    library_item = LibraryItem.objects.filter(book__id=book_id, member=request.user).first()
+    if not library_item:
+        raise Http404("Library item not found.")
+    
     book = library_item.book
 
     # Try to get an existing review for this book and member, or create a new one

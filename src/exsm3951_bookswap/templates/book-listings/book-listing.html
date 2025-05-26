@@ -20,7 +20,7 @@
     <div class="bg-amber-50 shadow-lg p-3 rounded-xl">
       <p class="font-bold">{{ book_listing.library_item.book.title }}</p>
       <p class="text-lg">{{ book_listing.library_item.book.author }}</p>
-      <img src="{{ book_listing.library_item.book.image_url }}" alt="No image" />
+      <img src="{{ book_listing.library_item.book.image_url }}" alt="No image" class="mx-auto max-w-full h-auto object-contain" />
     </div>
   </div>
   <!-- Condition -->
@@ -61,7 +61,7 @@
       <button type="submit" class="text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-500 dark:focus:ring-cyan-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Buy offer</button>
     </form>
     <a href="/library/transactions/swap/{{book_listing.id}}" class="text-white bg-gradient-to-r from-green-700 to-green-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-500 dark:focus:ring-green-800 font-medium rounded-xl text-md px-5 py-1.5 text-center">Swap</a>
-    <a href="{% url 'all_listings' %}" class="text-white bg-gradient-to-r from-green-700 to-green-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-600 dark:focus:ring-green-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Close</a>
+    <a href="{% url 'all_listings' %}" class="text-white bg-gradient-to-r from-pink-600 to-pink-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-600 dark:focus:ring-green-800 font-medium rounded-xl text-md px-7 py-1.5 text-center">Close</a>
   {% endif %}
 </div>
 

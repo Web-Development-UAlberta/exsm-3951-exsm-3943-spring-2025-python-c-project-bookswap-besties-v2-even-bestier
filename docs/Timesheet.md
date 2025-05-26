@@ -18,5 +18,5 @@
 - Sunday May 18, 11:30pm - 4:30am **5hours** -Swap and listing logic. 
 - Monday May 19, 7:00pm - 8:00pm, 11:00pm - 2:30am **4.5 hours** Styling and consistency
 - Tuesday May 20, 2:00pm - 5:00pm, 11:00pm - 4:30am **8.5 hours** Styling and nav bar function
-- Wednesday May 21, 2:00pm - 5:00pm **3hours** styling, bugs fixes, minor UI/UX improvements, presentation prep. **61 hours**
-- Sunday May 25, 11:00am - 11:59am, 5:30pm - 
+- Wednesday May 21, 2:00pm - 5:00pm **3hours** styling, bugs fixes, minor UI/UX improvements, presentation prep.
+- Sunday May 25, 11:00am - 11:59am, 5:30pm - 8:30pm, 9:30pm - 11:00pm **5.5 hours** Styling and Bug fixes.  **66.5 hours**
